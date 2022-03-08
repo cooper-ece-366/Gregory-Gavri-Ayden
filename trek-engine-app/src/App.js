@@ -1,9 +1,12 @@
 
-
+import Header from "./Components/Header";
 const App = ()=>{
   return (
     <div>
-      <h1>Hello World</h1>
+      <Header >
+        <div>Trip Gen</div>
+        <div>About page</div>
+      </Header> 
     </div>
   );
 }; 
