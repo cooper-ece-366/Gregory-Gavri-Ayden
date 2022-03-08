@@ -4,6 +4,9 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.UpdateOptions;
@@ -42,7 +45,19 @@ public class UserHandler {
         return users.get(0);
     }
 
-    public User verifyUser(String idTokenString) throws GeneralSecurityException, IOException {
+    public User verifyUser(String body) throws GeneralSecurityException, IOException {
+        // get the token from body
+        Gson gson = new Gson();
+        JsonObject obj = gson.fromJson(body,JsonElement.class).getAsJsonObject();
+        String idTokenString = "";
+        try {
+            idTokenString = obj.get("id_token").getAsString();
+        } catch (Exception e){
+            System.out.println("Error Parsing Token");
+            throw new IOException();
+        }
+
+        // verify token
         GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), new GsonFactory())
                 .setAudience(Collections.singletonList(System.getenv("GOOGLE_CLIENT_ID")))
                 .build();
@@ -59,6 +74,6 @@ public class UserHandler {
         String name = (String) payload.get("name");
         name = name.split(" ")[0];
         String familyName = (String) payload.get("family_name");
-        return insertIfNExists(userId,name,familyName,email);
+        return insertIfNExists(userId,name,familyName,email);  // return user from db and add if he exists
     }
 }

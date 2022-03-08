@@ -1,13 +1,13 @@
 
 import GoogleLogin from 'react-google-login';
 import axios from "axios"; 
+import {useUserContext} from '../../../Contexts/UserContext';
 const LoginButton = ()=>{
 
+    const {login} = useUserContext(); 
+
     const responseGoogle = async (response)=>{
-        const {tokenObj: {id_token}} = response;
-        console.log(response); 
-        const {data} = await axios.post("http://localhost:4567/login", {id_token}); 
-        console.log(data); 
+        login(response);
     }
 
 
