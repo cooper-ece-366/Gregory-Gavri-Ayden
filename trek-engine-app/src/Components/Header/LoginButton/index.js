@@ -6,7 +6,7 @@ const LoginButton = ()=>{
     const responseGoogle = async (response)=>{
         const {tokenObj: {id_token}} = response;
         console.log(response); 
-        const data = await axios.post("http://localhost:4567/login", {id_token}); 
+        const {data} = await axios.post("http://localhost:4567/login", {id_token}); 
         console.log(data); 
     }
 
@@ -14,7 +14,7 @@ const LoginButton = ()=>{
     return (
         <div>
             <GoogleLogin
-            clientId={process.env.GOOGLE_CLIENT_ID}
+            clientId={"484987685606-9i6j1tee1tjjs60ufho8iubh4l1getgu.apps.googleusercontent.com"}
             buttonText="Login"
             onSuccess={responseGoogle}
             onFailure={()=>{console.error("Login Failed!")}}
