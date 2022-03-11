@@ -24,8 +24,7 @@ public class User {
     }
 
     public String toJSONString() {
-        Gson gson = new Gson();
-        return gson.toJson(this);
+        return new Gson().toJson(this);
     }
 
     public String toString() {

@@ -1,8 +1,10 @@
 package edu.cooper.ece366;
 
 import static spark.Spark.*;
+
 import edu.cooper.ece366.Mongo.MongoHandler;
 import edu.cooper.ece366.Mongo.User.UserHandler;
+import edu.cooper.ece366.RouteInterfaces.UserBodyParser;
 
 public class Main {
 
@@ -32,20 +34,24 @@ public class Main {
         });
     }
 
+    public static void init() {
+        MongoHandler mongoHandler = new MongoHandler();
+        userHandler = new UserHandler(mongoHandler);
+        UserBodyParser.setUserHandler(userHandler); 
+        enableCORS();
+    }
+    
     public static void paths() {
         get("/", (req,res) -> "Hello World");
 
         // login post request authenticator
-        post("/login", (req,res) -> {
-            return userHandler.verifyUser(req.body());
+        post("/login", (UserBodyParser.UserBodyParserRoute)(req,res,body,user) -> {
+            return user.toJSONString(); 
         });
     }
 
     public static void main(String[] args) {
-        enableCORS();
-        MongoHandler mongoHandler = new MongoHandler();
-        userHandler = new UserHandler(mongoHandler);
+        init(); 
         paths();
-
     }
 }

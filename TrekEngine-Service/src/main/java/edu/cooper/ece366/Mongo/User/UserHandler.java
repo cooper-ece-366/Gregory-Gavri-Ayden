@@ -4,13 +4,9 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.UpdateOptions;
-import com.mongodb.client.result.UpdateResult;
 import edu.cooper.ece366.Mongo.MongoHandler;
 import org.bson.Document;
 import org.bson.conversions.Bson;
@@ -29,8 +25,13 @@ public class UserHandler {
 
     // returns user if it doesn't exist
     public User insertIfNExists(String userId, String firstName, String lastName, String email) {
-        Bson update = new Document("$setOnInsert", new Document().append("_id", userId).append("firstName", firstName).append("lastName", lastName).append("email",email));
-        UpdateResult result = collection.updateOne(Filters.eq("_id",userId),update,new UpdateOptions().upsert(true));
+        Bson update = new Document("$setOnInsert", 
+                        new Document()
+                            .append("_id", userId)
+                            .append("firstName", firstName)
+                            .append("lastName", lastName)
+                            .append("email",email));
+        collection.updateOne(Filters.eq("_id",userId),update,new UpdateOptions().upsert(true));
         return getUserFromID(userId);
     }
 
@@ -45,27 +46,20 @@ public class UserHandler {
         return users.get(0);
     }
 
-    public User verifyUser(String body) throws GeneralSecurityException, IOException {
-        // get the token from body
-        Gson gson = new Gson();
-        JsonObject obj = gson.fromJson(body,JsonElement.class).getAsJsonObject();
-        String idTokenString = "";
-        try {
-            idTokenString = obj.get("id_token").getAsString();
-        } catch (Exception e){
-            System.out.println("Error Parsing Token");
-            throw new IOException();
-        }
-
+    public User verifyUser(String idTokenString) throws GeneralSecurityException, IOException {
         // verify token
         GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), new GsonFactory())
                 .setAudience(Collections.singletonList(System.getenv("GOOGLE_CLIENT_ID")))
                 .build();
-        GoogleIdToken idToken = verifier.verify(idTokenString);
+        GoogleIdToken idToken; 
+        try{
+            idToken = verifier.verify(idTokenString);
+        } catch (Exception e){
+            throw new IOException("Illegal Token input");
+        }
         if (idToken == null)
-            throw new GeneralSecurityException();
+            throw new GeneralSecurityException("Bad Token");
         GoogleIdToken.Payload payload = idToken.getPayload();
-        // Print user identifier
 
         String userId = payload.getSubject();
 
