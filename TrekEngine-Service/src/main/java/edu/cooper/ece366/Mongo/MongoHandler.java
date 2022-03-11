@@ -1,6 +1,5 @@
 package edu.cooper.ece366.Mongo;
 
-import com.mongodb.DB;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoClientURI;
@@ -17,6 +16,8 @@ public class MongoHandler {
     public MongoHandler(){
         this("TrekEngine");
     }
+
+    // intializes the mongodb client and databse with the given name
     public MongoHandler(String name) {
         client = new MongoClient(new MongoClientURI(System.getenv("MONGO_URI")));
         CodecRegistry defaultCodecRegistry = MongoClientSettings.getDefaultCodecRegistry();

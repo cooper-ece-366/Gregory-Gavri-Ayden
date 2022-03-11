@@ -16,6 +16,8 @@ import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Collections;
 
+
+// runs operations on the user collection in the mongoDB
 public class UserHandler {
     private MongoCollection<Document> collection;
 
