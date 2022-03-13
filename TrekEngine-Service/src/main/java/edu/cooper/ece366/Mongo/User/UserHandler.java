@@ -7,12 +7,13 @@ import com.google.api.client.json.gson.GsonFactory;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.UpdateOptions;
+
+import edu.cooper.ece366.Exceptions.IllegalTokenException;
+import edu.cooper.ece366.Exceptions.InvalidTokenException;
 import edu.cooper.ece366.Mongo.MongoHandler;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
-import java.io.IOException;
-import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -48,7 +49,7 @@ public class UserHandler {
         return users.get(0);
     }
 
-    public User verifyUser(String idTokenString) throws GeneralSecurityException, IOException {
+    public User verifyUser(String idTokenString) throws IllegalTokenException, InvalidTokenException {
         // verify token
         GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), new GsonFactory())
                 .setAudience(Collections.singletonList(System.getenv("GOOGLE_CLIENT_ID")))
@@ -57,10 +58,10 @@ public class UserHandler {
         try{
             idToken = verifier.verify(idTokenString);
         } catch (Exception e){
-            throw new IOException("Illegal Token input");
+            throw new IllegalTokenException();
         }
         if (idToken == null)
-            throw new GeneralSecurityException("Bad Token");
+            throw new InvalidTokenException();
         GoogleIdToken.Payload payload = idToken.getPayload();
 
         String userId = payload.getSubject();

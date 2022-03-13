@@ -5,7 +5,8 @@ import static spark.Spark.*;
 import edu.cooper.ece366.Mongo.MongoHandler;
 import edu.cooper.ece366.Mongo.User.UserHandler;
 import static edu.cooper.ece366.RouteInterfaces.UserBodyParser.setUserHandler;
-import static edu.cooper.ece366.RouteInterfaces.UserBodyParser.authPost;
+import static edu.cooper.ece366.RouteInterfaces.UserBodyParser.AuthRoute;
+
 
 public class Main {
 
@@ -38,7 +39,7 @@ public class Main {
     public static void init() {
         MongoHandler mongoHandler = new MongoHandler();
         userHandler = new UserHandler(mongoHandler);
-        setUserHandler(userHandler); // initalizes authPost to work properly with the userHandler 
+        setUserHandler(userHandler); // initalizes AuthRoute to work properly with the userHandler 
         enableCORS();
     }
     
@@ -46,7 +47,7 @@ public class Main {
         get("/", (req,res) -> "Hello World");
 
         // login post request authenticator and returns a user object to the client
-        authPost("/login", (req,res,body,user) -> {
+        post("/login", (AuthRoute)(req,res,body,user) -> {
             return user.toJSONString(); 
         });
     }
