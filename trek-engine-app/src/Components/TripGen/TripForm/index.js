@@ -11,8 +11,9 @@ const styleSheet = {
     duration: {
         display: "flex",
         flexDirection: "row"
-    }
-    
+    },
+    startInput: {
+    }    
 }
 
 const TripForm = (props) => {
@@ -46,7 +47,7 @@ const TripForm = (props) => {
             <h1>Build Your Trip Here!</h1>
             <form style={styleSheet.form}>
                 From
-                <input type="text" placeholder="Start Location"></input>
+                <input type="text" placeholder="Start Location" style={styleSheet.startInput}></input>
                 To
                 <input type="text" placeholder="End Location"></input>
                 <select onChange={handleDurationChange}>
