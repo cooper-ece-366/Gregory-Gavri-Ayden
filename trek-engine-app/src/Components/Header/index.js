@@ -1,4 +1,7 @@
-import LoginButton from "./LoginButton"
+import LoginButton from "./LoginButton";
+import LogoutButton from "./LogoutButton";
+import { useUserContext } from "../../Contexts/UserContext";
+
 const styleSheet = {
     root: {
         position: "fixed", 
@@ -18,13 +21,11 @@ const styleSheet = {
         paddingLeft: "12px"
     }, 
     left: {
-        // borderRight: "3px solid black",
         paddingRight: "3px",
         marginRight: "40px",
     }, 
     linkRoot: {
         display: "flex", 
-        // flexGrow: "1",
     },
     link : {
         border: "1px solid black",
@@ -36,6 +37,7 @@ const styleSheet = {
 
 // the children will be the paths to the different pages
 const Header = ({children})=>{
+    const {user} = useUserContext();
     return (
         <div style = {styleSheet.root}>
             <div style= {styleSheet.leftRoot}>
@@ -46,7 +48,7 @@ const Header = ({children})=>{
                 
             </div>
             <div>TrekEngine </div> 
-            <div> <LoginButton /> </div>
+            <div> {user ? <> Welcome {user.firstName} <LogoutButton /> </>: <LoginButton />} </div>
         </div>
     )
 }
