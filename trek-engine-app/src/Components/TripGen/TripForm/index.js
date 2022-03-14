@@ -22,6 +22,7 @@ const TripForm = (props) => {
                 <textarea placeholder="Type mandatory locations here"></textarea>
                 I prefer to visit...
                 <textarea placeholder="National Parks, Big Cities, Famous restaraunts..."></textarea>
+                <button>Make my Trip!</button>
             </form>
             {/* Start Location | End Location | Trip Length | Advanced Options     */}
         </div>
