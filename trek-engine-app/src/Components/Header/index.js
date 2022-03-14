@@ -3,7 +3,7 @@ const styleSheet = {
     root: {
         position: "fixed", 
         width: "100%",
-        height: "6%", 
+        height: "50px", 
         backgroundColor: "#92a",
         display: "flex",
         flexDirection: "row",
