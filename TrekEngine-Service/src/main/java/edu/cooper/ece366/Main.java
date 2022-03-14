@@ -44,16 +44,14 @@ public class Main {
     }
     
     public static void paths() {
-        get("/", (req,res) -> "Hello World");
-
         // login post request authenticator and returns a user object to the client
-        post("/login", (AuthRoute)(req,res,body,user) -> {
-            return user.toJSONString(); 
+        path("/user", ()->{
+            post("/me", (AuthRoute)(req,res,body,user) -> user.toJSONString()); 
         });
     }
 
     public static void main(String[] args) {
         init(); 
-        paths();
+        path("/api/v1", ()->paths()); 
     }
 }

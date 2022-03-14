@@ -26,4 +26,5 @@ hs_err_pid*
 */.idea/*
 
 TrekEngine-Service/target/*
+trek-engine-app/src/env.js
 */.env*

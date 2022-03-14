@@ -1,3 +1,4 @@
+import env from "../../../env.js"; 
 import { GoogleLogout } from "react-google-login";
 import { useUserContext } from "../../../Contexts/UserContext";
 
@@ -15,7 +16,7 @@ const LogoutButton = () => {
 
     return (<div>
         <GoogleLogout
-            clientId={process.env.GOOGLE_CLIENT_ID}
+            clientId={env.GOOGLE_CLIENT_ID}
             buttonText="Logout"
             onLogoutSuccess={onSuccess}
             onFailure={onFailure}
