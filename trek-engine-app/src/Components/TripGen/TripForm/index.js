@@ -12,7 +12,23 @@ const styleSheet = {
         display: "flex",
         flexDirection: "row"
     },
+    textInput: {
+        margin: "10px",
+        padding: "10px",
+    },
     startInput: {
+        borderRadius: "10px",
+        borderWidth: "1px",
+        background: "linear-gradient(to right, #005000, #00ff00)",
+        borderImageSlice: "1",
+        color: "white",
+    },
+    endInput: {
+        borderRadius: "10px",
+        borderWidth: "1px",
+        background: "linear-gradient(to right, #500000, #ff0000)",
+        borderImageSlice: "1",
+        color: "white",
     }    
 }
 
@@ -47,9 +63,10 @@ const TripForm = (props) => {
             <h1>Build Your Trip Here!</h1>
             <form style={styleSheet.form}>
                 From
-                <input type="text" placeholder="Start Location" style={styleSheet.startInput}></input>
+                <input type="text" placeholder="Start Location" style={{...styleSheet.startInput, ...styleSheet.textInput}}></input>
                 To
-                <input type="text" placeholder="End Location"></input>
+                <input type="text" placeholder="End Location" style={{...styleSheet.endInput, ...styleSheet.textInput}}></input>
+                <hr/>
                 <select onChange={handleDurationChange}>
                     <option value="0">My Trip will take...</option>
                     <option value="1">My trip will start on...</option>
