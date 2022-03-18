@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { WithContext as ReactTags } from 'react-tag-input';
+import Multiselect from 'multiselect-react-dropdown';
 
 const styleSheet = {
     container: {
@@ -39,7 +41,16 @@ const TripForm = (props) => {
     const [days, setDays] = useState(0);
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
-    const [required, setRequired] = useState(false);
+    const [required, setRequired] = useState([]);
+    const [prefs, setPrefs] = useState([]);
+
+    const options = [
+        { name: "National Parks", value: 0 },
+        { name: "National Forests / Monuments", value: 0 },
+        { name: "Big Cities", value: 1 },
+        { name: "Famous Restaraunts", value: 2 },
+        { name: "Museums", value: 3 },
+    ];
 
     const handleDurationChange = (e) => {
         setDuration(e.target.value);
@@ -74,12 +85,16 @@ const TripForm = (props) => {
             setDays(finalDays);
         }
 
+        let finalRequired = required.map(r => r.text);
+
         let data = {
             from,
             to,
             days: parseInt(finalDays),
             startDate,
-            endDate
+            endDate,
+            required: finalRequired,
+            prefs
         }
 
         console.log(data);
@@ -105,9 +120,17 @@ const TripForm = (props) => {
         setEndDate(e.target.value);
     }
 
-    const handleRequiredChange = (e) => {
-        console.log(e.target.checked);
-        setRequired(e.target.value);
+    const handleDelete = i => {
+        setRequired(required.filter((requirement, index) => index !== i));
+    };
+
+    const handleAddition = requirement => {
+        setRequired([...required, requirement]);
+    };
+
+    const handlePrefChange = (e) => {
+        console.log(prefs);
+        setPrefs(e.map(p => p.name));
     }
 
     return (
@@ -128,9 +151,23 @@ const TripForm = (props) => {
                 </div>
 
                 Make sure I visit...
-                <textarea placeholder="Type mandatory locations here"></textarea>
+                <ReactTags
+                    tags={required}
+                    delimiters={[188, 13]}
+                    handleDelete={handleDelete}
+                    handleAddition={handleAddition}
+                    inputFieldPosition="bottom"
+                    autocomplete="False"
+                    allowDragDrop={false}
+                    placeholder="Press enter to add!"
+                />
                 I prefer to visit...
-                <textarea placeholder="National Parks, Big Cities, Famous restaraunts..."></textarea>
+                <Multiselect
+                    options={options}
+                    onSelect={handlePrefChange} // Function will trigger on select event
+                    onRemove={handlePrefChange} // Function will trigger on remove event
+                    displayValue="name" // Property name to display in the dropdown options
+                />
 
                 <button onClick={handleFormSubmit}>Make my Trip!</button>
             </form>
