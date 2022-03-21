@@ -80,7 +80,7 @@ const TripForm = (props) => {
 
         let finalDays = days;
 
-        if (duration == 1) {
+        if (duration === 1) {
             finalDays = Math.round((new Date(endDate) - new Date(startDate)) / (1000 * 60 * 60 * 24));
             setDays(finalDays);
         }
@@ -100,29 +100,17 @@ const TripForm = (props) => {
         console.log(data);
     }
 
-    const handleFromChange = (e) => {
-        setFrom(e.target.value);
-    }
+    const handleFromChange = (e) => setFrom(e.target.value);
 
-    const handleToChange = (e) => {
-        setTo(e.target.value);
-    }
+    const handleToChange = (e) => setTo(e.target.value);
 
-    const handleDayChange = (e) => {
-        setDays(e.target.value);
-    }
+    const handleDayChange = (e) => setDays(e.target.value);
 
-    const handleStartDateChange = (e) => {
-        setStartDate(e.target.value);
-    }
+    const handleStartDateChange = (e) => setStartDate(e.target.value);
 
-    const handleEndDateChange = (e) => {
-        setEndDate(e.target.value);
-    }
+    const handleEndDateChange = (e) => setEndDate(e.target.value);
 
-    const handleDelete = i => {
-        setRequired(required.filter((requirement, index) => index !== i));
-    };
+    const handleDelete = i => setRequired(required.filter((requirement, index) => index !== i));
 
     const handleAddition = requirement => {
         setRequired([...required, requirement]);
@@ -171,7 +159,6 @@ const TripForm = (props) => {
 
                 <button onClick={handleFormSubmit}>Make my Trip!</button>
             </form>
-            {/* Start Location | End Location | Trip Length | Advanced Options     */}
         </div>
     )
 }
