@@ -1,55 +1,75 @@
 import LoginButton from "./LoginButton"
+import Logo from "../Utils/Logo"
+import { Link } from "react-router-dom";
 
 const styleSheet = {
     root: {
-        position: "fixed", 
+        position: "fixed",
         width: "100%",
-        height: "50px", 
-        backgroundColor: "#92a",
+        height: "70px",
+        backgroundColor: "rgba(1,5,20,0.35)",
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        top: "0", 
+        top: "0",
         left: "0",
-        fontSize: "2em"
-    }, 
-    leftRoot: {
-        display: "flex", 
-        paddingLeft: "12px"
-    }, 
-    left: {
-        // borderRight: "3px solid black",
-        paddingRight: "3px",
-        marginRight: "40px",
-    }, 
-    linkRoot: {
-        display: "flex", 
-        // flexGrow: "1",
+        fontSize: "2em",
+        zIndex: "1",
+        padding: "10px",
+        boxSizing: "border-box"
     },
-    link : {
-        border: "1px solid black",
-        paddingRight: "10px",
-        marginRight: "30px",
+    left: {
+        display: "flex",
+        justifyContent: "center",
+        alignSelf: "center",
+        alignContent: "center"
+    },
+    name: {
+        lineHeight: "50px",
+        marginLeft: "10px",
+        color: "white",
+    },
+    Link: {
+        color: "white",
+        textDecoration: "none",
+        marginLeft: "20px",
     }
+};
 
-}; 
-
+const pages = [
+    {
+        path: "/",
+        name: "Home"
+    },
+    {
+        path: "/tripgen",
+        name: "TripGen"
+    },
+    {
+        path: "/about",
+        name: "About Us"
+    }
+];
 // the children will be the paths to the different pages
-const Header = ({children})=>{
+const Header = ({ children }) => {
     return (
-        <div style = {styleSheet.root}>
-            <div style= {styleSheet.leftRoot}>
-                <div style = {styleSheet.left}>
-                    <img src="/assets/logo/blanklogo.svg" height="40" width="40"></img>
-                </div>
-                <div style= {styleSheet.linkRoot}>
-                    {children.map(child=><div style = {styleSheet.link}>{child}</div>)}
-                </div>
-                
+        <div style={styleSheet.root}>
+            <div style={styleSheet.left}>
+                <Logo color="#ffffff" size="50px" />
+                <div style={styleSheet.name}>TrekEngine</div>
             </div>
-            <div>TrekEngine </div> 
-            <div> <LoginButton /> </div>
+            <div>
+                {pages.map(page => <Link style={styleSheet.Link} to={page.path} >{page.name}</Link>)}
+            </div>
+            {/* <div style={styleSheet.leftRoot}>
+                <div style={styleSheet.linkRoot}>
+                    
+                </div>
+
+            </div>
+            <div>TrekEngine </div>
+            <div> <LoginButton /> </div> */}
         </div>
     )
 }

@@ -1,7 +1,7 @@
 import TripForm from "./TripForm"
 
 const styleSheet = {
-    container : {
+    container: {
         display: "flex",
         paddingTop: "50px",
         height: "100%",
@@ -11,8 +11,8 @@ const styleSheet = {
 
 const TripGen = (props) => {
     return (
-        <div style = {styleSheet.container}>
-            <TripForm></TripForm>    
+        <div style={styleSheet.container}>
+            <TripForm></TripForm>
         </div>
     )
 }
