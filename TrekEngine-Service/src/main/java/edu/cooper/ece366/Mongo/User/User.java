@@ -6,10 +6,10 @@ import org.bson.codecs.pojo.annotations.BsonProperty;
 
 // user POJO that is seralizedable to JSON 
 public class User {
-    @BsonProperty("_id") public final String userId;
-    @BsonProperty("firstName") public final String firstName;
-    @BsonProperty("lastName") public final String lastName;
-    @BsonProperty("email") public final String email;
+    @BsonProperty("_id") private final String userId;
+    @BsonProperty("firstName") private final String firstName;
+    @BsonProperty("lastName") private final String lastName;
+    @BsonProperty("email") private final String email;
 
     @BsonCreator
     public User(
@@ -24,6 +24,21 @@ public class User {
         this.email = email;
     }
 
+    public String getUserId() {
+        return userId; 
+    }
+    public String getFirstName() {
+        return firstName; 
+    }
+    public String getLastName() {
+        return lastName; 
+    }
+    public String getEmail() {
+        return email; 
+    }
+  
+
+    
     public String toJSONString() {
         return new Gson().toJson(this);
     }

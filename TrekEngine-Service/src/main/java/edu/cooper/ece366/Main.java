@@ -52,6 +52,6 @@ public class Main {
 
     public static void main(String[] args) {
         init(); 
-        path("/api/v1", ()->paths()); 
+        path("/api/v1", Main::paths); 
     }
 }

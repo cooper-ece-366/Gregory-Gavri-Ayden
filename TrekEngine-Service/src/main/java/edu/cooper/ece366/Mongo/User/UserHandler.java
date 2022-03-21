@@ -4,12 +4,12 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
-import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.UpdateOptions;
 
 import edu.cooper.ece366.Exceptions.IllegalTokenException;
 import edu.cooper.ece366.Exceptions.InvalidTokenException;
+import edu.cooper.ece366.Mongo.CollectionHandler;
 import edu.cooper.ece366.Mongo.MongoHandler;
 import org.bson.Document;
 import org.bson.conversions.Bson;
@@ -19,13 +19,11 @@ import java.util.Collections;
 
 
 // runs operations on the user collection in the mongoDB
-public class UserHandler {
-    private MongoCollection<Document> collection;
+public class UserHandler extends CollectionHandler{
 
     public UserHandler(MongoHandler handler){
-        collection = handler.getCollection("users");
+        super(handler,"users"); 
     }
-
     // returns user if it doesn't exist
     public User insertIfNExists(String userId, String firstName, String lastName, String email) {
         Bson update = new Document("$setOnInsert", 
@@ -41,12 +39,12 @@ public class UserHandler {
     // returns user from userId
     public User getUserFromID(String userId) {
         ArrayList<User> users = collection.find(Filters.eq("_id",userId), User.class).into(new ArrayList<>());
-        return users.get(0);
+        return users.size() > 0 ? users.get(0) : null;
     }
 
     public User getUserFromEmail(String email){
         ArrayList<User> users = collection.find(Filters.eq("email",email), User.class).into(new ArrayList<>());
-        return users.get(0);
+        return users.size() > 0 ? users.get(0) : null;
     }
 
     public User verifyUser(String idTokenString) throws IllegalTokenException, InvalidTokenException {
