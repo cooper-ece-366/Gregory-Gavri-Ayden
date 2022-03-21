@@ -17,9 +17,16 @@ const styleSheet = {
         fontSize: "2em",
         zIndex: "1",
         padding: "10px",
-        boxSizing: "border-box"
+        boxSizing: "border-box",
+        userSelect: "none"
     },
     left: {
+        display: "flex",
+        justifyContent: "center",
+        alignSelf: "center",
+        alignContent: "center"
+    },
+    right: {
         display: "flex",
         justifyContent: "center",
         alignSelf: "center",
@@ -43,15 +50,15 @@ const pages = [
         name: "Home"
     },
     {
-        path: "/tripgen",
-        name: "TripGen"
+        path: "/explore",
+        name: "Explore"
     },
     {
         path: "/about",
         name: "About Us"
     }
 ];
-// the children will be the paths to the different pages
+
 const Header = ({ children }) => {
     return (
         <div style={styleSheet.root}>
@@ -59,17 +66,10 @@ const Header = ({ children }) => {
                 <Logo color="#ffffff" size="50px" />
                 <div style={styleSheet.name}>TrekEngine</div>
             </div>
-            <div>
+            <div style={styleSheet.right}>
                 {pages.map(page => <Link style={styleSheet.Link} to={page.path} >{page.name}</Link>)}
+                <LoginButton />
             </div>
-            {/* <div style={styleSheet.leftRoot}>
-                <div style={styleSheet.linkRoot}>
-                    
-                </div>
-
-            </div>
-            <div>TrekEngine </div>
-            <div> <LoginButton /> </div> */}
         </div>
     )
 }
