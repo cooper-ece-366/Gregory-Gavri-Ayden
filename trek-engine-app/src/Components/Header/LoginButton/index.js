@@ -1,14 +1,14 @@
 
+import env from "../../../env.js"; 
 import GoogleLogin from 'react-google-login';
+import {useUserContext} from '../../../Contexts/UserContext';
+
 import axios from "axios";
 const LoginButton = () => {
 
-    const responseGoogle = async (response) => {
-        const { tokenObj: { id_token } } = response;
-        console.log(response);
-        const data = await axios.post("http://localhost:4567/login", { id_token });
-        console.log(data);
-    }
+    const {login} = useUserContext(); 
+  
+    const responseGoogle = async (response) => login(response);
 
     const styleSheet = {
         button: {
@@ -25,20 +25,17 @@ const LoginButton = () => {
             cursor: "pointer",
             alignSelf: "center",
         }
-    }
-
 
     return (
-        // <div>
         <GoogleLogin
-            clientId={process.env.GOOGLE_CLIENT_ID}
-            buttonText="Login"
-            render={renderProps => (
-                <button style={styleSheet.button} onClick={renderProps.onClick} disabled={renderProps.disabled}>Login</button>
-            )}
-            onSuccess={responseGoogle}
-            onFailure={() => { console.error("Login Failed!") }}
-            cookiePolicy={'single_host_origin'}
+        clientId={env.GOOGLE_CLIENT_ID}
+        buttonText="Login"
+        render={renderProps => (
+            <button style={styleSheet.button} onClick={renderProps.onClick} disabled={renderProps.disabled}>Login</button>
+        )}
+        onSuccess={responseGoogle}
+        onFailure={() => { console.error("Login Failed!") }}
+        cookiePolicy={'single_host_origin'}
         />
     )
 }

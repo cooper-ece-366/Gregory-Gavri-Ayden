@@ -1,5 +1,6 @@
 
 import Header from "./Components/Header";
+import UserContext from "./Contexts/UserContext";
 import TripGen from "./Components/TripGen";
 import Home from "./Components/Home";
 import React from 'react';
@@ -15,15 +16,17 @@ const styleSheet = {
 
 const App = () => {
   return (
-    <div style={styleSheet.app}>
-      <BrowserRouter>
-        <Header />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/tripgen" element={<TripGen />} />
-        </Routes>
-      </BrowserRouter>
-    </div>
+    <UserContext>
+      <div style={styleSheet.app}>
+        <BrowserRouter>
+          <Header />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/tripgen" element={<TripGen />} />
+          </Routes>
+        </BrowserRouter>
+      </div>
+    </UserContext>
   );
 };
 
