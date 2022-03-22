@@ -1,8 +1,8 @@
 import LoginButton from "./LoginButton"
 import Logo from "../Utils/Logo"
-import { Link } from "react-router-dom";
 import LogoutButton from "./LogoutButton";
 import { useUserContext } from "../../Contexts/UserContext";
+import { cloneElement } from "react";
 
 const styleSheet = {
     root: {
@@ -46,20 +46,6 @@ const styleSheet = {
     }
 };
 
-const pages = [
-    {
-        path: "/",
-        name: "Home"
-    },
-    {
-        path: "/explore",
-        name: "Explore"
-    },
-    {
-        path: "/about",
-        name: "About Us"
-    }
-];
 
 // the children will be the paths to the different pages
 const Header = ({ children }) => {
@@ -72,7 +58,7 @@ const Header = ({ children }) => {
                 <div style={styleSheet.name}>TrekEngine</div>
             </div>
             <div style={styleSheet.right}>
-                {pages.map(page => <Link style={styleSheet.Link} to={page.path} >{page.name}</Link>)}
+                {children.map(l => cloneElement(l, { style: styleSheet.Link }))}
                 {user ? <LogoutButton /> : <LoginButton />}
             </div>
         </div>
