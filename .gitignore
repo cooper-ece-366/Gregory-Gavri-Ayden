@@ -28,5 +28,6 @@ hs_err_pid*
 TrekEngine-Service/target/*
 trek-engine-app/src/env.js
 */.env*
+*/env.js
 */build.sh
 */run.sh
