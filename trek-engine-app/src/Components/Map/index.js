@@ -1,4 +1,6 @@
 import React, { useRef, useEffect, useState,useImperativeHandle,forwardRef } from 'react';
+import {renderToString} from 'react-dom/server';
+import Popup from "./Popup"; 
 import mapboxgl from 'mapbox-gl';
 import env from "../../env";
 import {getDirection,getLatLng} from "../../utils/GeoLocation";
@@ -15,7 +17,6 @@ const styleSheet = {
 const Map = ({lng_i=-87.65,lat_i=41.84},ref) => {
   const mapContainerRef = useRef(null);
   const map = useRef(null);
-
   const [lng, setLng] = useState(lng_i);
   const [lat, setLat] = useState(lat_i);
   const [zoom, setZoom] = useState(3);
@@ -27,7 +28,9 @@ const Map = ({lng_i=-87.65,lat_i=41.84},ref) => {
         addMarkerLngLat(lng,lat,id); 
     }
     const addMarkerLngLat = (lng,lat,id) => {
-        const marker = new mapboxgl.Marker().setLngLat([lng, lat]).addTo(map.current);
+        const marker = new mapboxgl.Marker().setLngLat([lng, lat]).setPopup(
+          new mapboxgl.Popup({offset: 25}).setHTML(renderToString(<Popup>{id}</Popup>))
+        ).addTo(map.current); 
         markers.current[id] = marker;
     }
 
