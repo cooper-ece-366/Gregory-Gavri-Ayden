@@ -9,6 +9,7 @@
     "axios": "^0.26.0",
     "mapbox-gl": "^2.7.1",
     "multiselect-react-dropdown": "^2.0.21",
+    "polyline": "^0.2.0",
     "react": "^17.0.2",
     "react-dnd": "^15.1.1",
     "react-dnd-html5-backend": "^15.1.2",

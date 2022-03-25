@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState,useImperativeHandle,forwardRef } from 'react';
 import mapboxgl from 'mapbox-gl';
 import env from "../../env";
-import {getDirection} from "../../utils/GeoLocation";
+import {getDirection,getLatLng} from "../../utils/GeoLocation";
 
 mapboxgl.accessToken = env.MAP_BOX_ACCESS_TOKEN; 
 
@@ -22,7 +22,11 @@ const Map = ({lng_i=-87.65,lat_i=41.84},ref) => {
   const markers = useRef({}); 
   const paths = useRef({}); 
 
-    const addMarker = (lng,lat,id) => {
+    const addMarker = async (loc,id) => {
+        const [lng,lat] = await getLatLng(loc);
+        addMarkerLngLat(lng,lat,id); 
+    }
+    const addMarkerLngLat = (lng,lat,id) => {
         const marker = new mapboxgl.Marker().setLngLat([lng, lat]).addTo(map.current);
         markers.current[id] = marker;
     }
@@ -33,11 +37,14 @@ const Map = ({lng_i=-87.65,lat_i=41.84},ref) => {
         delete markers.current[id];
     }
 
-    const addPath = (marker1,marker2,id)=>{
-        if(!markers.current[marker1] || !markers.current[marker2]) return; 
+    const addPath = async (start,end,id)=>{
+        // if(!markers.current[marker1] || !markers.current[marker2]) return; 
         //TODO add call to backend for now it just generates a straight line
-        // const coordinates = getDirection(markers.current[marker1].getLngLat(),markers.current[marker2].getLngLat());
-        const coordinates = [ Object.values(markers.current[marker1].getLngLat()), Object.values(markers.current[marker2].getLngLat()) ];
+        const coordinates = await getDirection(start,end);
+        addMarkerLngLat(coordinates[0][0],coordinates[0][1],"start");
+        addMarkerLngLat(coordinates[coordinates.length-1][0],coordinates[coordinates.length-1][1],"end");
+        console.log(coordinates); 
+        // const coordinates = [ Object.values(markers.current[marker1].getLngLat()), Object.values(markers.current[marker2].getLngLat()) ];
         paths.current[id] = map.current.addLayer({
             id,
             type:"line",
@@ -81,11 +88,6 @@ const Map = ({lng_i=-87.65,lat_i=41.84},ref) => {
       zoom: zoom,
     });
 
-    map.current.on('load', ()=>{
-        addMarker(lng,lat,"test1");
-        addMarker(lng+20,lat+20,"test2");
-        addPath("test1","test2","p1");
-    }); 
 
     map.current.on('move', () => {
       setLng(map.current.getCenter().lng.toFixed(4));
@@ -100,6 +102,7 @@ const Map = ({lng_i=-87.65,lat_i=41.84},ref) => {
   // Functions exposed to the parent component 
   useImperativeHandle(ref,()=>({
     addMarker,
+    addMarkerLngLat,
     removeMarker,
     addPath,
     removePath

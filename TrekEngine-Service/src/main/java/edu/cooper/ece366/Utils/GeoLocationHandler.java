@@ -32,7 +32,11 @@ public class GeoLocationHandler {
             .build();
         Response response = client.newCall(request).execute();
         String res = response.body().string().trim();
-        return res; 
+        JsonObject obj = parseJSON(res); 
+        String location = obj.get("candidates").getAsJsonArray().get(0).getAsJsonObject()
+                            .get("geometry").getAsJsonObject()
+                            .get("location").getAsJsonObject().toString(); 
+        return location; 
     }
 
     public String searchMultiple(String search) throws IOException{ //throws ApiException, InterruptedException,IOException
