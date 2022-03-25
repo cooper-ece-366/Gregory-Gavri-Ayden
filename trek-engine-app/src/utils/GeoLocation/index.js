@@ -4,7 +4,7 @@ import polyline from "polyline";
 // TODO implement backend
 export const getDirection = async (origin, destination)=> {
     const {data} = await axios.get(`http://localhost:4567/api/v1/geo/direction?start=${origin}&end=${destination}`);  
-    return polyline.decode(data).map(x=>[x[1],x[0]]);
+    return polyline.decode(data).reverse();
 }
 
 export const getLatLng = async (address)=> {

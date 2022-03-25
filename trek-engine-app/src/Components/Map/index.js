@@ -38,13 +38,9 @@ const Map = ({lng_i=-87.65,lat_i=41.84},ref) => {
     }
 
     const addPath = async (start,end,id)=>{
-        // if(!markers.current[marker1] || !markers.current[marker2]) return; 
-        //TODO add call to backend for now it just generates a straight line
         const coordinates = await getDirection(start,end);
-        addMarkerLngLat(coordinates[0][0],coordinates[0][1],"start");
-        addMarkerLngLat(coordinates[coordinates.length-1][0],coordinates[coordinates.length-1][1],"end");
-        console.log(coordinates); 
-        // const coordinates = [ Object.values(markers.current[marker1].getLngLat()), Object.values(markers.current[marker2].getLngLat()) ];
+        addMarkerLngLat(coordinates[0][0],coordinates[0][1],`start-${id}`);
+        addMarkerLngLat(coordinates[coordinates.length-1][0],coordinates[coordinates.length-1][1],`end-${id}`);
         paths.current[id] = map.current.addLayer({
             id,
             type:"line",
