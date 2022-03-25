@@ -1,15 +1,8 @@
 package edu.cooper.ece366.Utils;
-
 import java.io.IOException;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.maps.GeoApiContext;
-import com.google.maps.GeocodingApi;
-import com.google.maps.errors.ApiException;
-import com.google.maps.model.GeocodingResult;
-
 
 import static edu.cooper.ece366.Utils.BodyParser.parseJSON;
 
@@ -64,7 +57,13 @@ public class GeoLocationHandler {
             .build();
         Response response = client.newCall(request).execute();
         String res = response.body().string().trim();
-        return res; 
+        JsonObject obj = parseJSON(res); 
+        String polyPoints = obj.get("routes").getAsJsonArray()
+                            .get(0).getAsJsonObject()
+                            .get("overview_polyline").getAsJsonObject()
+                            .get("points").getAsString();
+        
+        return polyPoints; 
     }
 
     
