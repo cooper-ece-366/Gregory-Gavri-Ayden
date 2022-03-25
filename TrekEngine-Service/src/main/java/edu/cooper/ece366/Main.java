@@ -4,6 +4,8 @@ import static spark.Spark.*;
 
 import edu.cooper.ece366.Mongo.MongoHandler;
 import edu.cooper.ece366.Mongo.User.UserHandler;
+import edu.cooper.ece366.Utils.GeoLocationHandler;
+
 import static edu.cooper.ece366.RouteInterfaces.UserBodyParser.setUserHandler;
 import static edu.cooper.ece366.RouteInterfaces.UserBodyParser.AuthRoute;
 import edu.cooper.ece366.Endpoints.TripGenAPI;
@@ -11,6 +13,7 @@ import edu.cooper.ece366.Endpoints.TripGenAPI;
 public class Main {
 
     private static UserHandler userHandler;
+    private static GeoLocationHandler geoHandler; 
 
     private static void enableCORS() {
 
@@ -39,7 +42,12 @@ public class Main {
     public static void init() {
         MongoHandler mongoHandler = new MongoHandler();
         userHandler = new UserHandler(mongoHandler);
+<<<<<<< HEAD
+        setUserHandler(userHandler); // initalizes AuthRoute to work properly with the userHandler 
+        geoHandler = new GeoLocationHandler(); 
+=======
         setUserHandler(userHandler); // initalizes AuthRoute to work properly with the userHandler
+>>>>>>> Greg-MapGUI
         enableCORS();
     }
 
