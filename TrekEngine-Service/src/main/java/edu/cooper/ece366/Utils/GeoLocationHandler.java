@@ -1,6 +1,9 @@
 package edu.cooper.ece366.Utils;
 import java.io.IOException;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.maps.GeoApiContext;
 
@@ -62,12 +65,19 @@ public class GeoLocationHandler {
         Response response = client.newCall(request).execute();
         String res = response.body().string().trim();
         JsonObject obj = parseJSON(res); 
-        String polyPoints = obj.get("routes").getAsJsonArray()
+        JsonArray steps = obj.get("routes").getAsJsonArray()
                             .get(0).getAsJsonObject()
-                            .get("overview_polyline").getAsJsonObject()
-                            .get("points").getAsString();
+                            .get("legs").getAsJsonArray().get(0).getAsJsonObject()
+                            .get("steps").getAsJsonArray(); 
+
+        String polylines[] = new String[steps.size()]; 
+
+        int counter = 0; 
+        for(JsonElement step : steps)
+            polylines[counter++] = step.getAsJsonObject().get("polyline").getAsJsonObject().get("points").getAsString();
         
-        return polyPoints; 
+        return new Gson().toJson(polylines); 
+        // return steps.toString();
     }
 
     

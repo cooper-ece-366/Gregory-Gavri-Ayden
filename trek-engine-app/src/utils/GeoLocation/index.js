@@ -1,10 +1,14 @@
 import axios from "axios"; 
-import polyline from "polyline"; 
+// import polyline from "@mapbox/polyline"; 
+import { decode, encode } from "@googlemaps/polyline-codec";
+
 
 // TODO implement backend
 export const getDirection = async (origin, destination)=> {
     const {data} = await axios.get(`http://localhost:4567/api/v1/geo/direction?start=${origin}&end=${destination}`);  
-    return polyline.decode(data).reverse();
+    const result = data.map(decode).reduce((acc,x)=>[...acc,...x],[]).map(([first,second])=>[second/100000,first/100000]); 
+    console.log(result); 
+    return result;
 }
 
 export const getLatLng = async (address)=> {
