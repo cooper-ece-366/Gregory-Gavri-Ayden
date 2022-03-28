@@ -31,12 +31,10 @@ const EditableText = (props) => {
 
     const handleEditClick = () => {
         setIsEdit(true);
-        console.log("edit clicked");
     }
 
     useEffect(() => {
         document.addEventListener("click", handleClickOutside, false);
-        // add listerner for enter key
         document.addEventListener("keydown", handleKeyDown, false);
       }, []);
 
@@ -58,7 +56,7 @@ const EditableText = (props) => {
 
     const getTextComponent = () => {
         if (isEdit) {
-            return <input style={styleSheet.input} type="text" value={text} onChange={changeText}></input>
+            return <input style={styleSheet.input} autoFocus type="text" value={text} onChange={changeText}></input>
         } else {
             return <h1 style={styleSheet.text}>{text}</h1>
         }

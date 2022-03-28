@@ -2,8 +2,8 @@
 import React, { useState } from 'react';
 import { WithContext as ReactTags } from 'react-tag-input';
 import Multiselect from 'multiselect-react-dropdown';
-import AutoComplete from "../AutoComplete"
-import EditableText from '../EditableText';
+import AutoComplete from "./AutoComplete"
+import EditableText from './EditableText';
 
 const styleSheet = {
     container: {
