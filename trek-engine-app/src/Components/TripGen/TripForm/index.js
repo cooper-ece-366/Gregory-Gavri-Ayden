@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { WithContext as ReactTags } from 'react-tag-input';
 import Multiselect from 'multiselect-react-dropdown';
-
+import AutoComplete from "../AutoComplete"
+import axios from "axios"; 
 const styleSheet = {
     container: {
         width: "250px",
@@ -75,7 +76,7 @@ const TripForm = (props) => {
         }
     }
 
-    const handleFormSubmit = (e) => {
+    const handleFormSubmit = async (e) => {
         e.preventDefault();
 
         let finalDays = days;
@@ -96,8 +97,6 @@ const TripForm = (props) => {
             required: finalRequired,
             prefs
         }
-
-        console.log(data);
     }
 
     const handleFromChange = (e) => setFrom(e.target.value);
@@ -126,9 +125,12 @@ const TripForm = (props) => {
             <h1>Build Your Trip Here!</h1>
             <form style={styleSheet.form} onSubmit={handleFormSubmit}>
                 From
-                <input type="text" onChange={handleFromChange} placeholder="Start Location" style={{ ...styleSheet.startInput, ...styleSheet.textInput }}></input>
+                <AutoComplete setName={setFrom}/>
+                {/* <input type="text" onChange={handleFromChange} placeholder="Start Location" style={{ ...styleSheet.startInput, ...styleSheet.textInput }}></input> */}
+                
                 To
-                <input type="text" onChange={handleToChange} placeholder="End Location" style={{ ...styleSheet.endInput, ...styleSheet.textInput }}></input>
+                <AutoComplete setName={setTo}/>
+                {/*<input type="text" onChange={handleToChange} placeholder="End Location" style={{ ...styleSheet.endInput, ...styleSheet.textInput }}></input>*/}
                 <hr />
                 <select onChange={handleDurationChange}>
                     <option value="0">My Trip will take...</option>

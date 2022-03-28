@@ -4,13 +4,17 @@ import static spark.Spark.*;
 
 import edu.cooper.ece366.Mongo.MongoHandler;
 import edu.cooper.ece366.Mongo.User.UserHandler;
+import edu.cooper.ece366.Utils.GeoLocationHandler;
+
 import static edu.cooper.ece366.RouteInterfaces.UserBodyParser.setUserHandler;
-import static edu.cooper.ece366.RouteInterfaces.UserBodyParser.AuthRoute;
 import edu.cooper.ece366.Endpoints.TripGenAPI;
+import edu.cooper.ece366.Endpoints.GeoLocAPI;
+import edu.cooper.ece366.Endpoints.UserAPI;
 
 public class Main {
 
     private static UserHandler userHandler;
+    private static GeoLocationHandler geoHandler; 
 
     private static void enableCORS() {
 
@@ -39,20 +43,20 @@ public class Main {
     public static void init() {
         MongoHandler mongoHandler = new MongoHandler();
         userHandler = new UserHandler(mongoHandler);
-        setUserHandler(userHandler); // initalizes AuthRoute to work properly with the userHandler
+        setUserHandler(userHandler); // initalizes AuthRoute to work properly with the userHandler 
+        geoHandler = new GeoLocationHandler(); 
         enableCORS();
     }
 
     public static void paths() {
         // login post request authenticator and returns a user object to the client
-        path("/user", () -> {
-            post("/me", (AuthRoute) (req, res, body, user) -> user.toJSONString());
-        });
+        UserAPI.paths(userHandler); 
+        TripGenAPI.paths(); 
+        GeoLocAPI.paths(geoHandler); 
     }
 
     public static void main(String[] args) {
         init();
         path("/api/v1", Main::paths);
-        path("/api/v1", TripGenAPI::paths);
     }
 }

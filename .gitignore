@@ -31,3 +31,5 @@ trek-engine-app/src/env.js
 */env.js
 */build.sh
 */run.sh
+
+*/.DS_Store
