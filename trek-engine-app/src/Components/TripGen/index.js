@@ -17,6 +17,19 @@ const styleSheet = {
     contentContainer: {
         paddingTop:"70px",
         width:"25%"
+    },
+    floatingMenu:{
+        position: "fixed",
+        zIndex: "2",
+        height: "80%",
+        width: "20%",
+        backgroundColor: "#ffffff",
+        borderRadius: "10px",
+        bottom: "10%",
+        left: "2.5%",
+        minWidth: "200px",
+        boxShadow: "0px 0px 50px #000000",
+        display: "flex",
     }
 }
 
@@ -25,10 +38,13 @@ const TripGen = (props) => {
     const mapRef = useRef(null);
     return (
         <div style={styleSheet.fullPage}>
-            <div style={styleSheet.contentContainer}>
+            {/* <div style={styleSheet.contentContainer}>
                 <div onClick={()=>{mapRef.current.addPath("NY","LA","NY-LA")}}>NY-LA Trip</div>
-            </div>
+            </div> */}
             <Map ref={mapRef}/>
+            <div style={styleSheet.floatingMenu}>
+                <TripForm />
+            </div>
         </div>
     );
 }

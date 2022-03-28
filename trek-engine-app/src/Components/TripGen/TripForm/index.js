@@ -1,11 +1,13 @@
+// Written by Gavri Kepets
 import React, { useState } from 'react';
 import { WithContext as ReactTags } from 'react-tag-input';
 import Multiselect from 'multiselect-react-dropdown';
 import AutoComplete from "../AutoComplete"
-import axios from "axios"; 
+import EditableText from '../EditableText';
+
 const styleSheet = {
     container: {
-        width: "250px",
+        width: "100%",
     },
     form: {
         display: "flex",
@@ -44,6 +46,7 @@ const TripForm = (props) => {
     const [endDate, setEndDate] = useState("");
     const [required, setRequired] = useState([]);
     const [prefs, setPrefs] = useState([]);
+    const [tripName, setTripName] = useState("Trip 1");
 
     const options = [
         { name: "National Parks", value: 0 },
@@ -122,7 +125,7 @@ const TripForm = (props) => {
 
     return (
         <div style={styleSheet.container}>
-            <h1>Build Your Trip Here!</h1>
+            <EditableText text="Trip 1" />
             <form style={styleSheet.form} onSubmit={handleFormSubmit}>
                 From
                 <AutoComplete setName={setFrom}/>
