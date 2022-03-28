@@ -42,7 +42,6 @@ const Map = ({lng_i=-87.65,lat_i=41.84},ref) => {
 
     const addPath = async (start,end,id)=>{
         const coordinates = await getDirection(start,end);
-        console.log(coordinates);
         addMarkerLngLat(coordinates[0][0],coordinates[0][1],`start-${id}`);
         addMarkerLngLat(coordinates[coordinates.length-1][0],coordinates[coordinates.length-1][1],`end-${id}`);
         paths.current[id] = map.current.addLayer({

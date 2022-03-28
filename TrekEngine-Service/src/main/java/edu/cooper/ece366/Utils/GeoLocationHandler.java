@@ -18,7 +18,6 @@ public class GeoLocationHandler {
     private final String API_KEY; 
     private GeoApiContext context;
 
-
     public GeoLocationHandler(){
         API_KEY = System.getenv("GOOGLE_API_KEY"); 
         context = new GeoApiContext.Builder()
@@ -42,7 +41,7 @@ public class GeoLocationHandler {
         return location; 
     }
 
-    public String searchMultiple(String search) throws IOException{ //throws ApiException, InterruptedException,IOException
+    public String searchMultiple(String search) throws IOException{ 
 
         OkHttpClient client = new OkHttpClient().newBuilder()
             .build();
@@ -55,7 +54,7 @@ public class GeoLocationHandler {
         return res; 
     }
 
-    public String directions(String start, String end) throws IOException{ //throws ApiException, InterruptedException,IOException
+    public String directions(String start, String end) throws IOException{ 
         OkHttpClient client = new OkHttpClient().newBuilder()
             .build();
         Request request = new Request.Builder()
@@ -72,13 +71,9 @@ public class GeoLocationHandler {
 
         String polylines[] = new String[steps.size()]; 
 
-        int counter = 0; 
-        for(JsonElement step : steps)
-            polylines[counter++] = step.getAsJsonObject().get("polyline").getAsJsonObject().get("points").getAsString();
+        for(int i = 0; i<steps.size(); i++)
+            polylines[i] = steps.get(i).getAsJsonObject().get("polyline").getAsJsonObject().get("points").getAsString();
         
         return new Gson().toJson(polylines); 
-        // return steps.toString();
     }
-
-    
 }
