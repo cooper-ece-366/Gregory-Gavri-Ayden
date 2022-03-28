@@ -3,7 +3,6 @@ import Header from "./Components/Header";
 import UserContext from "./Contexts/UserContext";
 import TripGen from "./Components/TripGen";
 import Home from "./Components/Home";
-import Explore from "./Components/Explore";
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
@@ -28,7 +27,6 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/tripgen" element={<TripGen />} />
-            <Route path="/explore" element={<Explore />} />
           </Routes>
         </BrowserRouter>
       </div>
