@@ -8,10 +8,16 @@ import EditableText from './EditableText';
 const styleSheet = {
     container: {
         width: "100%",
+        background: "linear-gradient(180deg, #050D2B 0%, #010514 100%)",
+        borderRadius: "10px",
+        color: "white",
     },
     form: {
         display: "flex",
         flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        width: "100%",
     },
     duration: {
         display: "flex",
@@ -34,6 +40,11 @@ const styleSheet = {
         background: "linear-gradient(to right, #500000, #ff0000)",
         borderImageSlice: "1",
         color: "white",
+    },
+    text:{
+        fontSize: "25px",
+        marginTop: "20px",
+        marginBottom: "5px",
     }
 }
 
@@ -102,10 +113,6 @@ const TripForm = (props) => {
         }
     }
 
-    const handleFromChange = (e) => setFrom(e.target.value);
-
-    const handleToChange = (e) => setTo(e.target.value);
-
     const handleDayChange = (e) => setDays(e.target.value);
 
     const handleStartDateChange = (e) => setStartDate(e.target.value);
@@ -127,13 +134,11 @@ const TripForm = (props) => {
         <div style={styleSheet.container}>
             <EditableText text="Trip 1" />
             <form style={styleSheet.form} onSubmit={handleFormSubmit}>
-                From
-                <AutoComplete setName={setFrom}/>
-                {/* <input type="text" onChange={handleFromChange} placeholder="Start Location" style={{ ...styleSheet.startInput, ...styleSheet.textInput }}></input> */}
+                <div style={styleSheet.text}>From</div>
+                <AutoComplete setName={setFrom} inputColor="#00ff00"/>
                 
-                To
-                <AutoComplete setName={setTo}/>
-                {/*<input type="text" onChange={handleToChange} placeholder="End Location" style={{ ...styleSheet.endInput, ...styleSheet.textInput }}></input>*/}
+                <div style={styleSheet.text}>To</div>
+                <AutoComplete setName={setTo} inputColor="#ff0000"/>
                 <hr />
                 <select onChange={handleDurationChange}>
                     <option value="0">My Trip will take...</option>

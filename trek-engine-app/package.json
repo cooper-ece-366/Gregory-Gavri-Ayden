@@ -20,6 +20,8 @@
     "react-scripts": "5.0.0",
     "react-select": "^5.2.2",
     "react-tag-input": "^6.8.0",
+    "tinycolor": "0.0.1",
+    "tinycolor2": "^1.4.2",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
