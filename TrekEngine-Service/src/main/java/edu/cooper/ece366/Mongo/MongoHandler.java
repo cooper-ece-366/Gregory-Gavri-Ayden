@@ -30,4 +30,8 @@ public class MongoHandler {
         return db.getCollection(name);
     }
 
+    public MongoCollection<Document> getCollection(String name, Class<?> clazz) {
+        return db.getCollection(name);
+    }
+
 }
