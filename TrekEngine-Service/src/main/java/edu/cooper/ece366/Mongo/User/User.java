@@ -37,8 +37,6 @@ public class User {
         return email; 
     }
   
-
-    
     public String toJSONString() {
         return new Gson().toJson(this);
     }

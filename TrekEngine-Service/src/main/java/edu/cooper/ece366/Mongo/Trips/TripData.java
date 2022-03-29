@@ -1,6 +1,5 @@
 package edu.cooper.ece366.Mongo.Trips;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.bson.codecs.pojo.annotations.BsonCreator;

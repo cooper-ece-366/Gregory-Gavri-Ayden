@@ -1,5 +1,6 @@
 package edu.cooper.ece366;
 
+import org.bson.Document;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,7 +12,7 @@ import com.mongodb.client.model.Filters;
 public class CollectionHandlerUnitTest {
 
     private static MongoHandler mongoHandler;
-    private CollectionHandler underTest;
+    private CollectionHandler<Document> underTest;
 
 
     @BeforeAll
@@ -22,7 +23,7 @@ public class CollectionHandlerUnitTest {
 
     @BeforeEach
     public void reset() {
-        underTest = new CollectionHandler(mongoHandler, "testCollection");
+        underTest = new CollectionHandler(mongoHandler, "testCollection", Document.class);
     }
 
     @Test

@@ -1,6 +1,7 @@
 package edu.cooper.ece366.Mongo.Trips;
 
-import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
@@ -8,26 +9,26 @@ import org.bson.codecs.pojo.annotations.BsonProperty;
 import edu.cooper.ece366.Mongo.SerializingInterface;
 
 public class Detail implements SerializingInterface {
-    @BsonProperty("startDate") private final String startDate;
+    @BsonProperty("startDate") private final Date startDate;
     @BsonProperty("tripLength") private final Integer tripLength;
-    @BsonProperty("tags") private final ArrayList<Tag> tags;
+    @BsonProperty("tags") private final List<Tag> tags;
     
     @BsonCreator
     public Detail(
-        @BsonProperty("startDate") String startDate,
+        @BsonProperty("startDate") Date startDate,
         @BsonProperty("tripLength") Integer tripLength, 
-        @BsonProperty("tags") ArrayList<Tag> tags) {
+        @BsonProperty("tags") List<Tag> tags) {
         this.startDate = startDate;
         this.tripLength = tripLength;
         this.tags = tags;
     }
-    public String getStartDate(){
+    public Date getStartDate(){
         return startDate; 
     }
     public Integer getTripLength(){
         return tripLength; 
     }
-    public ArrayList<Tag> getTags(){
+    public List<Tag> getTags(){
         return tags; 
     }
 

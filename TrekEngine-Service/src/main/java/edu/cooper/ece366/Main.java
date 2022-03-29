@@ -7,7 +7,7 @@ import edu.cooper.ece366.Mongo.Trips.TripHandler;
 import edu.cooper.ece366.Mongo.User.UserHandler;
 import edu.cooper.ece366.Utils.GeoLocationHandler;
 
-import static edu.cooper.ece366.RouteInterfaces.UserBodyParser.setUserHandler;
+import edu.cooper.ece366.RouteInterfaces.UserBodyParser;
 import edu.cooper.ece366.Endpoints.TripGenAPI;
 import edu.cooper.ece366.Endpoints.GeoLocAPI;
 import edu.cooper.ece366.Endpoints.UserAPI;
@@ -45,8 +45,8 @@ public class Main {
     public static void init() {
         MongoHandler mongoHandler = new MongoHandler();
         userHandler = new UserHandler(mongoHandler);
+        UserBodyParser.setUserHandler(userHandler); // initalizes AuthRoute to work properly with the userHandler 
         tripHandler = new TripHandler(mongoHandler);
-        setUserHandler(userHandler); // initalizes AuthRoute to work properly with the userHandler 
         geoHandler = new GeoLocationHandler(); 
         enableCORS();
     }
@@ -54,7 +54,7 @@ public class Main {
     public static void paths() {
         // login post request authenticator and returns a user object to the client
         UserAPI.paths(userHandler); 
-        TripGenAPI.paths(tripHandler); 
+        TripGenAPI.paths(tripHandler,userHandler); 
         GeoLocAPI.paths(geoHandler); 
     }
 
