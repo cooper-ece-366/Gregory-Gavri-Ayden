@@ -8,6 +8,7 @@ public class GeoLocAPI {
         path("/geo", () -> {
             get("/direction", (req, res) -> geoHandler.directions(req.queryParams("start"), req.queryParams("end")));
             get("/search", (req, res) -> geoHandler.search(req.queryParams("search")));
+            get("/nearby", (req, res) -> geoHandler.nearby(req.queryParams("location"), req.queryParams("type")));
         });
     }
 }

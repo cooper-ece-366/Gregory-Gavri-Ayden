@@ -14,6 +14,16 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class GeoLocationHandler {
+    private class Data {
+        public double lng; 
+        public double lat; 
+        public String name; 
+        public Data(double lng, double lat, String name){
+            this.lng = lng
+            this.lat = lat
+            this.name = name
+        }
+    }
 
     private final String API_KEY; 
     private GeoApiContext context;
@@ -41,17 +51,28 @@ public class GeoLocationHandler {
         return location; 
     }
 
-    public String searchMultiple(String search) throws IOException{ 
+    public String nearby(String location, String type) throws IOException{ 
 
         OkHttpClient client = new OkHttpClient().newBuilder()
             .build();
         Request request = new Request.Builder()
-            .url("https://maps.googleapis.com/maps/api/place/textsearch/json?query=" + search +"&inputtype=textquery&fields=formatted_address%2Cname%2Crating%2Cgeometry&key=" + API_KEY)
+            .url("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + location + "&radius=8000&type=" + type + "&key=" + API_KEY)
             .method("GET", null)
             .build();
         Response response = client.newCall(request).execute();
         String res = response.body().string().trim();
-        return res; 
+        JsonObject obj = parseJSON(res); 
+        JsonArray results = obj.get("results").getAsJsonArray();
+
+        String places[] = new Data[results.size()]; 
+        System.out.println(results.size());
+        for(int i = 0; i<results.size(); i++)
+            
+            Data temp = new Data(results.get(i).getAsJsonObject().get("name").getAsString(), results.get(i).getAsJsonObject().get("geometry").getAsString());
+            temp
+            names[i] = results.get(i).getAsJsonObject().get("name").getAsString();
+ 
+        return new Gson().toJson(names); 
     }
 
     public String directions(String start, String end) throws IOException{ 
