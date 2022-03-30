@@ -52,12 +52,12 @@ public class GeoLocationHandler {
         return location; 
     }
 
-    public String nearby(String location, String type) throws IOException{ 
+    public String nearby(String location, String type, String radius) throws IOException{ 
 
         OkHttpClient client = new OkHttpClient().newBuilder()
             .build();
         Request request = new Request.Builder()
-            .url("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + location + "&radius=8000&type=" + type + "&key=" + API_KEY)
+            .url("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + location + "&type=" + type + "&radius=" + radius + "&key=" + API_KEY)
             .method("GET", null)
             .build();
         Response response = client.newCall(request).execute();
@@ -69,10 +69,11 @@ public class GeoLocationHandler {
 
         String name;
         JsonObject local;
+        Data temp;
         for(int i = 0; i < results.size(); i++){
             name = results.get(i).getAsJsonObject().get("name").getAsString();
             local = results.get(i).getAsJsonObject().get("geometry").getAsJsonObject().get("location").getAsJsonObject();
-            Data temp = new Data(name, local.get("lng").getAsDouble(), local.get("lat").getAsDouble());
+            temp = new Data(name, local.get("lng").getAsDouble(), local.get("lat").getAsDouble());
             places[i] = temp;
         }
         return new Gson().toJson(places); 
