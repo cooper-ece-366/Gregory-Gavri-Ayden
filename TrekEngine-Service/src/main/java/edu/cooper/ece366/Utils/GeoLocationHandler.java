@@ -15,13 +15,14 @@ import okhttp3.Response;
 
 public class GeoLocationHandler {
     private class Data {
+        public String name; 
         public double lng; 
         public double lat; 
-        public String name; 
-        public Data(double lng, double lat, String name){
-            this.lng = lng
-            this.lat = lat
-            this.name = name
+        
+        public Data(String name, double lng, double lat){
+            this.name = name;
+            this.lng = lng;
+            this.lat = lat;
         }
     }
 
@@ -64,15 +65,17 @@ public class GeoLocationHandler {
         JsonObject obj = parseJSON(res); 
         JsonArray results = obj.get("results").getAsJsonArray();
 
-        String places[] = new Data[results.size()]; 
-        System.out.println(results.size());
-        for(int i = 0; i<results.size(); i++)
-            
-            Data temp = new Data(results.get(i).getAsJsonObject().get("name").getAsString(), results.get(i).getAsJsonObject().get("geometry").getAsString());
-            temp
-            names[i] = results.get(i).getAsJsonObject().get("name").getAsString();
- 
-        return new Gson().toJson(names); 
+        Data places[] = new Data[results.size()]; 
+
+        String name;
+        JsonObject local;
+        for(int i = 0; i < results.size(); i++){
+            name = results.get(i).getAsJsonObject().get("name").getAsString();
+            local = results.get(i).getAsJsonObject().get("geometry").getAsJsonObject().get("location").getAsJsonObject();
+            Data temp = new Data(name, local.get("lng").getAsDouble(), local.get("lat").getAsDouble());
+            places[i] = temp;
+        }
+        return new Gson().toJson(places); 
     }
 
     public String directions(String start, String end) throws IOException{ 
