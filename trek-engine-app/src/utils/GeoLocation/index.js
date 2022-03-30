@@ -15,7 +15,7 @@ export const getLatLng = async (address)=> {
     return [lng, lat];
 }
 
-export const getNearby = async (location)=> {
-    const {data} = await axios.get(`http://localhost:4567/api/v1/geo/near?search=${address}`);  
+export const getNearby = async (location,type,radius)=> {
+    const {data} = await axios.get(`http://localhost:4567/api/v1/geo/nearby?locaton=${location}&type=${type}&radius=${radius}`);  
     return data;
 }
