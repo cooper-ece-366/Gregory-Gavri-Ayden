@@ -3,7 +3,6 @@ package edu.cooper.ece366;
 import static spark.Spark.*;
 
 import edu.cooper.ece366.Mongo.MongoHandler;
-import edu.cooper.ece366.Mongo.Trips.Meta;
 import edu.cooper.ece366.Mongo.Trips.TripHandler;
 import edu.cooper.ece366.Mongo.User.UserHandler;
 import edu.cooper.ece366.Utils.GeoLocationHandler;
