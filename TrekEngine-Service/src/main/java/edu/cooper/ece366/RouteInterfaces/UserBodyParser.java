@@ -44,7 +44,29 @@ public class UserBodyParser {
         String handle(Request req, Response res, JsonObject body, User id_token);
     }
 
-    
+    // interface for the post request to parse the body and and validate user but will still allow non-authenticated users to post
+    public interface QAuthRoute extends Route {
+
+        default Object handle(Request req, Response res) {
+            JsonObject body = parseBody(req);
+            if(body == null) {
+                res.status(400); 
+                return "Invalid JSON";
+            } 
+            if(body.get("id_token") == null) {
+                return handle(req,res, body, null); 
+            }
+            String id_token = body.get("id_token").getAsString();
+            User user; 
+            try {
+                user = userHandler.verifyUser(id_token);
+            } catch (Exception e) {
+                return handle(req,res, body, null);  
+            }
+            return handle(req,res, body, user); 
+        }
+        String handle(Request req, Response res, JsonObject body, User id_token);
+    }
 }
 
 

@@ -1,7 +1,10 @@
 package edu.cooper.ece366.Mongo.Trips;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import com.google.gson.JsonObject;
 
 import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
@@ -22,6 +25,14 @@ public class Detail implements SerializingInterface {
         this.tripLength = tripLength;
         this.tags = tags;
     }
+    public Detail(JsonObject detailObj){
+        this.startDate = new Date (detailObj.get("startDate").getAsLong());
+        this.tripLength = detailObj.get("tripLength").getAsInt();
+        this.tags = new ArrayList<Tag> (); 
+        detailObj.get("tags").getAsJsonArray().forEach(tag -> {
+            this.tags.add(new Tag(tag.getAsJsonObject()));
+        });
+    }
     public Date getStartDate(){
         return startDate; 
     }
@@ -30,6 +41,18 @@ public class Detail implements SerializingInterface {
     }
     public List<Tag> getTags(){
         return tags; 
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) return true;
+        if (!(o instanceof Detail)) {
+            return false;
+        }
+        Detail detail = (Detail) o;
+        return startDate.equals(detail.startDate) &&
+               tripLength.equals(detail.tripLength) &&
+               tags.equals(detail.tags);
     }
 
     

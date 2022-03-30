@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.google.gson.Gson;
 
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeAll;
@@ -44,12 +43,14 @@ public class TripHandlerUnitTest {
             new TripData(new Loacation("start", 70.0,70.0,"city"),new Loacation("end", 80.0,80.0,"city"),new ArrayList<Loacation>()),
             new Detail(new Date(), 10, new ArrayList<Tag>())
         );  
+
+        System.out.println(trip1.getMeta().getIsPrivate());
         // make sure there is a trip in the database 
         underTest.insert(trip1); 
         assert(underTest.getCount() == 1);
 
         // grab from the database and make sure they are equal
-        assert(new Gson().toJson(underTest.getById(trip1.getId()))).equals(new Gson().toJson(trip1)); 
+        assert(underTest.getById(trip1.getId())).equals(trip1); 
     }
 
     @Test

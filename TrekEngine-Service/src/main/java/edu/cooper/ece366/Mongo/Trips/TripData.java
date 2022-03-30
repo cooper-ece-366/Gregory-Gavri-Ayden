@@ -1,6 +1,9 @@
 package edu.cooper.ece366.Mongo.Trips;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import com.google.gson.JsonObject;
 
 import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
@@ -21,6 +24,16 @@ public class TripData implements SerializingInterface{
         this.endLocation = endLocation;
         this.stops = stops;
     }
+
+    public TripData(JsonObject tripObj){
+        this.endLocation = new Loacation(tripObj.get("endLocation").getAsJsonObject());
+        this.startLocation = new Loacation(tripObj.get("startLocation").getAsJsonObject());
+        this.stops = new ArrayList<Loacation> (); 
+        tripObj.get("stops").getAsJsonArray().forEach(stop -> {
+            this.stops.add(new Loacation(stop.getAsJsonObject()));
+        });
+    }
+
     public Loacation getStartLocation(){
         return startLocation; 
     }
@@ -29,6 +42,18 @@ public class TripData implements SerializingInterface{
     }
     public List<Loacation> getStops(){
         return stops; 
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) return true;
+        if (!(o instanceof TripData)) {
+            return false;
+        }
+        TripData trip = (TripData) o;
+        return startLocation.equals(trip.startLocation) &&
+               endLocation.equals(trip.endLocation) &&
+               stops.equals(trip.stops);
     }
     
 }
