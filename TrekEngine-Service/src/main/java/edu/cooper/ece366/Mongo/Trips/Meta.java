@@ -5,7 +5,6 @@ import java.util.Date;
 import com.google.gson.JsonObject;
 
 import org.bson.codecs.pojo.annotations.BsonCreator;
-import org.bson.codecs.pojo.annotations.BsonIgnore;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 
 import edu.cooper.ece366.Mongo.SerializingInterface;

@@ -8,7 +8,6 @@ import org.bson.codecs.pojo.annotations.BsonProperty;
 import org.bson.types.ObjectId;
 
 import edu.cooper.ece366.Mongo.SerializingInterface;
-import edu.cooper.ece366.Mongo.User.UserHandler;
 public class Trip implements SerializingInterface { 
     @BsonProperty("_id") private final ObjectId id;
     @BsonProperty("meta") private final Meta meta;
@@ -49,6 +48,17 @@ public class Trip implements SerializingInterface {
         return details; 
     }
 
+    @Override
+    public boolean equals(Object o){
+        if (o == this) return true;
+        if (!(o instanceof Trip)) {
+            return false;
+        }
+        Trip other = (Trip) o;
+        
+        return this.id.equals(other.getId()) && this.meta.equals(other.getMeta()) && this.tripData.equals(other.getTripData()) && this.details.equals(other.getDetails());
+    }
+
     private class SerializedTrip implements SerializingInterface{
         
         private String _id; 
@@ -68,15 +78,6 @@ public class Trip implements SerializingInterface {
     public String toJSONString() {
         return new Gson().toJson(new SerializedTrip(this));
     }
-    @Override
-    public boolean equals(Object o){
-        if (o == this) return true;
-        if (!(o instanceof Trip)) {
-            return false;
-        }
-        Trip other = (Trip) o;
-        
-        return this.id.equals(other.getId()) && this.meta.equals(other.getMeta()) && this.tripData.equals(other.getTripData()) && this.details.equals(other.getDetails());
-    }
+    
 
 }
