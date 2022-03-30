@@ -12,8 +12,8 @@ import org.bson.codecs.pojo.annotations.BsonProperty;
 import edu.cooper.ece366.Mongo.SerializingInterface;
 
 public class Detail implements SerializingInterface {
-    @BsonProperty("startDate") private final Date startDate;
-    @BsonProperty("tripLength") private final Integer tripLength;
+    @BsonProperty("startDate") private Date startDate;
+    @BsonProperty("tripLength") private Integer tripLength;
     @BsonProperty("tags") private final List<Tag> tags;
     
     @BsonCreator
@@ -36,8 +36,14 @@ public class Detail implements SerializingInterface {
     public Date getStartDate(){
         return startDate; 
     }
+    public void setStartDate(Date startDate){
+        this.startDate = startDate; 
+    }
     public Integer getTripLength(){
         return tripLength; 
+    }
+    public void setTripLength(Integer tripLength){
+        this.tripLength = tripLength; 
     }
     public List<Tag> getTags(){
         return tags; 

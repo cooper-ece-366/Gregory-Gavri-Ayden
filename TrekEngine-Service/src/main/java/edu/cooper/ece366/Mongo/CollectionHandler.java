@@ -6,10 +6,11 @@ import java.util.List;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 
+import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 
-public class CollectionHandler<T> {
+public abstract class CollectionHandler<T extends IDInterface> {
 
     protected MongoCollection<T> collection;
 
@@ -40,6 +41,10 @@ public class CollectionHandler<T> {
 
     public void delete(String objectId){
         delete(new ObjectId(objectId));
+    }
+
+    public void update(T obj){
+        collection.updateOne(Filters.eq("_id",obj.getId()), new Document().append("$set", obj));
     }
 
     public void flush(){

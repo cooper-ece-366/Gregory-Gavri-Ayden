@@ -7,8 +7,9 @@ import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 import org.bson.types.ObjectId;
 
+import edu.cooper.ece366.Mongo.IDInterface;
 import edu.cooper.ece366.Mongo.SerializingInterface;
-public class Trip implements SerializingInterface { 
+public class Trip implements SerializingInterface, IDInterface  { 
     @BsonProperty("_id") private final ObjectId id;
     @BsonProperty("meta") private final Meta meta;
     @BsonProperty("trip") private final TripData tripData;

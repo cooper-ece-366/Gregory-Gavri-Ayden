@@ -2,6 +2,8 @@ package edu.cooper.ece366.Mongo.Trips;
 
 import java.util.ArrayList;
 
+import com.mongodb.client.model.Filters;
+
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
@@ -63,5 +65,10 @@ public class TripHandler extends CollectionHandler<Trip>{
     public ArrayList<Trip> getTripByEndLoc(double lnglb, double lngup, double latlb, double latup){
         return getTripByLoc( lnglb, lngup, latlb, latup, false); 
     }
+
+    // public void updateTrip(Trip trip){
+    //     collection.updateOne(Filters.eq("_id", trip.getId()), new Document().append("$set", trip));  
+    // }
+    
 
 }

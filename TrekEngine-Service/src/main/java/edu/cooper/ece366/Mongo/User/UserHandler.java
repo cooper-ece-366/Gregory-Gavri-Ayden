@@ -37,8 +37,8 @@ public class UserHandler extends CollectionHandler<User>{
 
     public User insertIfNExists(User user){
         Bson update = new Document("$setOnInsert", user);
-        collection.updateOne(Filters.eq("_id",user.getUserId()),update,new UpdateOptions().upsert(true));
-        return getById(user.getUserId());
+        collection.updateOne(Filters.eq("_id",user.getId()),update,new UpdateOptions().upsert(true));
+        return getById(user.getId());
     }
 
     // returns user from userId

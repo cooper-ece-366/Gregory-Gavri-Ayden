@@ -44,7 +44,7 @@ public class TripHandlerUnitTest {
             new Detail(new Date(), 10, new ArrayList<Tag>())
         );  
 
-        System.out.println(trip1.getMeta().getIsPrivate());
+        // System.out.println(trip1.getMeta().getIsPrivate());
         // make sure there is a trip in the database 
         underTest.insert(trip1); 
         assert(underTest.getCount() == 1);
@@ -230,6 +230,25 @@ public class TripHandlerUnitTest {
         // start location by lng lat
         assert(underTest.getTripByStartLoc(-90.0,90.0,60.0,79.0).size() == 2);
 
+    }
+
+    @Test
+    public void testUpdateTrip(){
+        Trip trip = new Trip(
+            new ObjectId(),
+            new Meta("Test Trip 1","Description","email1@gmail.com",false,new Date(),new Date()),
+            new TripData(new Loacation("Chicago", 80.0,70.0,"city"),new Loacation("LA", 80.0,80.0,"city"),new ArrayList<Loacation>()),
+            new Detail(new Date(), 10, new ArrayList<Tag>())
+        );
+        underTest.insert(trip);
+        
+        assert(underTest.getCount() == 1);
+
+        trip.getTripData().addStop(new Loacation("YellowStone", 80.0,70.0,"park"));
+
+        underTest.update(trip);
+        assert(underTest.getById(trip.getId()).getTripData().getStops().size() == 1);
+        assert(underTest.getById(trip.getId()).equals(trip)); 
     }
         
 }

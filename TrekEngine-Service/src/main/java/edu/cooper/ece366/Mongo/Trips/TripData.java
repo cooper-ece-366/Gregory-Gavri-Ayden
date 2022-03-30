@@ -11,8 +11,8 @@ import org.bson.codecs.pojo.annotations.BsonProperty;
 import edu.cooper.ece366.Mongo.SerializingInterface;
 
 public class TripData implements SerializingInterface{
-    @BsonProperty("startLocation") private final Loacation startLocation;
-    @BsonProperty("endLocation") private final Loacation endLocation;
+    @BsonProperty("startLocation") private Loacation startLocation;
+    @BsonProperty("endLocation") private Loacation endLocation;
     @BsonProperty("stops") private final List<Loacation> stops;
 
     @BsonCreator
@@ -37,11 +37,25 @@ public class TripData implements SerializingInterface{
     public Loacation getStartLocation(){
         return startLocation; 
     }
+    public void setStartLocation(Loacation startLocation){
+        this.startLocation = startLocation; 
+    }
     public Loacation getEndLocation(){
         return endLocation; 
     }
+    public void setEndLocation(Loacation endLocation){
+        this.endLocation = endLocation; 
+    }
     public List<Loacation> getStops(){
         return stops; 
+    }
+
+    public void addStop(Loacation stop, int index){
+        this.stops.add(index, stop);
+    }
+
+    public void addStop(Loacation stop){
+        this.stops.add(stop);
     }
 
     @Override

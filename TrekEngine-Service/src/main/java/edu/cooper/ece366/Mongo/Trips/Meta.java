@@ -13,12 +13,12 @@ import edu.cooper.ece366.Mongo.User.UserHandler;
 
 
 public class Meta implements SerializingInterface{
-    @BsonProperty("name") private final String name;
-    @BsonProperty("description") private final String description;
+    @BsonProperty("name") private String name;
+    @BsonProperty("description") private String description;
     @BsonProperty("user") private final String user;
-    @BsonProperty("private") private final Boolean isPrivate;
+    @BsonProperty("private") private Boolean isPrivate;
     @BsonProperty("created") private final Date created;
-    @BsonProperty("updated") private final Date updated;
+    @BsonProperty("updated") private Date updated;
 
 
     @BsonCreator
@@ -54,9 +54,15 @@ public class Meta implements SerializingInterface{
     public String getName(){
         return name; 
     }
+
+    public void setName(String name){
+        this.name = name; 
+    }
     public String getDescription(){
         return description; 
-
+    }
+    public void setDescription(String description){
+        this.description = description; 
     }
     public String getUser(){
         return user; 
@@ -64,11 +70,17 @@ public class Meta implements SerializingInterface{
     public Boolean getIsPrivate(){
         return isPrivate; 
     }
+    public void setIsPrivate(Boolean isPrivate){
+        this.isPrivate = isPrivate; 
+    }
     public Date getCreated(){
         return created; 
     }
     public Date getUpdated(){
         return updated; 
+    }
+    public void setUpdated(Date updated){
+        this.updated = updated; 
     }
 
     @Override
