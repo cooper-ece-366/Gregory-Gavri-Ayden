@@ -3,7 +3,6 @@ import axios from "axios";
 import { decode } from "@googlemaps/polyline-codec";
 
 
-// TODO implement backend
 export const getDirection = async (origin, destination)=> {
     const {data} = await axios.get(`http://localhost:4567/api/v1/geo/direction?start=${origin}&end=${destination}`);  
     const result = data.map(x=>decode(x,5)).reduce((acc,x)=>[...acc,...x],[]).map(([first,second])=>[second,first]); 
