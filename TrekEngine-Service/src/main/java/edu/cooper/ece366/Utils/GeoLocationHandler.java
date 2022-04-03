@@ -97,7 +97,7 @@ public class GeoLocationHandler {
         return new Gson().toJson(places); 
     }
 
-    public String directions(String start, String end) throws IOException{ 
+    public String directions(JsonArray stops) throws IOException{ 
         OkHttpClient client = new OkHttpClient().newBuilder()
             .build();
         Request request = new Request.Builder()
