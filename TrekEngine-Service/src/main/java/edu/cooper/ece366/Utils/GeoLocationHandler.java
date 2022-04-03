@@ -18,11 +18,13 @@ public class GeoLocationHandler {
         public String name; 
         public double lng; 
         public double lat; 
-        
-        public Data(String name, double lng, double lat){
+        public String[] types = new String[0];
+
+        public Data(String name, double lng, double lat, String[] types){
             this.name = name;
             this.lng = lng;
             this.lat = lat;
+            this.types = types;
         }
     }
 
@@ -36,20 +38,32 @@ public class GeoLocationHandler {
             .build();
     }
 
-    public String search(String search) throws IOException {
+    public String[] getTypes(JsonArray J_types){
+        
+        String types[] = new String[J_types.size()];
+        for(int i = 0; i < J_types.size(); i++){
+            types[i] = J_types.get(i).getAsString();
+        }
+        return types;
+    }
+
+    public String search(String address) throws IOException {
         OkHttpClient client = new OkHttpClient().newBuilder()
             .build();
         Request request = new Request.Builder()
-            .url("https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=" + search +"&inputtype=textquery&fields=formatted_address%2Cname%2Crating%2Cgeometry&key=" + API_KEY)
+            .url("https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=" + address +"&inputtype=textquery&fields=formatted_address%2Cname%2Crating%2Cgeometry%2Ctypes&key=" + API_KEY)
             .method("GET", null)
             .build();
         Response response = client.newCall(request).execute();
         String res = response.body().string().trim();
-        JsonObject obj = parseJSON(res); 
-        String location = obj.get("candidates").getAsJsonArray().get(0).getAsJsonObject()
-                            .get("geometry").getAsJsonObject()
-                            .get("location").getAsJsonObject().toString(); 
-        return location; 
+        JsonObject obj = parseJSON(res).get("candidates").getAsJsonArray().get(0).getAsJsonObject();
+
+        Data temp = new Data(obj.get("name").getAsString(), 
+                            obj.get("geometry").getAsJsonObject().get("location").getAsJsonObject().get("lng").getAsDouble(),
+                            obj.get("geometry").getAsJsonObject().get("location").getAsJsonObject().get("lat").getAsDouble(),
+                            getTypes(obj.get("types").getAsJsonArray()));
+
+        return new Gson().toJson(temp); 
     }
 
     public String nearby(String location, String type, String radius) throws IOException{ 
@@ -70,10 +84,14 @@ public class GeoLocationHandler {
         String name;
         JsonObject local;
         Data temp;
+        String types[];
+
         for(int i = 0; i < results.size(); i++){
             name = results.get(i).getAsJsonObject().get("name").getAsString();
             local = results.get(i).getAsJsonObject().get("geometry").getAsJsonObject().get("location").getAsJsonObject();
-            temp = new Data(name, local.get("lng").getAsDouble(), local.get("lat").getAsDouble());
+            types = getTypes(results.get(i).getAsJsonObject().get("types").getAsJsonArray());
+            
+            temp = new Data(name, local.get("lng").getAsDouble(), local.get("lat").getAsDouble(), types);
             places[i] = temp;
         }
         return new Gson().toJson(places); 

@@ -7,7 +7,7 @@ public class GeoLocAPI {
         // login post request authenticator and returns a user object to the client
         path("/geo", () -> {
             get("/direction", (req, res) -> geoHandler.directions(req.queryParams("start"), req.queryParams("end")));
-            get("/search", (req, res) -> geoHandler.search(req.queryParams("search")));
+            get("/search", (req, res) -> geoHandler.search(req.queryParams("address")));
             get("/nearby", (req, res) -> geoHandler.nearby(req.queryParams("location"), req.queryParams("type"), req.queryParams("radius")));
         });
     }
