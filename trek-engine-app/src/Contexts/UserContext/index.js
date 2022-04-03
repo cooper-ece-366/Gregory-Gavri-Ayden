@@ -12,8 +12,8 @@ const UserContext = ({children}) => {
     
     const login = async (g_api_obj) => {
         const {data: db_user} = await axios.post("http://localhost:4567/api/v1/user/me", {id_token: g_api_obj.tokenObj.id_token}); 
-        setUser(db_user);
         api_obj.current = g_api_obj;
+        setUser(db_user);
         const refresh = async () => {
             api_obj.current = await api_obj.current.reloadAuthResponse();
             setTimeout(refresh, api_obj.current.expires_in * 1000);

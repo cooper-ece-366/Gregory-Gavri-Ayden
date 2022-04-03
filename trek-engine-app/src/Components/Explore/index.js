@@ -1,5 +1,5 @@
 import {useRef} from "react"; 
-import Map from "../Map"; 
+import Map from "../Utils/Map"; 
 
 const styleSheet = {
     fullPage: {
