@@ -18,7 +18,7 @@ public class GeoLocationHandler {
         public String name; 
         public double lng; 
         public double lat; 
-        public String[] types = new String[0];
+        public String[] types;
 
         public Data(String name, double lng, double lat, String[] types){
             this.name = name;
