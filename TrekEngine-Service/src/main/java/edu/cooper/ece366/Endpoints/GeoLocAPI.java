@@ -10,7 +10,7 @@ public class GeoLocAPI {
             // get("/direction", (req, res) -> geoHandler.directions(req.queryParams("start"), req.queryParams("end")));
             get("/search", (req, res) -> geoHandler.search(req.queryParams("address")));
             get("/nearby", (req, res) -> geoHandler.nearby(req.queryParams("location"), req.queryParams("type"), req.queryParams("radius")));
-            post("/direction", (BodyParserRoute)(req,res,body)->{
+            post("/directions", (BodyParserRoute)(req,res,body)->{
                 try {
                     return geoHandler.directions(body.get("stops").getAsJsonArray()); 
                 } catch (Exception e){

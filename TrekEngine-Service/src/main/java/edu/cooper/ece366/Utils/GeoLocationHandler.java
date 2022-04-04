@@ -97,11 +97,23 @@ public class GeoLocationHandler {
         return new Gson().toJson(places); 
     }
 
-    public String directions(JsonArray stops) throws IOException{ 
+    public String directions(JsonArray stops) throws IOException{
+
+        String start = stops.get(0).getAsString();
+        String end = stops.get(stops.size()-1).getAsString();
+        String waypoints = "";
+
+        for(int i = 1; i < stops.size()-1; i++){
+            String or = "";
+            if(i != 1)
+                or = "|";
+            waypoints = waypoints + or + "via:" + stops.get(i).getAsString();
+        }
+
         OkHttpClient client = new OkHttpClient().newBuilder()
             .build();
         Request request = new Request.Builder()
-            .url("https://maps.googleapis.com/maps/api/directions/json?origin=" + start + "&destination=" + end + "&key=" + API_KEY)
+            .url("https://maps.googleapis.com/maps/api/directions/json?origin=" + start + "&destination=" + end + "&waypoints=" + waypoints + "&key=" + API_KEY)
             .method("GET", null)
             .build();
         Response response = client.newCall(request).execute();
@@ -111,7 +123,7 @@ public class GeoLocationHandler {
                             .get(0).getAsJsonObject()
                             .get("legs").getAsJsonArray().get(0).getAsJsonObject()
                             .get("steps").getAsJsonArray(); 
-
+        System.out.println(res);
         String polylines[] = new String[steps.size()]; 
 
         for(int i = 0; i<steps.size(); i++)
