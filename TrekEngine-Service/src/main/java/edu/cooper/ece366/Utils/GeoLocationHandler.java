@@ -1,5 +1,6 @@
 package edu.cooper.ece366.Utils;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -45,6 +46,18 @@ public class GeoLocationHandler {
             types[i] = J_types.get(i).getAsString();
         }
         return types;
+    }
+
+    public int[] getIndexes(int n){
+        int indexes[] = new int[(int)Math.ceil((double)n/10)+1];
+        indexes[0] = 0;
+        for(int i = 1; i < (int)Math.ceil((double)n/10)+1; i++){
+            if(indexes[i-1] + 9 > n)
+                indexes[i] = n-1;
+            else
+                indexes[i] = indexes[i-1] + 9;
+        }
+        return indexes;
     }
 
     public String search(String address) throws IOException {
@@ -98,37 +111,41 @@ public class GeoLocationHandler {
     }
 
     public String directions(JsonArray stops) throws IOException{
-
-        String start = stops.get(0).getAsString();
-        String end = stops.get(stops.size()-1).getAsString();
-        String waypoints = "";
-
-        for(int i = 1; i < stops.size()-1; i++){
-            String or = "";
-            if(i != 1)
-                or = "|";
-            waypoints = waypoints + or + "via:" + stops.get(i).getAsString();
-        }
-
-        OkHttpClient client = new OkHttpClient().newBuilder()
-            .build();
-        Request request = new Request.Builder()
-            .url("https://maps.googleapis.com/maps/api/directions/json?origin=" + start + "&destination=" + end + "&waypoints=" + waypoints + "&key=" + API_KEY)
-            .method("GET", null)
-            .build();
-        Response response = client.newCall(request).execute();
-        String res = response.body().string().trim();
-        JsonObject obj = parseJSON(res); 
-        JsonArray steps = obj.get("routes").getAsJsonArray()
-                            .get(0).getAsJsonObject()
-                            .get("legs").getAsJsonArray().get(0).getAsJsonObject()
-                            .get("steps").getAsJsonArray(); 
-        System.out.println(res);
-        String polylines[] = new String[steps.size()]; 
-
-        for(int i = 0; i<steps.size(); i++)
-            polylines[i] = steps.get(i).getAsJsonObject().get("polyline").getAsJsonObject().get("points").getAsString();
         
-        return new Gson().toJson(polylines); 
+        int indexes[] = getIndexes(stops.size());
+        ArrayList<String> polylines = new ArrayList<String>();
+
+        for(int i = 0; i < indexes.length-1; i++){
+            String start = stops.get(indexes[i]).getAsString();
+            String end = stops.get(indexes[i+1]).getAsString();
+            String waypoints = "";
+            
+            for(int j = indexes[i]+1; j < indexes[i+1]; j++){
+                String or = "";
+                if(j != indexes[i]+1)
+                    or = "|";
+                waypoints = waypoints + or + "via:" + stops.get(j).getAsString();
+            }
+
+            OkHttpClient client = new OkHttpClient().newBuilder()
+                .build();
+            Request request = new Request.Builder()
+                .url("https://maps.googleapis.com/maps/api/directions/json?origin=" + start + "&destination=" + end + "&waypoints=" + waypoints + "&key=" + API_KEY)
+                .method("GET", null)
+                .build();
+            Response response = client.newCall(request).execute();
+            String res = response.body().string().trim();
+            JsonObject obj = parseJSON(res); 
+            JsonArray steps = obj.get("routes").getAsJsonArray()
+                                .get(0).getAsJsonObject()
+                                .get("legs").getAsJsonArray().get(0).getAsJsonObject()
+                                .get("steps").getAsJsonArray();
+            
+            for(int k = 0; k<steps.size(); k++){
+                System.out.println(steps.get(k).getAsJsonObject().get("html_instructions"));
+                polylines.add(steps.get(k).getAsJsonObject().get("polyline").getAsJsonObject().get("points").getAsString());
+            }
+        }
+        return new Gson().toJson(polylines);
     }
 }
