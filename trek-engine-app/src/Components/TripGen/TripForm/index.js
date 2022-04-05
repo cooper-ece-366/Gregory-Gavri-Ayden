@@ -5,7 +5,7 @@ import Multiselect from 'multiselect-react-dropdown';
 import AutoComplete from "./AutoComplete"
 import EditableText from './EditableText';
 import CustomSelect from '../../Utils/CustomSelect';
-import CustomInput from '../../Utils/CustomInput';
+import DaysInput from './DaysInput';
 
 const styleSheet = {
     container: {
@@ -28,20 +28,6 @@ const styleSheet = {
     textInput: {
         margin: "10px",
         padding: "10px",
-    },
-    startInput: {
-        borderRadius: "10px",
-        borderWidth: "1px",
-        background: "linear-gradient(to right, #005000, #00ff00)",
-        borderImageSlice: "1",
-        color: "white",
-    },
-    endInput: {
-        borderRadius: "10px",
-        borderWidth: "1px",
-        background: "linear-gradient(to right, #500000, #ff0000)",
-        borderImageSlice: "1",
-        color: "white",
     },
     text: {
         fontSize: "25px",
@@ -76,7 +62,7 @@ const TripForm = (props) => {
     const getDurationMenu = () => {
         if (duration == 0) {
             return (
-                <CustomInput type="number" onChange={handleDayChange}></CustomInput>
+                <DaysInput type="number" onChange={handleDayChange}></DaysInput>
             )
         }
         else if (duration == 1) {

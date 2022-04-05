@@ -3,11 +3,11 @@ import React from 'react';
 
 const styleSheet = {
     select: {
-        fontSize: "16px",
+        fontSize: "1.5em",
         height: "30px",
         borderRadius: "10px",
-        background: `linear-gradient(90deg, #0080b0 0%, #002e40 100%)`,
-        border: "2px solid #00ecff",
+        background: `linear-gradient(90deg, #050D2B 0%, #050D2B 100%)`,
+        border: "2px solid rgba(255, 255, 255, 0.1)",
         color: "white",
         height: "100%",
         lineHeight: "30px",
