@@ -4,6 +4,8 @@ import { WithContext as ReactTags } from 'react-tag-input';
 import Multiselect from 'multiselect-react-dropdown';
 import AutoComplete from "./AutoComplete"
 import EditableText from './EditableText';
+import CustomSelect from '../../Utils/CustomSelect';
+import CustomInput from '../../Utils/CustomInput';
 
 const styleSheet = {
     container: {
@@ -41,7 +43,7 @@ const styleSheet = {
         borderImageSlice: "1",
         color: "white",
     },
-    text:{
+    text: {
         fontSize: "25px",
         marginTop: "20px",
         marginBottom: "5px",
@@ -74,9 +76,7 @@ const TripForm = (props) => {
     const getDurationMenu = () => {
         if (duration == 0) {
             return (
-                <div>
-                    <input type="number" placeholder='10' onChange={handleDayChange}></input> days
-                </div>
+                <CustomInput type="number" onChange={handleDayChange}></CustomInput>
             )
         }
         else if (duration == 1) {
@@ -126,7 +126,6 @@ const TripForm = (props) => {
     };
 
     const handlePrefChange = (e) => {
-        console.log(prefs);
         setPrefs(e.map(p => p.name));
     }
 
@@ -135,15 +134,12 @@ const TripForm = (props) => {
             <EditableText text="Trip 1" />
             <form style={styleSheet.form} onSubmit={handleFormSubmit}>
                 <div style={styleSheet.text}>From</div>
-                <AutoComplete setName={setFrom} inputColor="#00ff00"/>
-                
+                <AutoComplete setName={setFrom} inputColor="#00ff00" />
+
                 <div style={styleSheet.text}>To</div>
-                <AutoComplete setName={setTo} inputColor="#ff0000"/>
-                <hr />
-                <select onChange={handleDurationChange}>
-                    <option value="0">My Trip will take...</option>
-                    <option value="1">My trip will start on...</option>
-                </select>
+                <AutoComplete setName={setTo} inputColor="#ff0000" />
+                <br />
+                <CustomSelect handleChange={handleDurationChange} options={["My trip will be...", "My trip will start on..."]} />
                 <div>
                     {getDurationMenu()}
                 </div>
@@ -155,7 +151,6 @@ const TripForm = (props) => {
                     handleDelete={handleDelete}
                     handleAddition={handleAddition}
                     inputFieldPosition="bottom"
-                    autocomplete="False"
                     allowDragDrop={false}
                     placeholder="Press enter to add!"
                 />
