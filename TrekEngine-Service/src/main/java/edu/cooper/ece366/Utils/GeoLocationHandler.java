@@ -48,18 +48,6 @@ public class GeoLocationHandler {
         return types;
     }
 
-    public int[] getIndexes(int n){
-        int indexes[] = new int[(int)Math.ceil((double)n/10)+1];
-        indexes[0] = 0;
-        for(int i = 1; i < (int)Math.ceil((double)n/10)+1; i++){
-            if(indexes[i-1] + 9 > n)
-                indexes[i] = n-1;
-            else
-                indexes[i] = indexes[i-1] + 9;
-        }
-        return indexes;
-    }
-
     public String search(String address) throws IOException {
         OkHttpClient client = new OkHttpClient().newBuilder()
             .build();
