@@ -1,6 +1,6 @@
 import TripForm from "./TripForm"
-import {useRef} from "react"; 
-import Map from "../Map"; 
+import { useRef } from "react";
+import Map from "../Map";
 
 const styleSheet = {
     container: {
@@ -11,14 +11,14 @@ const styleSheet = {
     },
     fullPage: {
         width: "100%",
-        height:"100%",
+        height: "100%",
         display: "flex",
     },
     contentContainer: {
-        paddingTop:"70px",
-        width:"25%"
+        paddingTop: "70px",
+        width: "25%"
     },
-    floatingMenu:{
+    floatingMenu: {
         position: "fixed",
         zIndex: "2",
         height: "80%",
@@ -27,7 +27,7 @@ const styleSheet = {
         borderRadius: "10px",
         bottom: "10%",
         left: "2.5%",
-        minWidth: "200px",
+        minWidth: "250px",
         boxShadow: "0px 0px 50px #000000",
         display: "flex",
     }
@@ -41,7 +41,7 @@ const TripGen = (props) => {
             {/* <div style={styleSheet.contentContainer}>
                 <div onClick={()=>{mapRef.current.addPath("NY","LA","NY-LA")}}>NY-LA Trip</div>
             </div> */}
-            <Map ref={mapRef}/>
+            <Map ref={mapRef} />
             <div style={styleSheet.floatingMenu}>
                 <TripForm />
             </div>

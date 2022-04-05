@@ -1,11 +1,11 @@
 // Written by Gavri Kepets
 import React, { useState } from 'react';
-import { WithContext as ReactTags } from 'react-tag-input';
 import Multiselect from 'multiselect-react-dropdown';
 import AutoComplete from "./AutoComplete"
 import EditableText from './EditableText';
 import CustomSelect from '../../Utils/CustomSelect';
 import DaysInput from './DaysInput';
+import Tags from './Tags';
 
 const styleSheet = {
     container: {
@@ -105,12 +105,6 @@ const TripForm = (props) => {
 
     const handleEndDateChange = (e) => setEndDate(e.target.value);
 
-    const handleDelete = i => setRequired(required.filter((requirement, index) => index !== i));
-
-    const handleAddition = requirement => {
-        setRequired([...required, requirement]);
-    };
-
     const handlePrefChange = (e) => {
         setPrefs(e.map(p => p.name));
     }
@@ -130,16 +124,8 @@ const TripForm = (props) => {
                     {getDurationMenu()}
                 </div>
 
-                Make sure I visit...
-                <ReactTags
-                    tags={required}
-                    delimiters={[188, 13]}
-                    handleDelete={handleDelete}
-                    handleAddition={handleAddition}
-                    inputFieldPosition="bottom"
-                    allowDragDrop={false}
-                    placeholder="Press enter to add!"
-                />
+                <div style={styleSheet.text}>Make sure I visit...</div>
+                <Tags tags={required} setTags={setRequired} />
                 I prefer to visit...
                 <Multiselect
                     options={options}

@@ -8,11 +8,20 @@ const styleSheet = {
         display: "flex",
         justifyContent: "center",
         textAlign: "center",
+        marginTop: "20px"
     },
     input: {
-        fontSize: "16px",
-        width: "50%",
+        fontSize: "1.25em",
+        width: "25%",
         marginRight: "20px",
+        background: "linear-gradient(91.38deg, #3E16DE 0%, #05153E 100.2%)",
+        color: "white",
+        borderRadius: "10px",
+        padding: "0px 10px",
+        border: "2px solid #0014C4"
+    },
+    days: {
+        fontSize: "1.25em",
     }
 }
 
@@ -22,7 +31,7 @@ const DaysInput = (props) => {
     return (
         <div style={styleSheet.container}>
             <input style={styleSheet.input} autoFocus type="number" value={text} onChange={props.onChange}></input>
-            <div>Days</div>
+            <div style={styleSheet.days}>Days</div>
         </div>
     )
 }
