@@ -1,11 +1,14 @@
 import {useState} from 'react'; 
 
 const styleSheet = {
-    container: {
+    container: (dragging)=> ({
         display: "flex",
         flexDirecton: "row",
         justifyContent: "space-between",
-    }, 
+        border: `1px ${dragging ? "dashed":"solid"} black`,
+        paddingTop:"1px",
+        marginTop:"5px",
+    }), 
     clicker: {
         cursor: "pointer",
     }
@@ -14,18 +17,19 @@ const styleSheet = {
 
 
 const DraggableItem = ({children, onDragStart,onDrop,onDragOver, onDragEnd,remove,index})=>{
-    
 
-
+    const [dragging, setDragging] = useState(false); 
     return (
-        <div style = {styleSheet.container}>
+        <div style = {styleSheet.container(dragging)}>
             <div draggable={true}
                 className={`draggable ${index}`}
                 onDragStart={(e)=>{
                     if(e.currentTarget.classList[1] === "draggable") return; 
+                    setTimeout(()=>setDragging(true),1); // cheat to just change div without the dragged div
                     onDragStart(e); 
                 }}
                 onDragEnd={(e)=>{
+                    setDragging(false); 
                     onDragEnd(e);
                 }}
                 onDragOver={(e)=>{
@@ -35,7 +39,7 @@ const DraggableItem = ({children, onDragStart,onDrop,onDragOver, onDragEnd,remov
                 onDrop={e=>{
                     onDrop(e); 
                 }}>
-                    {children}
+                    {!dragging ? children : <div></div>}
             </div>
             <div style = {styleSheet.clicker} onClick = {()=>remove(index)}>
                 -

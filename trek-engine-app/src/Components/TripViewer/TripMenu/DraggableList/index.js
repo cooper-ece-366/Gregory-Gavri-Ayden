@@ -13,7 +13,8 @@ const DraggableList = ({stops, swapStops, remove})=>{
 
     const onDragOver = (e)=>{
         e.preventDefault();
-        setEndPos(parseInt(e.target.classList[1]));
+        const currentEnd = parseInt(e.target.classList[1]);
+        setEndPos(currentEnd); 
     }
 
     const onDrop = (e)=>{
