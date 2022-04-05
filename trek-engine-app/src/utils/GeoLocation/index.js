@@ -13,3 +13,8 @@ export const getLatLng = async (address)=> {
     const {data: {lng, lat}} = await axios.get(`http://localhost:4567/api/v1/geo/search?search=${address}`);  
     return [lng, lat];
 }
+
+export const getLoc = async (address)=> {
+    const {data: {lng, lat,type="Unknown"}} = await axios.get(`http://localhost:4567/api/v1/geo/search?search=${address}`);  
+    return {lng, lat, type, name:address};
+}

@@ -21,7 +21,7 @@ const UserContext = ({children}) => {
         setTimeout(refresh,api_obj.current.expires_in * 1000);
     }
     const logout = () => {setUser(null); api_obj.current = null;}
-    const getIdToken = () => api_obj.current.tokenObj.id_token;
+    const getIdToken = () => api_obj.current.id_token;
     return (
         <UserContextP.Provider value={{user, setUser, login, logout, getIdToken}}>
             {children}

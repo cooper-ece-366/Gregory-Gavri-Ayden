@@ -4,6 +4,8 @@ import static spark.Spark.*;
 
 import com.google.gson.JsonObject;
 
+import org.bson.types.ObjectId;
+
 import edu.cooper.ece366.Mongo.Trips.Trip;
 import edu.cooper.ece366.Mongo.Trips.TripHandler;
 import edu.cooper.ece366.Mongo.User.UserHandler;
@@ -46,6 +48,18 @@ public class TripGenAPI {
                     return "Trip is private";
                 }
                 return trip.toJSONString();
+            });
+
+            post("/update", (AuthRoute)(req,res,body,user)->{
+                Trip trip = new Trip(body.get("trip").getAsJsonObject()); 
+                // do checks first to make sure it is legal 
+                Trip currentTrip = tripHandler.getByIdAndUser(trip.getId(), user.getEmail()); 
+                if(currentTrip == null || !currentTrip.getMeta().getUser().equals(user.getEmail())) {
+                    res.status(400);
+                    return "Unkown Error User doesn't have permission to edit this trip";
+                }
+                tripHandler.update(trip);
+                return "Update Succesfull";
             });
         }); 
     }

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { WithContext as ReactTags } from 'react-tag-input';
 import Multiselect from 'multiselect-react-dropdown';
-import AutoComplete from "../AutoComplete"
+import AutoComplete from "../../Utils/AutoComplete"
 import axios from "axios"; 
 const styleSheet = {
     container: {

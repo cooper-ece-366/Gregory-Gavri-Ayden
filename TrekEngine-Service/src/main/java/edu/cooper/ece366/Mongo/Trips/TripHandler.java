@@ -6,6 +6,7 @@ import com.mongodb.client.model.Filters;
 
 import org.bson.Document;
 import org.bson.conversions.Bson;
+import org.bson.types.ObjectId;
 
 import edu.cooper.ece366.Mongo.CollectionHandler;
 import edu.cooper.ece366.Mongo.MongoHandler; 
@@ -31,6 +32,12 @@ public class TripHandler extends CollectionHandler<Trip>{
     public ArrayList<Trip> getTripByUser(String userEmail){
         Bson filter = new Document().append("meta.user", userEmail); 
         return this.rawQuery(filter); 
+    }
+
+    public Trip getByIdAndUser(ObjectId id, String userEmail){
+        Bson filter = new Document().append("_id", id).append("meta.user", userEmail); 
+        ArrayList<Trip> trips = this.rawQuery(filter);
+        return trips.size() > 0 ? trips.get(0) : null;
     }
 
     public ArrayList<Trip> getTripByLength(int length, boolean isGreaterThan, boolean isEqualTo){
@@ -65,10 +72,5 @@ public class TripHandler extends CollectionHandler<Trip>{
     public ArrayList<Trip> getTripByEndLoc(double lnglb, double lngup, double latlb, double latup){
         return getTripByLoc( lnglb, lngup, latlb, latup, false); 
     }
-
-    // public void updateTrip(Trip trip){
-    //     collection.updateOne(Filters.eq("_id", trip.getId()), new Document().append("$set", trip));  
-    // }
-    
 
 }

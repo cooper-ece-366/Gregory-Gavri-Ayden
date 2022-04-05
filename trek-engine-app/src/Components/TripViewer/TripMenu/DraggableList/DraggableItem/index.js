@@ -1,21 +1,47 @@
 import {useState} from 'react'; 
 
-const DraggableItem = ({children, onDragStart,onDrop,onDragOver,index:key})=>{
+const styleSheet = {
+    container: {
+        display: "flex",
+        flexDirecton: "row",
+        justifyContent: "space-between",
+    }, 
+    clicker: {
+        cursor: "pointer",
+    }
+
+}; 
+
+
+const DraggableItem = ({children, onDragStart,onDrop,onDragOver, onDragEnd,remove,index})=>{
     
-    const [isVisible, setIsVisible] = useState(true); 
-    return <div draggable={true}
-        className={`draggable ${key}`}
-        onDragStart={(e)=>{
-            setIsVisible(false);
-           onDragStart(e,key); 
-        }}
-        onDrop={(e)=>onDrop(e,key)}
-        onDragOver={(e)=>{
-            setIsVisible(true);
-            onDragOver(e,key); 
-        }}>
-            {children}
-    </div>
+
+
+    return (
+        <div style = {styleSheet.container}>
+            <div draggable={true}
+                className={`draggable ${index}`}
+                onDragStart={(e)=>{
+                    if(e.currentTarget.classList[1] === "draggable") return; 
+                    onDragStart(e); 
+                }}
+                onDragEnd={(e)=>{
+                    onDragEnd(e);
+                }}
+                onDragOver={(e)=>{
+                    if(e.currentTarget.classList[1] === "draggable") return; 
+                    onDragOver(e); 
+                }}
+                onDrop={e=>{
+                    onDrop(e); 
+                }}>
+                    {children}
+            </div>
+            <div style = {styleSheet.clicker} onClick = {()=>remove(index)}>
+                -
+            </div>
+        </div>
+    );  
 };
 
 
