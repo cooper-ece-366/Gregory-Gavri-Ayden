@@ -112,17 +112,25 @@ public class GeoLocationHandler {
 
     public String directions(JsonArray stops) throws IOException{
         
-        int indexes[] = getIndexes(stops.size());
+        int indexes = (int)Math.ceil((double)stops.size()/10)+1;
         ArrayList<String> polylines = new ArrayList<String>();
+        int start_ind = -9;
+        int end_ind;
 
-        for(int i = 0; i < indexes.length-1; i++){
-            String start = stops.get(indexes[i]).getAsString();
-            String end = stops.get(indexes[i+1]).getAsString();
+        for(int i = 1; i < indexes; i++){
+            start_ind = start_ind + 9;
+            if(start_ind + 9 > stops.size()-1)
+                end_ind = stops.size()-1;
+            else
+                end_ind = start_ind + 9;
+            
+            String start = stops.get(start_ind).getAsString();
+            String end = stops.get(end_ind).getAsString();
             String waypoints = "";
             
-            for(int j = indexes[i]+1; j < indexes[i+1]; j++){
+            for(int j = start_ind+1; j < end_ind; j++){
                 String or = "";
-                if(j != indexes[i]+1)
+                if(j != start_ind+1)
                     or = "|";
                 waypoints = waypoints + or + "via:" + stops.get(j).getAsString();
             }
