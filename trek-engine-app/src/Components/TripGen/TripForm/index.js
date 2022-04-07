@@ -3,9 +3,10 @@ import React, { useState } from 'react';
 import Multiselect from 'multiselect-react-dropdown';
 import AutoComplete from "./AutoComplete"
 import EditableText from './EditableText';
-import CustomSelect from '../../Utils/CustomSelect';
+import CustomSelect from '../../Utils/FormUtils/CustomSelect';
 import DaysInput from './DaysInput';
 import Tags from './Tags';
+import CustomInput from '../../Utils/FormUtils/CustomInput';
 
 const styleSheet = {
     container: {
@@ -123,6 +124,9 @@ const TripForm = (props) => {
                 <div>
                     {getDurationMenu()}
                 </div>
+                <br />
+                From...
+                <CustomInput></CustomInput>
 
                 <div style={styleSheet.text}>Make sure I visit...</div>
                 <Tags tags={required} setTags={setRequired} />
