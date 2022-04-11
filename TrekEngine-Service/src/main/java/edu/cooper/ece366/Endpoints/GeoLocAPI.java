@@ -3,6 +3,8 @@ import edu.cooper.ece366.RouteInterfaces.BodyParserRoute;
 import edu.cooper.ece366.Utils.GeoLocationHandler;
 import static spark.Spark.*;
 
+import java.io.IOException;
+
 public class GeoLocAPI {
     public static void paths(GeoLocationHandler geoHandler) {
         path("/geo", () -> {
@@ -12,8 +14,13 @@ public class GeoLocAPI {
             post("/directions", (BodyParserRoute)(req,res,body)->{
                 try {
                     return geoHandler.directions(body.get("stops").getAsJsonArray()); 
-                } catch (Exception e){
+                } catch (IOException e){
                     res.status(500); 
+                    // System.out.println(e.getMessage());
+                    // for (StackTraceElement ste : e.getStackTrace()) {
+                    //     System.out.println(ste.toString());
+                    // }
+                    // System.out.println(e.getStackTrace()); 
                     return e.getMessage();
                 }
             }); 

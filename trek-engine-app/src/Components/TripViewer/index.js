@@ -62,6 +62,12 @@ const TripViewer = ()=>{
                 <div style={styleSheet.fullPage} >
                     <Map ref={mapRef} addMarkerArgs={
                         [trip.tripData.startLocation, ...trip.tripData.stops, trip.tripData.endLocation]
+                    }
+                    addPathArgs={
+                        [{
+                            stops: [trip.tripData.startLocation, ...trip.tripData.stops, trip.tripData.endLocation].map(({name})=>name),
+                            id: trip.meta.name
+                        }]
                     }/>
                     <FloatingMenu>
                         <TripMenu 

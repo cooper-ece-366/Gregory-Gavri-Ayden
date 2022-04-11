@@ -48,6 +48,9 @@ public class GeoLocationHandler {
     }
 
     public String search(String address) throws IOException {
+        if(address == null)
+            return "Invalid Input"; 
+
         OkHttpClient client = new OkHttpClient().newBuilder()
             .build();
         Request request = new Request.Builder()
@@ -98,7 +101,6 @@ public class GeoLocationHandler {
     }
 
     public String directions(JsonArray stops) throws IOException{
-        
         int indexes = (int)Math.ceil((double)stops.size()/10)+1;
         ArrayList<String> polylines = new ArrayList<String>();
         int start_ind = -9;
@@ -137,7 +139,6 @@ public class GeoLocationHandler {
                                 .get("steps").getAsJsonArray();
             
             for(int k = 0; k<steps.size(); k++){
-                System.out.println(steps.get(k).getAsJsonObject().get("html_instructions"));
                 polylines.add(steps.get(k).getAsJsonObject().get("polyline").getAsJsonObject().get("points").getAsString());
             }
         }

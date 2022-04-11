@@ -20,7 +20,7 @@ const Explore = () => {
     return (
         <div style={styleSheet.fullPage}>
             <div style={styleSheet.contentContainer}>
-                <div onClick={()=>{mapRef.current.addPath("NY","LA","NY-LA")}}>NY-LA Trip</div>
+                <div onClick={()=>{mapRef.current.addPath(["NY","LA"],"NY-LA")}}>NY-LA Trip</div>
             </div>
             <Map ref={mapRef}/>
         </div>
