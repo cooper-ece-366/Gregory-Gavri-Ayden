@@ -7,7 +7,7 @@ import CustomSelect from '../../Utils/FormUtils/CustomSelect';
 import DaysInput from './DaysInput';
 import AutoList from './AutoList';
 import "./styles.css";
-import AutoComplete from "../../Utils/AutoComplete"
+// import AutoComplete from "../../Utils/AutoComplete"
 import axios from "axios";
 
 const styleSheet = {

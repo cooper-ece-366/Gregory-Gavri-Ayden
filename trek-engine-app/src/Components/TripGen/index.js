@@ -1,6 +1,6 @@
 import TripForm from "./TripForm"
 import { useRef } from "react";
-import Map from "../Map";
+import Map from "../Utils/Map";
 
 const styleSheet = {
     container: {
