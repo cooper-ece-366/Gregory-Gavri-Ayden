@@ -23,6 +23,8 @@ const styleSheet = {
         zIndex: "2",
         height: "80%",
         width: "20%",
+        maxWidth: "450px",
+        minWidth: "200px",
         backgroundColor: "#ffffff",
         borderRadius: "10px",
         bottom: "10%",
