@@ -1,6 +1,5 @@
 // Written by Gavri Kepets
 import React from 'react';
-import { useState } from 'react';
 
 const styleSheet = {
     container: {
@@ -25,15 +24,18 @@ const styleSheet = {
     }
 }
 
-const DaysInput = (props) => {
-    const [text, setText] = useState(props.text);
+const ListItem = ({ name, removeItem }) => {
+
+    const removeName = () => {
+        removeItem(name);
+    }
 
     return (
-        <div style={styleSheet.container}>
-            <input style={styleSheet.input} autoFocus type="number" value={text} onChange={props.onChange}></input>
-            <div style={styleSheet.days}>Days</div>
+        <div key={name} style={styleSheet.container}>
+            <div><p>{name}</p></div>
+            <div><button onClick={removeName}>X</button></div>
         </div>
     )
 }
 
-export default DaysInput;
+export default ListItem;

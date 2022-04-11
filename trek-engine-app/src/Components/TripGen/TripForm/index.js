@@ -5,8 +5,8 @@ import AutoComplete from "./AutoComplete"
 import EditableText from './EditableText';
 import CustomSelect from '../../Utils/FormUtils/CustomSelect';
 import DaysInput from './DaysInput';
-import Tags from './Tags';
-import CustomInput from '../../Utils/FormUtils/CustomInput';
+import AutoList from './AutoList';
+import "./styles.css";
 
 const styleSheet = {
     container: {
@@ -34,6 +34,26 @@ const styleSheet = {
         fontSize: "25px",
         marginTop: "20px",
         marginBottom: "5px",
+    },
+    submit: {
+        position: "absolute",
+        bottom: "0",
+        marginBottom: "20px",
+        minWidth: "100px",
+        maxWidth: "300px",
+        width: "80%",
+        fontSize: "1.5em",
+        backgroundColor: "rgba(222, 45, 22, 0.5)",
+        color: "white",
+        background: "#DE2D16",
+        border: "4px solid #781C10",
+        boxSizing: "border-box",
+        boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+        borderRadius: "25px",
+        fontSize: "1.5em",
+        fontFamily: "'Sen', sans-serif",
+        cursor: "pointer",
+        padding: "10px",
     }
 }
 
@@ -87,17 +107,17 @@ const TripForm = (props) => {
             setDays(finalDays);
         }
 
-        let finalRequired = required.map(r => r.text);
-
         let data = {
             from,
             to,
             days: parseInt(finalDays),
             startDate,
             endDate,
-            required: finalRequired,
+            required,
             prefs
         }
+
+        console.log(data);
     }
 
     const handleDayChange = (e) => setDays(e.target.value);
@@ -108,6 +128,10 @@ const TripForm = (props) => {
 
     const handlePrefChange = (e) => {
         setPrefs(e.map(p => p.name));
+    }
+
+    const addRequired = (e) => {
+        setRequired(e);
     }
 
     return (
@@ -125,12 +149,9 @@ const TripForm = (props) => {
                     {getDurationMenu()}
                 </div>
                 <br />
-                From...
-                <CustomInput></CustomInput>
-
                 <div style={styleSheet.text}>Make sure I visit...</div>
-                <Tags tags={required} setTags={setRequired} />
-                I prefer to visit...
+                <AutoList items={required} setItems={addRequired}></AutoList>
+                <div style={styleSheet.text}>I prefer to visit...</div>
                 <Multiselect
                     options={options}
                     onSelect={handlePrefChange} // Function will trigger on select event
@@ -138,7 +159,7 @@ const TripForm = (props) => {
                     displayValue="name" // Property name to display in the dropdown options
                 />
 
-                <button onClick={handleFormSubmit}>Make my Trip!</button>
+                <button style={styleSheet.submit} onClick={handleFormSubmit}>Make my Trip!</button>
             </form>
         </div>
     )

@@ -10,7 +10,7 @@ const styleSheet = {
         return ({
             width: width,
             fontSize: fontSize,
-            background: "#ffff00",
+            background: "#ffffff",
             height: height,
             border: 0,
             outline: 0,
@@ -20,9 +20,9 @@ const styleSheet = {
     }
 }
 
-const CustomInput = ({ type, onChange, inputColor = "red", width = "85%", fontSize = "16px", height = "30px" }) => {
+const CustomInput = ({ type, onChange, inputColor = "red", width = "85%", fontSize = "16px", height = "30px", customClass = "customInput" }) => {
     return (
-        <input onChange={onChange} type={type} style={styleSheet.input(inputColor, width, height, fontSize)} className="customInput" />
+        <input onChange={onChange} type={type} style={styleSheet.input(inputColor, width, height, fontSize)} className={customClass} />
     )
 }
 

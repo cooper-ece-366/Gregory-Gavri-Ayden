@@ -29,7 +29,7 @@ const styleSheet = {
     }
 }
 
-const CustomSelect = ({ handleChange, options, fontSize = "1.5em", fontSizeOption = "1.25em", }) => {
+const CustomSelect = ({ handleChange, options, fontSize = "1.25em", fontSizeOption = "1em", }) => {
     return (
         <div style={styleSheet.container}>
             <select style={styleSheet.select(fontSize)} onChange={handleChange}>

@@ -1,6 +1,6 @@
 // Written by Gavri Kepets, Greg Presser
 import PlacesAutocomplete from 'react-places-autocomplete';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import TinyColor from 'tinycolor2';
 import "./styles.css"
 
@@ -41,12 +41,15 @@ const styleSheet = {
   }
 }
 
-const AutoComplete = ({ setName, inputColor = "red" }) => {
+const AutoComplete = ({ setName, inputColor = "red", inputRef, setText }) => {
+
+  if (setText === undefined) {
+    setText = setName;
+  }
 
   const [address, setAddress] = useState('');
 
-  const handleChange = ad => setAddress(ad);
-
+  const handleChange = ad => { setAddress(ad); setText(ad); }
 
   const handleSelect = async ad => {
     setAddress(ad);
@@ -62,7 +65,7 @@ const AutoComplete = ({ setName, inputColor = "red" }) => {
       >
         {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
           <div style={styleSheet.container}>
-            <input style={styleSheet.input(inputColor)}
+            <input ref={inputRef} style={styleSheet.input(inputColor)}
               {...getInputProps({
                 placeholder: 'Search Places ...',
                 className: 'location-search-input, autocompleteInput',
