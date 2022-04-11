@@ -35,7 +35,7 @@ public class UserHandlerUnitTest {
         String lastName = "testLastName"; 
         String email = "testEmail"; 
         User user = underTest.insertIfNExists(userId, firstName, lastName, email); 
-        assert(user.getUserId().equals(userId)); 
+        assert(user.getId().equals(userId)); 
         assert(user.getFirstName().equals(firstName)); 
         assert(user.getLastName().equals(lastName)); 
         assert(user.getEmail().equals(email)); 
@@ -45,7 +45,7 @@ public class UserHandlerUnitTest {
 
         // repeat insert
         user = underTest.insertIfNExists(userId, firstName, lastName, email); 
-        assert(user.getUserId().equals(userId)); 
+        assert(user.getId().equals(userId)); 
         assert(user.getFirstName().equals(firstName)); 
         assert(user.getLastName().equals(lastName)); 
         assert(user.getEmail().equals(email)); 
@@ -71,7 +71,7 @@ public class UserHandlerUnitTest {
         underTest.insertIfNExists(userId, firstName, lastName, email); 
         User user = underTest.getUserFromEmail(email); 
 
-        assert(user.getUserId().equals(userId));
+        assert(user.getId().equals(userId));
         assert(user.getFirstName().equals(firstName));
         assert(user.getLastName().equals(lastName));
         assert(user.getEmail().equals(email));

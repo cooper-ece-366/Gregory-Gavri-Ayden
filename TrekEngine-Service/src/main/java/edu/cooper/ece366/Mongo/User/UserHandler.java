@@ -13,37 +13,59 @@ import edu.cooper.ece366.Mongo.CollectionHandler;
 import edu.cooper.ece366.Mongo.MongoHandler;
 import org.bson.Document;
 import org.bson.conversions.Bson;
+import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
 
 // runs operations on the user collection in the mongoDB
-public class UserHandler extends CollectionHandler{
+public class UserHandler extends CollectionHandler<User>{
 
     public UserHandler(MongoHandler handler){
-        super(handler,"users"); 
+        super(handler,"users",User.class); 
     }
     // returns user if it doesn't exist
     public User insertIfNExists(String userId, String firstName, String lastName, String email) {
-        Bson update = new Document("$setOnInsert", 
-                        new Document()
-                            .append("_id", userId)
-                            .append("firstName", firstName)
-                            .append("lastName", lastName)
-                            .append("email",email));
-        collection.updateOne(Filters.eq("_id",userId),update,new UpdateOptions().upsert(true));
-        return getUserFromID(userId);
+        return insertIfNExists(new User(
+            userId,
+            firstName,
+            lastName,
+            email
+        )); 
+    }
+
+    public User insertIfNExists(User user){
+        Bson update = new Document("$setOnInsert", user);
+        collection.updateOne(Filters.eq("_id",user.getId()),update,new UpdateOptions().upsert(true));
+        return getById(user.getId());
     }
 
     // returns user from userId
-    public User getUserFromID(String userId) {
-        ArrayList<User> users = collection.find(Filters.eq("_id",userId), User.class).into(new ArrayList<>());
+    @Override
+    public User getById(String userId) {
+        ArrayList<User> users = collection.find(Filters.eq("_id",userId)).into(new ArrayList<>());
         return users.size() > 0 ? users.get(0) : null;
     }
 
+    // Doesn't allow to query by ObjectId because they are invalid 
+    @Override
+    public User getById(ObjectId invalidId){
+        throw new IllegalArgumentException("ObjectId type is not valid for User");
+    }
+
+    @Override
+    public void delete(String id){
+        collection.deleteOne(Filters.eq("_id",id));
+    }
+
+    @Override
+    public void delete(ObjectId objectId){
+        throw new IllegalArgumentException("ObjectId type is not valid for User");
+    }
+
     public User getUserFromEmail(String email){
-        ArrayList<User> users = collection.find(Filters.eq("email",email), User.class).into(new ArrayList<>());
+        ArrayList<User> users =  rawQuery(Filters.eq("email",email)); 
         return users.size() > 0 ? users.get(0) : null;
     }
 

@@ -5,7 +5,6 @@ import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
@@ -26,8 +25,8 @@ public class MongoHandler {
         db = client.getDatabase(name).withCodecRegistry(pojoCodecRegistry);
     }
 
-    public MongoCollection<Document> getCollection(String name) {
-        return db.getCollection(name);
+    public <T> MongoCollection<T> getCollection(String name, Class<T> clazz) {
+        return db.getCollection(name,clazz);
     }
 
 }
