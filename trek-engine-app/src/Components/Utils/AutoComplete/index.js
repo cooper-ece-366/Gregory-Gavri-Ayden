@@ -7,7 +7,7 @@ import {
   } from 'react-places-autocomplete';
 
 import {useState} from 'react'; 
-const AutoComplete = ({setName}) => {
+const AutoComplete = ({setName,placeholder="Search Places ..."},clearOnSelect=false) => {
 
     const [address,setAddress] = useState(''); 
    
@@ -15,7 +15,7 @@ const AutoComplete = ({setName}) => {
     
    
     const handleSelect = async ad => {
-        setAddress(ad); 
+        setAddress(clearOnSelect ? '' : ad); 
         setName(ad);
     }
    
@@ -29,7 +29,7 @@ const AutoComplete = ({setName}) => {
             <div>
               <input
                 {...getInputProps({
-                  placeholder: 'Search Places ...',
+                  placeholder,
                   className: 'location-search-input',
                 })}
               />

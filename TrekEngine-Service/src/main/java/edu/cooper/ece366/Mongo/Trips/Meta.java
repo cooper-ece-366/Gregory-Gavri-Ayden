@@ -41,7 +41,10 @@ public class Meta implements SerializingInterface{
         this.name = metaJson.get("name").getAsString();
         this.description = metaJson.get("description").getAsString();
         this.user = metaJson.get("user").getAsString();
-        this.isPrivate = metaJson.get("private").getAsBoolean();
+        if (metaJson.has("private"))
+            this.isPrivate = metaJson.get("private").getAsBoolean();
+        else
+            this.isPrivate = metaJson.get("isPrivate").getAsBoolean();
         this.created = new Date (metaJson.get("created").getAsLong()); 
         this.updated = new Date (metaJson.get("updated").getAsLong()); 
     }

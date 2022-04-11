@@ -7,6 +7,7 @@ import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 import org.bson.types.ObjectId;
 
+import edu.cooper.ece366.Exceptions.IllegalJsonException;
 import edu.cooper.ece366.Mongo.IDInterface;
 import edu.cooper.ece366.Mongo.SerializingInterface;
 public class Trip implements SerializingInterface, IDInterface  { 
@@ -30,9 +31,17 @@ public class Trip implements SerializingInterface, IDInterface  {
 
 
     public Trip(JsonObject tripJson){
-        this.id = new ObjectId(); 
+        if(tripJson.has("_id"))
+            this.id = new ObjectId(tripJson.get("_id").getAsString());
+        else
+            this.id = new ObjectId(); 
         this.meta = new Meta(tripJson.get("meta").getAsJsonObject());
-        this.tripData = new TripData(tripJson.get("trip").getAsJsonObject());
+        if(tripJson.has("trip"))
+            this.tripData = new TripData(tripJson.get("trip").getAsJsonObject());
+        else if(tripJson.has("tripData"))
+            this.tripData = new TripData(tripJson.get("tripData").getAsJsonObject());
+        else
+            throw new IllegalJsonException(); 
         this.details = new Detail(tripJson.get("details").getAsJsonObject());
     }
 

@@ -2,8 +2,8 @@ import React, { useRef, useEffect, useState,useImperativeHandle,forwardRef } fro
 import {renderToString} from 'react-dom/server';
 import Popup from "./Popup"; 
 import mapboxgl from 'mapbox-gl';
-import env from "../../env";
-import {getDirection,getLatLng} from "../../utils/GeoLocation";
+import env from "../../../env"; 
+import {getDirection,getLatLng} from "../../../utils/GeoLocation";
 
 mapboxgl.accessToken = env.MAP_BOX_ACCESS_TOKEN; 
 
@@ -14,7 +14,7 @@ const styleSheet = {
     },
 }
 
-const Map = ({lng_i=-87.65,lat_i=41.84},ref) => {
+const Map = ({lng_i=-87.65,lat_i=41.84,addMarkerArgs=[],addPathArgs=[]},ref) => {
   const mapContainerRef = useRef(null);
   const map = useRef(null);
   const [lng, setLng] = useState(lng_i);
@@ -93,6 +93,13 @@ const Map = ({lng_i=-87.65,lat_i=41.84},ref) => {
       setLat(map.current.getCenter().lat.toFixed(4));
       setZoom(map.current.getZoom().toFixed(2));
     });
+
+    map.current.on("load", ()=>{
+      console.log(addMarkerArgs); 
+      addMarkerArgs.forEach(({lat,lng,name:id})=>addMarkerLngLat(lng,lat,id));
+
+        
+    }); 
 
     // Clean up on unmount
     return () => map.current.remove();

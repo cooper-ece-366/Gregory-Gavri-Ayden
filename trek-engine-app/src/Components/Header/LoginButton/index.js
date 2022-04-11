@@ -36,6 +36,7 @@ const LoginButton = () => {
             onSuccess={responseGoogle}
             onFailure={() => { console.error("Login Failed!") }}
             cookiePolicy={'single_host_origin'}
+            isSignedIn={true}
         />
     )
 }
