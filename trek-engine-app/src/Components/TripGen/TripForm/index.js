@@ -1,7 +1,7 @@
 // Written by Gavri Kepets
 import React, { useState } from 'react';
 import Multiselect from 'multiselect-react-dropdown';
-import AutoComplete from "./AutoComplete"
+import AutoComplete from "../../Utils/AutoComplete";
 import EditableText from './EditableText';
 import CustomSelect from '../../Utils/FormUtils/CustomSelect';
 import DaysInput from './DaysInput';

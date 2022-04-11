@@ -1,7 +1,7 @@
 // Written by Gavri Kepets
 import React from 'react';
 import { useState } from 'react';
-import AutoComplete from '../AutoComplete';
+import AutoComplete from "../../../Utils/AutoComplete";
 import ListItem from './ListItem';
 
 const styleSheet = {
