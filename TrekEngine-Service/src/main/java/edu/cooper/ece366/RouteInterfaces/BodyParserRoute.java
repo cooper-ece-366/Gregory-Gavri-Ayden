@@ -9,7 +9,7 @@ import static edu.cooper.ece366.Utils.BodyParser.parseBody;
 
 // parses the body for post requests 
 public interface BodyParserRoute extends Route {
-    default Object handle(Request req, Response res) {
+    default Object handle(Request req, Response res) throws Exception {
         JsonObject body = parseBody(req);
         if(body == null) {
             res.status(400); 
