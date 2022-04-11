@@ -1,15 +1,28 @@
+// Written by Gavri Kepets
 import React, { useState } from 'react';
-import { WithContext as ReactTags } from 'react-tag-input';
 import Multiselect from 'multiselect-react-dropdown';
+import AutoComplete from "./AutoComplete"
+import EditableText from './EditableText';
+import CustomSelect from '../../Utils/FormUtils/CustomSelect';
+import DaysInput from './DaysInput';
+import AutoList from './AutoList';
+import "./styles.css";
 import AutoComplete from "../../Utils/AutoComplete"
-import axios from "axios"; 
+import axios from "axios";
+
 const styleSheet = {
     container: {
-        width: "250px",
+        width: "100%",
+        background: "linear-gradient(180deg, #050D2B 0%, #010514 100%)",
+        borderRadius: "10px",
+        color: "white",
     },
     form: {
         display: "flex",
         flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        width: "100%",
     },
     duration: {
         display: "flex",
@@ -19,19 +32,30 @@ const styleSheet = {
         margin: "10px",
         padding: "10px",
     },
-    startInput: {
-        borderRadius: "10px",
-        borderWidth: "1px",
-        background: "linear-gradient(to right, #005000, #00ff00)",
-        borderImageSlice: "1",
-        color: "white",
+    text: {
+        fontSize: "25px",
+        marginTop: "20px",
+        marginBottom: "5px",
     },
-    endInput: {
-        borderRadius: "10px",
-        borderWidth: "1px",
-        background: "linear-gradient(to right, #500000, #ff0000)",
-        borderImageSlice: "1",
+    submit: {
+        position: "absolute",
+        bottom: "0",
+        marginBottom: "20px",
+        minWidth: "100px",
+        maxWidth: "300px",
+        width: "80%",
+        fontSize: "1.5em",
+        backgroundColor: "rgba(222, 45, 22, 0.5)",
         color: "white",
+        background: "#DE2D16",
+        border: "4px solid #781C10",
+        boxSizing: "border-box",
+        boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+        borderRadius: "25px",
+        fontSize: "1.5em",
+        fontFamily: "'Sen', sans-serif",
+        cursor: "pointer",
+        padding: "10px",
     }
 }
 
@@ -44,6 +68,7 @@ const TripForm = (props) => {
     const [endDate, setEndDate] = useState("");
     const [required, setRequired] = useState([]);
     const [prefs, setPrefs] = useState([]);
+    const [tripName, setTripName] = useState("Trip 1");
 
     const options = [
         { name: "National Parks", value: 0 },
@@ -60,9 +85,7 @@ const TripForm = (props) => {
     const getDurationMenu = () => {
         if (duration == 0) {
             return (
-                <div>
-                    <input type="number" placeholder='10' onChange={handleDayChange}></input> days
-                </div>
+                <DaysInput type="number" onChange={handleDayChange}></DaysInput>
             )
         }
         else if (duration == 1) {
@@ -86,22 +109,18 @@ const TripForm = (props) => {
             setDays(finalDays);
         }
 
-        let finalRequired = required.map(r => r.text);
-
         let data = {
             from,
             to,
             days: parseInt(finalDays),
             startDate,
             endDate,
-            required: finalRequired,
+            required,
             prefs
         }
+
+        console.log(data);
     }
-
-    const handleFromChange = (e) => setFrom(e.target.value);
-
-    const handleToChange = (e) => setTo(e.target.value);
 
     const handleDayChange = (e) => setDays(e.target.value);
 
@@ -109,49 +128,32 @@ const TripForm = (props) => {
 
     const handleEndDateChange = (e) => setEndDate(e.target.value);
 
-    const handleDelete = i => setRequired(required.filter((requirement, index) => index !== i));
-
-    const handleAddition = requirement => {
-        setRequired([...required, requirement]);
-    };
-
     const handlePrefChange = (e) => {
-        console.log(prefs);
         setPrefs(e.map(p => p.name));
+    }
+
+    const addRequired = (e) => {
+        setRequired(e);
     }
 
     return (
         <div style={styleSheet.container}>
-            <h1>Build Your Trip Here!</h1>
+            <EditableText text="Trip 1" />
             <form style={styleSheet.form} onSubmit={handleFormSubmit}>
-                From
-                <AutoComplete setName={setFrom}/>
-                {/* <input type="text" onChange={handleFromChange} placeholder="Start Location" style={{ ...styleSheet.startInput, ...styleSheet.textInput }}></input> */}
-                
-                To
-                <AutoComplete setName={setTo}/>
-                {/*<input type="text" onChange={handleToChange} placeholder="End Location" style={{ ...styleSheet.endInput, ...styleSheet.textInput }}></input>*/}
-                <hr />
-                <select onChange={handleDurationChange}>
-                    <option value="0">My Trip will take...</option>
-                    <option value="1">My trip will start on...</option>
-                </select>
+                <div style={styleSheet.text}>From</div>
+                <AutoComplete setName={setFrom} inputColor="#00ff00" />
+
+                <div style={styleSheet.text}>To</div>
+                <AutoComplete setName={setTo} inputColor="#ff0000" />
+                <br />
+                <CustomSelect handleChange={handleDurationChange} options={["My trip will be...", "My trip will start on..."]} />
                 <div>
                     {getDurationMenu()}
                 </div>
-
-                Make sure I visit...
-                <ReactTags
-                    tags={required}
-                    delimiters={[188, 13]}
-                    handleDelete={handleDelete}
-                    handleAddition={handleAddition}
-                    inputFieldPosition="bottom"
-                    autocomplete="False"
-                    allowDragDrop={false}
-                    placeholder="Press enter to add!"
-                />
-                I prefer to visit...
+                <br />
+                <div style={styleSheet.text}>Make sure I visit...</div>
+                <AutoList items={required} setItems={addRequired}></AutoList>
+                <div style={styleSheet.text}>I prefer to visit...</div>
                 <Multiselect
                     options={options}
                     onSelect={handlePrefChange} // Function will trigger on select event
@@ -159,7 +161,7 @@ const TripForm = (props) => {
                     displayValue="name" // Property name to display in the dropdown options
                 />
 
-                <button onClick={handleFormSubmit}>Make my Trip!</button>
+                <button style={styleSheet.submit} onClick={handleFormSubmit}>Make my Trip!</button>
             </form>
         </div>
     )

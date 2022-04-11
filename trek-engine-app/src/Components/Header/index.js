@@ -43,6 +43,7 @@ const styleSheet = {
         color: "white",
         textDecoration: "none",
         marginLeft: "20px",
+        fontSize: "0.75em",
     }
 };
 

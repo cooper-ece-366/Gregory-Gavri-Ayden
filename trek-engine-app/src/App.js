@@ -22,9 +22,9 @@ const App = () => {
       <div style={styleSheet.app}>
         <BrowserRouter>
           <Header >
-            <Link to = "/">Home</Link>
-            <Link to = "/explore" >Explore</Link>
-            <Link to = "/about">About Us</Link>
+            <Link to="/">Home</Link>
+            <Link to="/explore" >Explore</Link>
+            <Link to="/about">About Us</Link>
           </Header>
           <Routes>
             <Route path="/" element={<Home />} />

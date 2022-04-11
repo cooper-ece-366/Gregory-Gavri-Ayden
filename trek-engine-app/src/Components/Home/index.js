@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import Logo from '../Utils/Logo';
 
 const styleSheet = {
@@ -43,16 +44,18 @@ const styleSheet = {
         fontSize: "1.5em",
         marginTop: "150px",
         fontFamily: "'Sen', sans-serif",
+        cursor: "pointer",
     }
 }
 
+// TODO: link the button to a newly created page for the trip by UUID
 const Home = (props) => {
     return (
         <div style={styleSheet.container()}>
             <div><h1 style={styleSheet.title}>let's explore the world.</h1></div>
             <div><Logo size="100" color="white"></Logo></div>
             <div><h1 style={styleSheet.text}>TrekEngine provides a fast, smart, and simple solution for planning your next adventure.</h1></div>
-            <div><button style={styleSheet.buildButton}>Build your trip now!</button></div>
+            <div><Link to="/tripgen"><button style={styleSheet.buildButton}>Build your trip now!</button></Link></div>
         </div>
     )
 }

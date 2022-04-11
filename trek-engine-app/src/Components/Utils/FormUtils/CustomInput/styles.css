@@ -1,0 +1,18 @@
+.customInput{
+    transition: 0.3s;
+}
+
+.customInput:focus{
+    box-shadow: 0 0 0 2px #00bcd4;
+    transition: 0.3s;
+}
+
+.customInputRed:focus{
+    box-shadow: 0 0 0 2px #ff0000;
+    transition: 0.3s;
+}
+
+.customInputGreen:focus{
+    box-shadow: 0 0 0 2px #00ff00;
+    transition: 0.3s;
+}
