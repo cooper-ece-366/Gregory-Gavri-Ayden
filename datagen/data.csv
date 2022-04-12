@@ -1,4 +1,4 @@
-city_ascii,lat,lng,type
+name,lat,lng,type
 New York,40.6943,-73.9249,city
 Los Angeles,34.1139,-118.4068,city
 Chicago,41.8373,-87.6862,city
