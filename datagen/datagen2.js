@@ -56,6 +56,7 @@ const getStop = (obj,tag1)=>{
 const generateStops = async (obj)=>{
     
     for (let i = 0; i < 1; i++) {
+        console.log("Starting: ", obj[i].name);
         const {data} = await search(obj[i].name); 
         insert(getStop(data, obj[i].type));
 
@@ -67,6 +68,7 @@ const generateStops = async (obj)=>{
             for(let k = 0; k < data.length; k++){
                 insert(getStop(data[k],p_types[j])); 
             }
+            console.log("finished: ", p_types[j]);
         }
     }
     return(stops);
