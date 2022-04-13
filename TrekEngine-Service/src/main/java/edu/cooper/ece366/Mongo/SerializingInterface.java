@@ -19,10 +19,13 @@ public interface SerializingInterface {
                     e.printStackTrace();
                 }
             } else {
-                obj.add(field.getName(), new Gson().fromJson(field.get(this), JsonObject.class));
-
+                try {
+                    new Gson().toJson(field.get(this));
+                } catch (IllegalArgumentException | IllegalAccessException e) {
+                    e.printStackTrace();
+                }
             }
         }
-        return new Gson().toJson(this); 
+        return new Gson().toJson(obj); 
     }
 }

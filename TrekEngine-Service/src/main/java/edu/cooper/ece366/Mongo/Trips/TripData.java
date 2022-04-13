@@ -14,13 +14,13 @@ import edu.cooper.ece366.Mongo.SerializingInterface;
 public class TripData implements SerializingInterface{
     @BsonProperty("startLocation") private ObjectId startLocation;
     @BsonProperty("endLocation") private ObjectId endLocation;
-    @BsonProperty("stops") private final List<ObjectId> stops;
+    @BsonProperty("stops") private final List<Stop> stops;
 
     @BsonCreator
     public TripData(
         @BsonProperty("startLocation") ObjectId startLocation, 
         @BsonProperty("endLocation") ObjectId endLocation, 
-        @BsonProperty("stops") List<ObjectId> stops) {
+        @BsonProperty("stops") List<Stop> stops) {
         this.startLocation = startLocation;
         this.endLocation = endLocation;
         this.stops = stops;
@@ -29,9 +29,9 @@ public class TripData implements SerializingInterface{
     public TripData(JsonObject tripObj){
         this.endLocation = new ObjectId(tripObj.get("endLocation").getAsString());
         this.startLocation = new ObjectId(tripObj.get("startLocation").getAsString());
-        this.stops = new ArrayList<ObjectId> (); 
+        this.stops = new ArrayList<Stop> (); 
         tripObj.get("stops").getAsJsonArray().forEach(stop -> {
-            this.stops.add(new ObjectId(stop.getAsString()));
+            this.stops.add(new Stop(stop.getAsJsonObject()));
         });
     }
 
@@ -47,17 +47,19 @@ public class TripData implements SerializingInterface{
     public void setEndLocation(ObjectId endLocation){
         this.endLocation = endLocation; 
     }
-    public List<ObjectId> getStops(){
+    public List<Stop> getStops(){
         return stops; 
     }
 
-    public void addStop(ObjectId stop, int index){
-        this.stops.add(index, stop);
+    public void addStop(ObjectId smallStop, ObjectId bigStop){
+        for(Stop stop: this.stops){
+            if(stop.getBigStop().equals(bigStop)){
+                stop.getSmallStops().add(smallStop); // TODO make sure this works (idk if it like deep copies it or some bs) 
+                return;
+            }
+        }
     }
 
-    public void addStop(ObjectId stop){
-        this.stops.add(stop);
-    }
 
     @Override
     public boolean equals(Object o) {

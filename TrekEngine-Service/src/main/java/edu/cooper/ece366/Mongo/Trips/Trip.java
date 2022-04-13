@@ -88,6 +88,6 @@ public class Trip implements SerializingInterface, IDInterface  {
     public String toJSONString() {
         return new SerializedTrip(this).toJSONString(); 
     }
-    
+
 
 }
