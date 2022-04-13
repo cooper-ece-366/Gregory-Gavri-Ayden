@@ -86,7 +86,7 @@ public class Trip implements SerializingInterface, IDInterface  {
 
     @Override
     public String toJSONString() {
-        return new Gson().toJson(new SerializedTrip(this));
+        return new SerializedTrip(this).toJSONString(); 
     }
     
 

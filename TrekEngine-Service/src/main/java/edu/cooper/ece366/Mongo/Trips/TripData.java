@@ -7,54 +7,55 @@ import com.google.gson.JsonObject;
 
 import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
+import org.bson.types.ObjectId;
 
 import edu.cooper.ece366.Mongo.SerializingInterface;
 
 public class TripData implements SerializingInterface{
-    @BsonProperty("startLocation") private Loacation startLocation;
-    @BsonProperty("endLocation") private Loacation endLocation;
-    @BsonProperty("stops") private final List<Loacation> stops;
+    @BsonProperty("startLocation") private ObjectId startLocation;
+    @BsonProperty("endLocation") private ObjectId endLocation;
+    @BsonProperty("stops") private final List<ObjectId> stops;
 
     @BsonCreator
     public TripData(
-        @BsonProperty("startLocation") Loacation startLocation, 
-        @BsonProperty("endLocation") Loacation endLocation, 
-        @BsonProperty("stops") List<Loacation> stops) {
+        @BsonProperty("startLocation") ObjectId startLocation, 
+        @BsonProperty("endLocation") ObjectId endLocation, 
+        @BsonProperty("stops") List<ObjectId> stops) {
         this.startLocation = startLocation;
         this.endLocation = endLocation;
         this.stops = stops;
     }
 
     public TripData(JsonObject tripObj){
-        this.endLocation = new Loacation(tripObj.get("endLocation").getAsJsonObject());
-        this.startLocation = new Loacation(tripObj.get("startLocation").getAsJsonObject());
-        this.stops = new ArrayList<Loacation> (); 
+        this.endLocation = new ObjectId(tripObj.get("endLocation").getAsString());
+        this.startLocation = new ObjectId(tripObj.get("startLocation").getAsString());
+        this.stops = new ArrayList<ObjectId> (); 
         tripObj.get("stops").getAsJsonArray().forEach(stop -> {
-            this.stops.add(new Loacation(stop.getAsJsonObject()));
+            this.stops.add(new ObjectId(stop.getAsString()));
         });
     }
 
-    public Loacation getStartLocation(){
+    public ObjectId getStartLocation(){
         return startLocation; 
     }
-    public void setStartLocation(Loacation startLocation){
+    public void setStartLocation(ObjectId startLocation){
         this.startLocation = startLocation; 
     }
-    public Loacation getEndLocation(){
+    public ObjectId getEndLocation(){
         return endLocation; 
     }
-    public void setEndLocation(Loacation endLocation){
+    public void setEndLocation(ObjectId endLocation){
         this.endLocation = endLocation; 
     }
-    public List<Loacation> getStops(){
+    public List<ObjectId> getStops(){
         return stops; 
     }
 
-    public void addStop(Loacation stop, int index){
+    public void addStop(ObjectId stop, int index){
         this.stops.add(index, stop);
     }
 
-    public void addStop(Loacation stop){
+    public void addStop(ObjectId stop){
         this.stops.add(stop);
     }
 
