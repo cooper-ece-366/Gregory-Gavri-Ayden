@@ -12,8 +12,15 @@ const styleSheet = {
         width: "100%",
         height:"100%",
         display: "flex",
+    },
+    invalid: {
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%,-50%)",
+        width: "100%",
+        height: "100%",
     }
-
 }; 
 const TripViewer = ()=>{
     const params = useParams(); 
@@ -57,34 +64,30 @@ const TripViewer = ()=>{
             (async()=>setTrip(await getTripById(params.id)))(); 
     },[user]); 
     return (
-        <div style={styleSheet.fullPage}>
-            { trip ? (
-                <div style={styleSheet.fullPage} >
-                    <Map ref={mapRef} addMarkerArgs={
-                        [trip.tripData.startLocation, ...trip.tripData.stops, trip.tripData.endLocation]
-                    }
-                    addPathArgs={
-                        [{
-                            stops: [trip.tripData.startLocation, ...trip.tripData.stops, trip.tripData.endLocation].map(({name})=>name),
-                            id: trip.meta.name
-                        }]
-                    }/>
-                    <FloatingMenu>
-                        <TripMenu 
-                            trip={trip}
-                            swapStops={swapStops}
-                            addTrip={addTrip}
-                            changeName={changeName}
-                            changeDescription={changeDescription}
-                            remove={remove}
-                            editable={user?.email === trip.meta.user}
-                            submit={submit}/>
-                    </FloatingMenu>
+        <div style={styleSheet.fullPage} >
+            {trip ? null : <div styleSheet={styleSheet.invalid}><h1>No Trip Selected.</h1></div>}
+            <Map ref={mapRef} addMarkerArgs={
+                [trip.tripData.startLocation, ...trip.tripData.stops, trip.tripData.endLocation]
+            }
+            addPathArgs={
+                [{
+                    stops: [trip.tripData.startLocation, ...trip.tripData.stops, trip.tripData.endLocation].map(({name})=>name),
+                    id: trip.meta.name
+                }]
+            }/>
+            <FloatingMenu>
+                <TripMenu 
+                    trip={trip}
+                    swapStops={swapStops}
+                    addTrip={addTrip}
+                    changeName={changeName}
+                    changeDescription={changeDescription}
+                    remove={remove}
+                    editable={user?.email === trip.meta.user}
+                    submit={submit}/>
+            </FloatingMenu>
 
-                </div>
-                
-            ): (<h1>No trip selected</h1>)}  
-        </div>
+        </div>  
     ); 
 }
 
