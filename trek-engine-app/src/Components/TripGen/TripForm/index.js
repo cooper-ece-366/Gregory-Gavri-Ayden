@@ -16,6 +16,9 @@ const styleSheet = {
         background: "linear-gradient(180deg, #050D2B 0%, #010514 100%)",
         borderRadius: "10px",
         color: "white",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
     },
     form: {
         display: "flex",
@@ -23,6 +26,8 @@ const styleSheet = {
         justifyContent: "center",
         alignItems: "center",
         width: "100%",
+        overflow: "auto",
+        overflowX: "hidden",
     },
     duration: {
         display: "flex",
@@ -33,18 +38,15 @@ const styleSheet = {
         padding: "10px",
     },
     text: {
-        fontSize: "25px",
+        fontSize: "1.5em",
         marginTop: "20px",
         marginBottom: "5px",
     },
     submit: {
-        position: "absolute",
-        bottom: "0",
-        marginBottom: "20px",
-        minWidth: "100px",
+        minWidth: "200px",
         maxWidth: "300px",
+        margin: "20px",
         width: "80%",
-        fontSize: "1.5em",
         backgroundColor: "rgba(222, 45, 22, 0.5)",
         color: "white",
         background: "#DE2D16",
@@ -52,10 +54,10 @@ const styleSheet = {
         boxSizing: "border-box",
         boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
         borderRadius: "25px",
-        fontSize: "1.5em",
+        fontSize: "1.25em",
         fontFamily: "'Sen', sans-serif",
         cursor: "pointer",
-        padding: "10px",
+        padding: "5px",
     }
 }
 
@@ -162,8 +164,10 @@ const TripForm = (props) => {
                     displayValue="name" // Property name to display in the dropdown options
                 />
 
-                <button style={styleSheet.submit} onClick={handleFormSubmit}>Make my Trip!</button>
             </form>
+            <div>
+                <button style={styleSheet.submit} onClick={handleFormSubmit}>Make my Trip!</button>
+            </div>
         </div>
     )
 }

@@ -14,7 +14,7 @@ const styleSheet = {
         marginTop: "20px"
     },
     input: {
-        fontSize: "1.25em",
+        fontSize: "1.15em",
         width: "25%",
         marginRight: "20px",
         background: "#ffffff",
@@ -23,13 +23,10 @@ const styleSheet = {
         padding: "0px 10px",
         border: "2px solid #0014C4"
     },
-    days: {
-        fontSize: "1.25em",
-    },
     scroll: {
         overflow: "auto",
         maxHeight: "200px",
-        minHeight: "200px",
+        minHeight: "100px",
         background: "rgba(100, 100, 100, 0.25)",
     },
     mybutton: {

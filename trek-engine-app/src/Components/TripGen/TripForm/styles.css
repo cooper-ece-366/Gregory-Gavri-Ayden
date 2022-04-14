@@ -7,3 +7,18 @@
 .optionContainer{
     background-color: #000000;
 }
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #1e2540; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+background: #1B2139;
+}
