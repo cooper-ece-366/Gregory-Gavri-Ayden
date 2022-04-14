@@ -53,5 +53,13 @@ public class Stop implements SerializingInterface {
     public List<ObjectId> getSmallStops() {
         return smallStops;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) return true;
+        if (!(o instanceof Stop)) return false;
+        Stop stop = (Stop) o;
+        return this.bigStop.equals(stop.bigStop) && this.smallStops.equals(stop.smallStops);
+    }
     
 }

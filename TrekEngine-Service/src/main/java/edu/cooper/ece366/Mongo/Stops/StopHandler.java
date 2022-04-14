@@ -14,7 +14,7 @@ public abstract class StopHandler<T extends Loacation> extends CollectionHandler
     }
 
     public ArrayList<T> getStopsByType(String tag){
-        return rawQuery(Filters.eq("tag", tag)); 
+        return rawQuery(Filters.eq("type", tag)); 
     }
 
     public ArrayList<T> getStopsByLoc(double lnglb, double latlb, double lngup, double latup){
