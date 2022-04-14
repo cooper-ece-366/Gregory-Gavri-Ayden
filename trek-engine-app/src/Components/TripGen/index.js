@@ -3,26 +3,16 @@ import { useRef } from "react";
 import Map from "../Utils/Map";
 
 const styleSheet = {
-    container: {
-        display: "flex",
-        paddingTop: "50px",
-        height: "100%",
-        width: "100%",
-    },
     fullPage: {
         width: "100%",
         height: "100%",
         display: "flex",
     },
-    contentContainer: {
-        paddingTop: "70px",
-        width: "25%"
-    },
     floatingMenu: {
         position: "fixed",
         zIndex: "2",
         height: "80%",
-        width: "20%",
+        width: "15%",
         maxWidth: "450px",
         minWidth: "200px",
         backgroundColor: "#ffffff",

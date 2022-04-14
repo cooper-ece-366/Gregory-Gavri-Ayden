@@ -8,6 +8,7 @@ import TripViewer from "./Components/TripViewer";
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import About from "./Components/About";
 
 const styleSheet = {
   app: {
@@ -31,6 +32,7 @@ const App = () => {
             <Route path="/tripgen" element={<TripGen />} />
             <Route path="/explore" element={<Explore />} />
             <Route path="/viewTrip/:id" element={<TripViewer />} />
+            <Route path="/about" element={<About />} />
           </Routes>
         </BrowserRouter>
       </div>
