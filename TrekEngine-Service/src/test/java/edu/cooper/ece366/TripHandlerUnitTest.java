@@ -40,9 +40,9 @@ public class TripHandlerUnitTest {
         smallStopHandler.flush();
 
         bigStops = new ArrayList<BigStops>(){{
-            add (new BigStops(new ObjectId(), "New York", 70.0, 70.0, "City")); 
-            add (new BigStops(new ObjectId(), "Chicago", 75.0, 65.0, "City")); 
-            add (new BigStops(new ObjectId(), "LA", 79.0, 70.0, "City")); 
+            add (new BigStops(new ObjectId(), "New York", 70.0, 70.0, "City",true)); 
+            add (new BigStops(new ObjectId(), "Chicago", 75.0, 65.0, "City",true)); 
+            add (new BigStops(new ObjectId(), "LA", 79.0, 70.0, "City",true)); 
         }}; 
         bigStopHandler.insert(bigStops); 
 
@@ -270,11 +270,23 @@ public class TripHandlerUnitTest {
         
         assert(underTest.getCount() == 1);
 
-        trip.getTripData().addStop(smallStops.get(0).getId(), bigStops.get(0).getId());
+        trip.addStop(smallStops.get(1).getId(), bigStops.get(1).getId());
 
+        List<Stop> stops = trip.getTripData().getStops(); 
+        for(Stop stop: stops){
+            if(stop.getBigStop().equals(bigStops.get(1).getId())){
+                assert(stop.getSmallStops().size() == 1);
+            }
+        }
+        
         underTest.update(trip);
-        assert(underTest.getById(trip.getId()).getTripData().getStops().size() == 1);
-        assert(underTest.getById(trip.getId()).equals(trip)); 
+
+        stops = underTest.getById(trip.getId()).getTripData().getStops();
+        for(Stop stop: stops){
+            if(stop.getBigStop().equals(bigStops.get(1).getId())){
+                assert(stop.getSmallStops().size() == 1);
+            }
+        }
     }
         
 }

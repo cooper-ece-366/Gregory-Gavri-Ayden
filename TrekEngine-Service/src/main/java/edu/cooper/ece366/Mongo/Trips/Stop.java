@@ -53,6 +53,9 @@ public class Stop implements SerializingInterface {
     public List<ObjectId> getSmallStops() {
         return smallStops;
     }
+    public void addStop(ObjectId smallStop){
+        this.smallStops.add(smallStop); 
+    }
 
     @Override
     public boolean equals(Object o) {

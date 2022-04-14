@@ -52,9 +52,11 @@ public class TripData implements SerializingInterface{
     }
 
     public void addStop(ObjectId smallStop, ObjectId bigStop){
-        for(Stop stop: this.stops){
-            if(stop.getBigStop().equals(bigStop)){
-                stop.getSmallStops().add(smallStop); // TODO make sure this works (idk if it like deep copies it or some bs) 
+        for(int i = 0; i<stops.size(); i++){
+            if(stops.get(i).getBigStop().equals(bigStop)){
+                Stop temp = stops.get(i);
+                temp.addStop(smallStop);
+                stops.set(i, temp);
                 return;
             }
         }

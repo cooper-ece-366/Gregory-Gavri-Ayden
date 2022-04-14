@@ -30,7 +30,7 @@ public class BigStopHandlerUnitTest {
     @Test
     public void testInsert(){
         ObjectId id = new ObjectId(); 
-        BigStops bigStop = new BigStops(id, "name1", 0.0, 0.0, "type1");
+        BigStops bigStop = new BigStops(id, "name1", 0.0, 0.0, "type1",true);
         underTest.insert(bigStop);
         assert(underTest.getCount() == 1);
         BigStops test = underTest.getById(id);  
@@ -40,10 +40,10 @@ public class BigStopHandlerUnitTest {
     @Test
     public void testGetStopsByType(){
         ArrayList<BigStops> bigStops = new ArrayList<BigStops>(){{
-            add(new BigStops(new ObjectId(), "name1", 0.0, 0.0, "type1"));
-            add(new BigStops(new ObjectId(), "name2", 0.0, 0.0, "type2"));
-            add(new BigStops(new ObjectId(), "name1", 0.0, 0.0, "type1"));
-            add(new BigStops(new ObjectId(), "name2", 0.0, 0.0, "type2"));
+            add(new BigStops(new ObjectId(), "name1", 0.0, 0.0, "type1",true));
+            add(new BigStops(new ObjectId(), "name2", 0.0, 0.0, "type2",true));
+            add(new BigStops(new ObjectId(), "name1", 0.0, 0.0, "type1",true));
+            add(new BigStops(new ObjectId(), "name2", 0.0, 0.0, "type2",true));
         }}; 
         underTest.insert(bigStops); 
         assert(underTest.getCount() == 4); 
@@ -51,12 +51,12 @@ public class BigStopHandlerUnitTest {
         assert(underTest.getStopsByType("type2").size() == 2);
     }
     @Test
-    public void testGetStopsByLoc(){
-        BigStops stop1 = new BigStops(new ObjectId(),"New York", 70.0,70.0,"city"); 
+    public void testGetStopsByLoc(){ 
+        BigStops stop1 = new BigStops(new ObjectId(),"New York", 70.0,70.0,"city",true); 
         
-        BigStops stop2 = new BigStops( new ObjectId(),"New York", 75.0,65.0,"city"); 
+        BigStops stop2 = new BigStops( new ObjectId(),"New York", 75.0,65.0,"city",true); 
             
-        BigStops stop3 = new BigStops(new ObjectId(),"Chicago", 80.0,70.0,"city"); 
+        BigStops stop3 = new BigStops(new ObjectId(),"Chicago", 80.0,70.0,"city",true); 
 
         List<BigStops> stops = new ArrayList<BigStops>(){{
             add(stop1);
@@ -72,11 +72,11 @@ public class BigStopHandlerUnitTest {
     }
     @Test
     public void testGetStopsByName(){
-        BigStops stop1 = new BigStops(new ObjectId(),"New York", 70.0,70.0,"city"); 
+        BigStops stop1 = new BigStops(new ObjectId(),"New York", 70.0,70.0,"city",true); 
         
-        BigStops stop2 = new BigStops( new ObjectId(),"New York", 75.0,65.0,"city"); 
+        BigStops stop2 = new BigStops( new ObjectId(),"New York", 75.0,65.0,"city",true); 
             
-        BigStops stop3 = new BigStops(new ObjectId(),"Chicago", 80.0,70.0,"city"); 
+        BigStops stop3 = new BigStops(new ObjectId(),"Chicago", 80.0,70.0,"city",true); 
 
         List<BigStops> stops = new ArrayList<BigStops>(){{
             add(stop1);
@@ -88,5 +88,22 @@ public class BigStopHandlerUnitTest {
         assert(underTest.getStopsByName("New York").size() == 2);
         assert(underTest.getStopsByName("Chicago").size() == 1);
 
+    }
+
+    @Test
+    public void testCurated(){
+        BigStops stop1 = new BigStops(new ObjectId(),"New York", 70.0,70.0,"city",true); 
+        
+        BigStops stop2 = new BigStops( new ObjectId(),"New York", 75.0,65.0,"city",false); 
+
+        List<BigStops> stops = new ArrayList<BigStops>(){{
+            add(stop1);
+            add(stop2); 
+        }};
+
+        underTest.insert(stops);
+        assert(underTest.getCuratedStopsByName("New York").size() == 1);
+        assert(underTest.getStopsByName("New York").size() == 2);
+        
     }
 }

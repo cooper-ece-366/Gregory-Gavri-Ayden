@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import com.mongodb.client.model.Filters;
 
+import org.bson.conversions.Bson;
+
 import edu.cooper.ece366.Mongo.CollectionHandler;
 import edu.cooper.ece366.Mongo.MongoHandler;
 
@@ -13,15 +15,26 @@ public abstract class StopHandler<T extends Loacation> extends CollectionHandler
         super(handler, name, clazz);
     }
 
+    protected Bson getStopsByTypeFilter(String tag){
+        return Filters.eq("type", tag); 
+    }
+
     public ArrayList<T> getStopsByType(String tag){
-        return rawQuery(Filters.eq("type", tag)); 
+        return rawQuery(getStopsByTypeFilter(tag)); 
+    }
+
+    protected Bson getStopByLocFilter(double lnglb, double latlb, double lngup, double latup){
+        return Filters.and(Filters.gte("lng", lnglb), Filters.lte("lng", lngup), Filters.gte("lat", latlb), Filters.lte("lat", latup)); 
     }
 
     public ArrayList<T> getStopsByLoc(double lnglb, double latlb, double lngup, double latup){
-        return rawQuery(Filters.and(Filters.gte("lng", lnglb), Filters.lte("lng", lngup), Filters.gte("lat", latlb), Filters.lte("lat", latup)));
+        return rawQuery(getStopByLocFilter(lnglb, latlb, lngup, latup));
+    }
+    protected Bson getStopByNameFilter(String name){
+        return Filters.eq("name", name); 
     }
 
     public ArrayList<T> getStopsByName(String name){
-        return rawQuery(Filters.eq("name", name));
+        return rawQuery(getStopByNameFilter(name));
     }
 }

@@ -12,6 +12,7 @@ public interface SerializingInterface {
         Field[] fields = this.getClass().getDeclaredFields();
         for (Field field: fields){
             Class<?>[] interfaces = field.getType().getInterfaces(); 
+            field.setAccessible(true);
             if(Arrays.stream(interfaces).filter(inter -> inter == SerializingInterface.class).count() >= 1){
                 try {
                    obj.add(field.getName(), new Gson().fromJson(((SerializingInterface)(field.get(this))).toJSONString(), JsonObject.class)) ;    
@@ -25,6 +26,8 @@ public interface SerializingInterface {
                     e.printStackTrace();
                 }
             }
+            field.setAccessible(false);
+
         }
         return new Gson().toJson(obj); 
     }
