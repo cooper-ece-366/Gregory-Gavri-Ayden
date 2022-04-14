@@ -19,15 +19,18 @@ const styleSheet = {
         fontSize: "30px",
         margin: "0px"
     },
-    edit:{
+    edit: {
         fontSize: "10px",
     }
 }
 
-const EditableText = (props) => {
+const EditableText = ({ startText, onChange }) => {
     const wrapperRef = useRef(null);
+    const inputRef = useRef(null);
+    const textRef = useRef(null);
+
     const [isEdit, setIsEdit] = useState(false);
-    const [text, setText] = useState(props.text);
+    const [text, setText] = useState(startText);
 
     const handleEditClick = () => {
         setIsEdit(true);
@@ -36,7 +39,7 @@ const EditableText = (props) => {
     useEffect(() => {
         document.addEventListener("click", handleClickOutside, false);
         document.addEventListener("keydown", handleKeyDown, false);
-      }, []);
+    }, []);
 
     const handleClickOutside = (event) => {
         if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
@@ -54,11 +57,21 @@ const EditableText = (props) => {
         setText(e.target.value);
     }
 
+    useEffect(() => {
+        if (isEdit) {
+            wrapperRef.current.focus();
+            inputRef.current.select();
+        }
+        else {
+            onChange(text);
+        }
+    }, [isEdit]);
+
     const getTextComponent = () => {
         if (isEdit) {
-            return <input style={styleSheet.input} autoFocus type="text" value={text} onChange={changeText}></input>
+            return <input style={styleSheet.input} ref={inputRef} autoFocus type="text" value={text} onChange={changeText}></input>
         } else {
-            return <h1 style={styleSheet.text}>{text}</h1>
+            return <h1 style={styleSheet.text} ref={textRef}>{text}</h1>
         }
     }
 

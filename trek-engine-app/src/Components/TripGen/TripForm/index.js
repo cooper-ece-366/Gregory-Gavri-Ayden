@@ -68,7 +68,7 @@ const TripForm = (props) => {
     const [endDate, setEndDate] = useState("");
     const [required, setRequired] = useState([]);
     const [prefs, setPrefs] = useState([]);
-    const [tripName, setTripName] = useState("Trip 1");
+    const [name, setName] = useState("Trip 1");
 
     const options = [
         { name: "National Parks", value: 0 },
@@ -110,6 +110,7 @@ const TripForm = (props) => {
         }
 
         let data = {
+            name,
             from,
             to,
             days: parseInt(finalDays),
@@ -138,7 +139,7 @@ const TripForm = (props) => {
 
     return (
         <div style={styleSheet.container}>
-            <EditableText text="Trip 1" />
+            <EditableText startText="Trip 1" onChange={setName} />
             <form style={styleSheet.form} onSubmit={handleFormSubmit}>
                 <div style={styleSheet.text}>From</div>
                 <AutoComplete setName={setFrom} inputColor="#00ff00" />

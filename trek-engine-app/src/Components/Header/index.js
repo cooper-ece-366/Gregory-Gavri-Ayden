@@ -3,6 +3,7 @@ import Logo from "../Utils/Logo"
 import LogoutButton from "./LogoutButton";
 import { useUserContext } from "../../Contexts/UserContext";
 import { cloneElement } from "react";
+import { Link } from 'react-router-dom';
 
 const styleSheet = {
     root: {
@@ -26,7 +27,8 @@ const styleSheet = {
         display: "flex",
         justifyContent: "center",
         alignSelf: "center",
-        alignContent: "center"
+        alignContent: "center",
+        textDecoration: "none"
     },
     right: {
         display: "flex",
@@ -38,6 +40,7 @@ const styleSheet = {
         lineHeight: "50px",
         marginLeft: "10px",
         color: "white",
+        textDecoration: "none"
     },
     Link: {
         color: "white",
@@ -55,8 +58,10 @@ const Header = ({ children }) => {
     return (
         <div style={styleSheet.root}>
             <div style={styleSheet.left}>
-                <Logo color="#ffffff" size="50px" />
-                <div style={styleSheet.name}>TrekEngine</div>
+                <Link style={styleSheet.left} to="/">
+                    <Logo color="#ffffff" size="50px" />
+                    <div style={styleSheet.name}>TrekEngine</div>
+                </Link>
             </div>
             <div style={styleSheet.right}>
                 {children.map(l => cloneElement(l, { style: styleSheet.Link }))}
