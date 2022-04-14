@@ -10,6 +10,8 @@ import edu.cooper.ece366.Exceptions.IllegalJsonException;
 import edu.cooper.ece366.Mongo.IDInterface;
 import edu.cooper.ece366.Mongo.SerializingAnnotation;
 import edu.cooper.ece366.Mongo.SerializingInterface;
+import edu.cooper.ece366.Mongo.Stops.BigStops.BigStopHandler;
+import edu.cooper.ece366.Mongo.Stops.SmallStops.SmallStopHandler;
 public class Trip implements SerializingInterface, IDInterface  { 
     @BsonProperty("_id") 
     @SerializingAnnotation("_id")
@@ -104,6 +106,11 @@ public class Trip implements SerializingInterface, IDInterface  {
     @Override
     public String toJSONString() {
         return new SerializedTrip(this).toJSONString(); 
+    }
+
+    @Override
+    public String toJSONString(BigStopHandler bigStopHandler, SmallStopHandler smallStopHandler) {
+        return new SerializedTrip(this).toJSONString(bigStopHandler,smallStopHandler); 
     }
 
 

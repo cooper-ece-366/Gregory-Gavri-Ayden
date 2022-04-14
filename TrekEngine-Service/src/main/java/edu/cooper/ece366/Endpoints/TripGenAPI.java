@@ -6,6 +6,8 @@ import com.google.gson.JsonObject;
 
 import org.bson.types.ObjectId;
 
+import edu.cooper.ece366.Mongo.Stops.BigStops.BigStopHandler;
+import edu.cooper.ece366.Mongo.Stops.SmallStops.SmallStopHandler;
 import edu.cooper.ece366.Mongo.Trips.Trip;
 import edu.cooper.ece366.Mongo.Trips.TripHandler;
 import edu.cooper.ece366.Mongo.User.UserHandler;
@@ -21,7 +23,7 @@ public class TripGenAPI {
         return "trips trips blah blah blah";
     }
 
-    public static void paths(TripHandler tripHandler,UserHandler userHandler) {
+    public static void paths(TripHandler tripHandler,UserHandler userHandler, BigStopHandler bigStopHandler, SmallStopHandler smallStopHandler) {
         path("/tripgen", () -> {
             post("/submit", (req, res) -> GetRelevantTrips());
             
@@ -47,7 +49,7 @@ public class TripGenAPI {
                     res.status(400);
                     return "Trip is private";
                 }
-                return trip.toJSONString();
+                return trip.toJSONString(bigStopHandler,smallStopHandler);
             });
 
             post("/update", (AuthRoute)(req,res,body,user)->{
