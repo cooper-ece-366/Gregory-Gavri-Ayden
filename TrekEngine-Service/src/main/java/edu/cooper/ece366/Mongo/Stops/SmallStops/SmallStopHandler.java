@@ -13,7 +13,7 @@ public class SmallStopHandler extends StopHandler<SmallStops> {
 
 
     public SmallStopHandler(MongoHandler handler) {
-        super(handler, "smallStop", SmallStops.class);
+        super(handler, "smallStops", SmallStops.class);
     }
 
     public List<SmallStops> getStopsByBigStopType(ObjectId bigStopType) {

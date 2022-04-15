@@ -64,5 +64,46 @@ public class Stop implements SerializingInterface {
         Stop stop = (Stop) o;
         return this.bigStop.equals(stop.bigStop) && this.smallStops.equals(stop.smallStops);
     }
+
+
+   
+
+    private class SerializedStop implements SerializingInterface {
+        private final String bigStop;
+        private final List<String> smallStops; 
+
+        public SerializedStop(Stop stop){
+            this.bigStop = stop.getBigStop().toHexString();
+            this.smallStops = new ArrayList<String> ();
+            for(ObjectId id: stop.getSmallStops()){
+                smallStops.add(id.toHexString()); 
+            }
+        }
+    }
+
+    private class SerializedStopExtended implements SerializingInterface {
+        private final BigStops bigStop;
+        private final List<SmallStops> smallStops; 
+
+        public SerializedStopExtended(Stop stop, BigStopHandler bigStopHandler, SmallStopHandler smallStopHandler) {
+
+            this.bigStop = bigStopHandler.getById(stop.getBigStop()); 
+            this.smallStops = new ArrayList<SmallStops> ();
+            for(ObjectId id: stop.getSmallStops()){
+                smallStops.add(smallStopHandler.getById(id)); 
+            }
+        }
+    }
+
+    @Override
+    public String toJSONString() {
+        return new SerializedStop(this).toJSONString();
+    }
+
+    @Override
+    public String toJSONString(BigStopHandler bigStopHandler, SmallStopHandler smallStopHandler){
+        return new SerializedStopExtended(this, bigStopHandler, smallStopHandler).toJSONString();
+    }
+
     
 }

@@ -79,9 +79,6 @@ public class TripData implements SerializingInterface{
                stops.equals(trip.stops);
     }
 
-    
-
-
     private class SerializedTripData implements SerializingInterface {
 
         private class SerializedStop implements SerializingInterface {
@@ -124,7 +121,11 @@ public class TripData implements SerializingInterface{
                 this.bigStop = bigStopHandler.getById(stop.getBigStop()); 
                 this.smallStops = new ArrayList<SmallStops> ();
                 for(ObjectId id: stop.getSmallStops()){
-                    smallStops.add(smallStopHandler.getById(id)); 
+                    SmallStops temp = smallStopHandler.getById(id); 
+                    // maybe change this to like correcting it or something in the db but if managed correctly it should never happen
+                    if(temp == null)
+                        continue; 
+                    smallStops.add(temp); 
                 }
             }
         }
@@ -150,7 +151,8 @@ public class TripData implements SerializingInterface{
     }
 
     public String toJSONString(BigStopHandler bigStopHandler, SmallStopHandler smallStopHandler) {
-        return new SerializedTripDataExpanded(this, bigStopHandler, smallStopHandler).toJSONString();
+        SerializedTripDataExpanded temp = new SerializedTripDataExpanded(this, bigStopHandler, smallStopHandler); 
+        return temp.toJSONString(bigStopHandler,smallStopHandler);
     }
 
     

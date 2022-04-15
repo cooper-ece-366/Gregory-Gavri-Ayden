@@ -8,22 +8,17 @@ import org.bson.types.ObjectId;
 
 import edu.cooper.ece366.Exceptions.IllegalJsonException;
 import edu.cooper.ece366.Mongo.IDInterface;
-import edu.cooper.ece366.Mongo.SerializingAnnotation;
 import edu.cooper.ece366.Mongo.SerializingInterface;
 import edu.cooper.ece366.Mongo.Stops.BigStops.BigStopHandler;
 import edu.cooper.ece366.Mongo.Stops.SmallStops.SmallStopHandler;
 public class Trip implements SerializingInterface, IDInterface  { 
     @BsonProperty("_id") 
-    @SerializingAnnotation("_id")
     private final ObjectId id;
     @BsonProperty("meta") 
-    @SerializingAnnotation("meta") 
     private final Meta meta;
     @BsonProperty("trip") 
-    @SerializingAnnotation("trip") 
     private final TripData tripData;
     @BsonProperty("details") 
-    @SerializingAnnotation("details") 
     private final Detail details;
 
     @BsonCreator
@@ -55,16 +50,13 @@ public class Trip implements SerializingInterface, IDInterface  {
         this.details = new Detail(tripJson.get("details").getAsJsonObject());
     }
 
-    @SerializingAnnotation("_id")
     public ObjectId getId(){
         return id; 
     }
 
-    @SerializingAnnotation("meta")
     public Meta getMeta(){
         return meta; 
     }
-    @SerializingAnnotation("trip")
     public TripData getTripData(){
         return tripData; 
     }
@@ -72,7 +64,6 @@ public class Trip implements SerializingInterface, IDInterface  {
     public void addStop(ObjectId smallStop, ObjectId bigStop){
         this.tripData.addStop(smallStop, bigStop); 
     }
-    @SerializingAnnotation("details")
     public Detail getDetails(){
         return details; 
     }
