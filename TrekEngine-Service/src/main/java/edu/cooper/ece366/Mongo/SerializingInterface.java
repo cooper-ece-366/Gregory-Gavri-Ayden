@@ -22,7 +22,7 @@ public interface SerializingInterface {
             if(field.getName().contains("this$")) continue;
             Class<?>[] interfaces = field.getType().getInterfaces(); 
             field.setAccessible(true);
-            if (Arrays.stream(interfaces).filter(inter -> inter == Collection.class).count() >= 1){
+            if (field.getType() == List.class){
                 Type gType = field.getGenericType();
                 if (gType instanceof ParameterizedType){
                     ParameterizedType pType = (ParameterizedType)gType;
@@ -32,9 +32,10 @@ public interface SerializingInterface {
                     if(Arrays.stream(genericInterfaces).filter(inter -> inter == SerializingInterface.class).count() >= 1){
                         try {
                             JsonArray arr = new JsonArray();
-                            SerializingInterface[] objs = (SerializingInterface[])(((Collection)(field.get(this))).toArray()); 
-                            for(int i = 0; i<objs.length; i++){
-                                String temp = objs[i].toJSONString(); 
+                            int size = ((List)field.get(this)).size();
+                            for(int i = 0; i<size; i++){
+                                SerializingInterface tempObj = (SerializingInterface)(((List)field.get(this)).get(i)); 
+                                String temp = tempObj.toJSONString(); 
                                 arr.add(new Gson().fromJson(temp, JsonElement.class)); 
                             }
                             obj.add(field.getName(), arr); 
