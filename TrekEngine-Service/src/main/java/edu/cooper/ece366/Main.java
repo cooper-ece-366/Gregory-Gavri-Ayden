@@ -3,6 +3,8 @@ package edu.cooper.ece366;
 import static spark.Spark.*;
 
 import edu.cooper.ece366.Mongo.MongoHandler;
+import edu.cooper.ece366.Mongo.Stops.BigStops.BigStopHandler;
+import edu.cooper.ece366.Mongo.Stops.SmallStops.SmallStopHandler;
 import edu.cooper.ece366.Mongo.Trips.TripHandler;
 import edu.cooper.ece366.Mongo.User.UserHandler;
 import edu.cooper.ece366.Utils.GeoLocationHandler;
@@ -17,6 +19,8 @@ public class Main {
     private static UserHandler userHandler;
     private static GeoLocationHandler geoHandler; 
     private static TripHandler tripHandler;
+    private static BigStopHandler bigStopHandler;
+    private static SmallStopHandler smallStopHandler;
 
     private static void enableCORS() {
 
@@ -47,6 +51,8 @@ public class Main {
         userHandler = new UserHandler(mongoHandler);
         UserBodyParser.setUserHandler(userHandler); // initalizes AuthRoute to work properly with the userHandler 
         tripHandler = new TripHandler(mongoHandler);
+        bigStopHandler = new BigStopHandler(mongoHandler);
+        smallStopHandler = new SmallStopHandler(mongoHandler);
         geoHandler = new GeoLocationHandler(); 
         enableCORS();
     }
@@ -54,7 +60,7 @@ public class Main {
     public static void paths() {
         // login post request authenticator and returns a user object to the client
         UserAPI.paths(userHandler); 
-        TripGenAPI.paths(tripHandler,userHandler); 
+        TripGenAPI.paths(tripHandler,userHandler,bigStopHandler,smallStopHandler); 
         GeoLocAPI.paths(geoHandler); 
     }
 

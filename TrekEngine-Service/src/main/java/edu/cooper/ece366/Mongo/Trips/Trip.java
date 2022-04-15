@@ -1,6 +1,5 @@
 package edu.cooper.ece366.Mongo.Trips;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import org.bson.codecs.pojo.annotations.BsonCreator;
@@ -10,11 +9,17 @@ import org.bson.types.ObjectId;
 import edu.cooper.ece366.Exceptions.IllegalJsonException;
 import edu.cooper.ece366.Mongo.IDInterface;
 import edu.cooper.ece366.Mongo.SerializingInterface;
+import edu.cooper.ece366.Mongo.Stops.BigStops.BigStopHandler;
+import edu.cooper.ece366.Mongo.Stops.SmallStops.SmallStopHandler;
 public class Trip implements SerializingInterface, IDInterface  { 
-    @BsonProperty("_id") private final ObjectId id;
-    @BsonProperty("meta") private final Meta meta;
-    @BsonProperty("trip") private final TripData tripData;
-    @BsonProperty("details") private final Detail details;
+    @BsonProperty("_id") 
+    private final ObjectId id;
+    @BsonProperty("meta") 
+    private final Meta meta;
+    @BsonProperty("trip") 
+    private final TripData tripData;
+    @BsonProperty("details") 
+    private final Detail details;
 
     @BsonCreator
     public Trip(
@@ -45,14 +50,19 @@ public class Trip implements SerializingInterface, IDInterface  {
         this.details = new Detail(tripJson.get("details").getAsJsonObject());
     }
 
-    public Meta getMeta(){
-        return meta; 
-    }
     public ObjectId getId(){
         return id; 
     }
+
+    public Meta getMeta(){
+        return meta; 
+    }
     public TripData getTripData(){
         return tripData; 
+    }
+
+    public void addStop(ObjectId smallStop, ObjectId bigStop){
+        this.tripData.addStop(smallStop, bigStop); 
     }
     public Detail getDetails(){
         return details; 
@@ -86,8 +96,13 @@ public class Trip implements SerializingInterface, IDInterface  {
 
     @Override
     public String toJSONString() {
-        return new Gson().toJson(new SerializedTrip(this));
+        return new SerializedTrip(this).toJSONString(); 
     }
-    
+
+    @Override
+    public String toJSONString(BigStopHandler bigStopHandler, SmallStopHandler smallStopHandler) {
+        return new SerializedTrip(this).toJSONString(bigStopHandler,smallStopHandler); 
+    }
+
 
 }

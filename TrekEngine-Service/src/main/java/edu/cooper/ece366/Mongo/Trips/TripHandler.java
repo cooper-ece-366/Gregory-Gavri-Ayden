@@ -9,7 +9,9 @@ import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 
 import edu.cooper.ece366.Mongo.CollectionHandler;
-import edu.cooper.ece366.Mongo.MongoHandler; 
+import edu.cooper.ece366.Mongo.MongoHandler;
+import edu.cooper.ece366.Mongo.Stops.BigStops.BigStopHandler;
+import edu.cooper.ece366.Mongo.Stops.BigStops.BigStops; 
 
 
 public class TripHandler extends CollectionHandler<Trip>{
@@ -46,31 +48,37 @@ public class TripHandler extends CollectionHandler<Trip>{
         return this.rawQuery(filter); 
     }
 
-    private ArrayList<Trip> getTripByLoc(String loc, boolean isStart){
-        Bson filter = new Document().append("trip." + (isStart ? "startLocation" : "endLocation") + ".name",loc);  
+    private  ArrayList<Trip> getTripByLoc(String loc, boolean isStart,BigStopHandler stopHandler ){
+
+        ArrayList<BigStops> stops = stopHandler.getStopsByName(loc); 
+        ArrayList<ObjectId> stopIds = new ArrayList<ObjectId>();
+        for(BigStops s : stops){
+            stopIds.add(s.getId()); 
+        }
+        Bson filter = Filters.in("trip." + (isStart ? "startLocation" : "endLocation"), stopIds);
         return this.rawQuery(filter);
     }
 
-    private ArrayList<Trip> getTripByLoc(double lnglb, double lngup, double latlb, double latup, boolean isStart){
+    private ArrayList<Trip> getTripByLoc(double lnglb, double lngup, double latlb, double latup, boolean isStart,BigStopHandler stopHandler){
         
+        ArrayList<BigStops> stops = stopHandler.getStopsByLoc(lnglb, lngup, latlb, latup); 
         String base = "trip." + (isStart ? "startLocation" : "endLocation"); 
-        Bson filter = new Document().append(base + ".lng", new Document().append("$gte", lnglb).append("$lte",lngup) )
-                                    .append(base + ".lat", new Document().append("$gte",latlb).append("$lte",latup) );
+        Bson filter = Filters.in(base, stops); 
         return this.rawQuery(filter);
     }
 
-    public ArrayList<Trip> getTripByStartLoc(String loc){
-        return getTripByLoc(loc, true);
+    public ArrayList<Trip> getTripByStartLoc(String loc,BigStopHandler stopHandler){
+        return getTripByLoc(loc, true,stopHandler);
     }
-    public ArrayList<Trip> getTripByStartLoc(double lnglb, double lngup, double latlb, double latup){
-        return getTripByLoc( lnglb, lngup, latlb, latup, true); 
+    public ArrayList<Trip> getTripByStartLoc(double lnglb, double lngup, double latlb, double latup,BigStopHandler stopHandler){
+        return getTripByLoc( lnglb, lngup, latlb, latup, true,stopHandler); 
     }
 
-    public ArrayList<Trip> getTripByEndLoc(String loc){
-        return getTripByLoc(loc, false);
+    public ArrayList<Trip> getTripByEndLoc(String loc,BigStopHandler stopHandler){
+        return getTripByLoc(loc, false,stopHandler);
     }
-    public ArrayList<Trip> getTripByEndLoc(double lnglb, double lngup, double latlb, double latup){
-        return getTripByLoc( lnglb, lngup, latlb, latup, false); 
+    public ArrayList<Trip> getTripByEndLoc(double lnglb, double lngup, double latlb, double latup,BigStopHandler stopHandler){
+        return getTripByLoc( lnglb, lngup, latlb, latup, false,stopHandler); 
     }
 
 }
