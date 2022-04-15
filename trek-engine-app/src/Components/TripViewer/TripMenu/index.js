@@ -5,6 +5,7 @@ import DraggableList from './DraggableList';
 import {getLoc} from "../../../utils/GeoLocation";
 
 const TripMenu = ({trip, swapStops,addTrip,changeName,changeDescription,submit,remove, editable})=>{
+    const [addLocation, setAddLocation] = useState("");
 
     const styleSheet = {
         container: {
@@ -14,12 +15,27 @@ const TripMenu = ({trip, swapStops,addTrip,changeName,changeDescription,submit,r
             flexDirection: "column",
             alignItems: "center",
             margin: "5px",
-        }
+        },
+        add: {
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+        },
+        addButton: {
+            margin: "5px",
+            padding: "5px",
+            borderRadius: "5px",
+            border: "none",
+            cursor: "pointer",
+        },
     }
 
-    const addLoc = async (address)=>{
-        const loc = await getLoc(address); 
-        addTrip(loc); 
+    // TODO: In backend, check if user added a curated stop or a custom stop.
+    const addLoc = async () => {
+        let location = await getLoc(addLocation);
+        console.log(location);
+        addTrip({bigStop:{name:addLocation, lat:location.lat, lng:location.lng}});
     }
 
     const getBigStops = () => {
@@ -38,7 +54,8 @@ const TripMenu = ({trip, swapStops,addTrip,changeName,changeDescription,submit,r
                     name,
                 })=><li>{name}</li>)}</ol>
             }
-            {editable && <AutoComplete placeholder="Add a Stop" setName={addLoc} clearOnSelect={true}/> }
+            <br/>
+            <div style={styleSheet.add}>{editable && <AutoComplete inputColor="grey" placeholder="Add a Stop" setName={setAddLocation} clearOnSelect={true}/> }<button style={styleSheet.addButton} onClick={addLoc}>Add Place</button></div>
             {editable && <button onClick={submit}>Update Button</button>}
         </div>
     );    

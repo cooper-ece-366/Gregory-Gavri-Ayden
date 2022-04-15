@@ -119,7 +119,7 @@ const TripViewer = ()=>{
         <div style={styleSheet.fullPage}>
             { trip ? (
                 <div style={styleSheet.fullPage} >
-                    {isRemove ? <div style={styleSheet.removeModal}><h1>Are you sure you want to remove this stop?</h1><div><button style={styleSheet.modalButton} onClick={removeLocationByKey}>Yes</button><button style={styleSheet.modalButton} onClick={closeModal}>No</button></div></div> : null}
+                    {isRemove && <div style={styleSheet.removeModal}><h1>Are you sure you want to remove this stop?</h1><div><button style={styleSheet.modalButton} onClick={removeLocationByKey}>Yes</button><button style={styleSheet.modalButton} onClick={closeModal}>No</button></div></div>}
                     <Map ref={mapRef} addMarkerArgs={trip.tripData.stops}
                     addPathArgs={
                         [{
