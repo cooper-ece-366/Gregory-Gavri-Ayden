@@ -1,6 +1,13 @@
 import {useState} from 'react'; 
 import DraggableItem from "./DraggableItem";
+
 const DraggableList = ({stops, swapStops, remove})=>{
+
+    const styleSheet = {
+        container: {
+            width: "100%",
+        }
+    }
 
     const [startPos,setStartPos] = useState(null); 
     const [endPos, setEndPos] = useState(null); 
@@ -28,7 +35,7 @@ const DraggableList = ({stops, swapStops, remove})=>{
     }
 
     return (
-        <div>
+        <div style={styleSheet.container}>
             {stops.map(({name},i)=>(<DraggableItem index = {i} 
                 onDragStart={onDragStart} 
                 onDrop={onDrop} 

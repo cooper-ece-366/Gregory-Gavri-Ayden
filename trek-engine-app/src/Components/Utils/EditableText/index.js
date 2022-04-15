@@ -8,6 +8,7 @@ const styleSheet = (fontSize)=>({
         justifyContent: "space-between",
         fontSize,
         margin: "10px",
+        width: "100%",
     },
     input: {
         width: "100%",

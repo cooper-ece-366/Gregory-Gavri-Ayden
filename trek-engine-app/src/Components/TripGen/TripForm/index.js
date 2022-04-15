@@ -13,8 +13,7 @@ import axios from "axios";
 const styleSheet = {
     container: {
         width: "100%",
-        background: "linear-gradient(180deg, #050D2B 0%, #010514 100%)",
-        borderRadius: "10px",
+        margin: "5px",
         color: "white",
         display: "flex",
         flexDirection: "column",

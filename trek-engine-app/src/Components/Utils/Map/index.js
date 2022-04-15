@@ -1,3 +1,4 @@
+// Written by Gregory Pressor, Ayden Shankman, and Gavri Kepets
 import React, { useRef, useEffect, useState,useImperativeHandle,forwardRef } from 'react';
 import {renderToString} from 'react-dom/server';
 import Popup from "./Popup"; 
@@ -41,7 +42,7 @@ const Map = ({lng_i=-87.65,lat_i=41.84,addMarkerArgs=[],addPathArgs=[]},ref) => 
     }
 
     const addPath = async (stops,id)=>{
-        const coordinates = await getDirection(stops);
+        const coordinates = await getDirection(stops.map(stop => stop.name));
         addMarkerLngLat(coordinates[0][0],coordinates[0][1],`start-${id}`);
         addMarkerLngLat(coordinates[coordinates.length-1][0],coordinates[coordinates.length-1][1],`end-${id}`);
         paths.current[id] = map.current.addLayer({
@@ -95,13 +96,10 @@ const Map = ({lng_i=-87.65,lat_i=41.84,addMarkerArgs=[],addPathArgs=[]},ref) => 
     });
 
     map.current.on("load", ()=>{
-      console.log(addMarkerArgs); 
-      console.log(addPathArgs); 
-      addMarkerArgs.forEach(({lat,lng,name:id})=>addMarkerLngLat(lng,lat,id));
-      addPathArgs.forEach(({stops,id})=>{
-        console.log(stops); 
-        addPath(stops,id)}
-      ); 
+      for(let i = 0; i < addMarkerArgs.length-1; i++){
+        console.log(addMarkerArgs[i].bigStop.id, addMarkerArgs[i+1].bigStop.id)
+        addPath([addMarkerArgs[i].bigStop, addMarkerArgs[i+1].bigStop],addMarkerArgs[i].bigStop.id+"-"+addMarkerArgs[i+1].bigStop.id);
+      }
     }); 
 
     // Clean up on unmount

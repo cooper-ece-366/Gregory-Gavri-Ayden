@@ -8,11 +8,11 @@ const styleSheet = {
         border: `1px ${dragging ? "dashed":"solid"} black`,
         paddingTop:"1px",
         marginTop:"5px",
+        cursor: "grab"
     }), 
     clicker: {
         cursor: "pointer",
     }
-
 }; 
 
 
@@ -42,7 +42,7 @@ const DraggableItem = ({children, onDragStart,onDrop,onDragOver, onDragEnd,remov
                     {!dragging ? children : <div></div>}
             </div>
             <div style = {styleSheet.clicker} onClick = {()=>remove(index)}>
-                -
+                X
             </div>
         </div>
     );  

@@ -22,6 +22,7 @@ const styleSheet = {
         minWidth: "250px",
         boxShadow: "0px 0px 50px #000000",
         display: "flex",
+        background: "linear-gradient(180deg, #050D2B 0%, #010514 100%)",
     }
 }
 

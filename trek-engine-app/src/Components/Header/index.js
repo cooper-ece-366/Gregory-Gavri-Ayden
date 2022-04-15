@@ -47,6 +47,7 @@ const styleSheet = {
         textDecoration: "none",
         marginLeft: "20px",
         fontSize: "0.75em",
+        lineHeight: "1.75em"
     }
 };
 
