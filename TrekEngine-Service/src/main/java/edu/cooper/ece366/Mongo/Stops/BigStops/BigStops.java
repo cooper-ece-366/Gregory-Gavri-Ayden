@@ -53,6 +53,8 @@ public class BigStops extends Loacation implements SerializingInterface {
 
     @Override
     public String toJSONString(BigStopHandler bigStopHandler, SmallStopHandler smallstopHandler ){
+        if (bigStopHandler == null || smallstopHandler == null)
+            return this.toJSONString();
         return new BigStopsSerilizer(this).toJSONString(bigStopHandler,smallstopHandler); 
     }
 

@@ -150,7 +150,10 @@ public class TripData implements SerializingInterface{
         return new SerializedTripData(this).toJSONString();
     }
 
+    @Override
     public String toJSONString(BigStopHandler bigStopHandler, SmallStopHandler smallStopHandler) {
+        if (bigStopHandler == null || smallStopHandler == null)
+            return this.toJSONString();
         SerializedTripDataExpanded temp = new SerializedTripDataExpanded(this, bigStopHandler, smallStopHandler); 
         return temp.toJSONString(bigStopHandler,smallStopHandler);
     }

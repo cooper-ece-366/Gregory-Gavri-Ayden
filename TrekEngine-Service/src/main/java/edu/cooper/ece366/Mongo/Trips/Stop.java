@@ -102,6 +102,8 @@ public class Stop implements SerializingInterface {
 
     @Override
     public String toJSONString(BigStopHandler bigStopHandler, SmallStopHandler smallStopHandler){
+        if (bigStopHandler == null || smallStopHandler == null)
+            return this.toJSONString();
         return new SerializedStopExtended(this, bigStopHandler, smallStopHandler).toJSONString();
     }
 
