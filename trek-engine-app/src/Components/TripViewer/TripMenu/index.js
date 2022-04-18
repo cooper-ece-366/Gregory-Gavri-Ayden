@@ -1,10 +1,10 @@
-import {useState, useEffect} from 'react'; 
+import { useState, useEffect } from 'react';
 import AutoComplete from '../../Utils/AutoComplete';
 import EditableText from '../../Utils/EditableText';
-import DraggableList from './DraggableList';    
-import {getLoc} from "../../../utils/GeoLocation";
+import DraggableList from './DraggableList';
+import { getLoc } from "../../../utils/GeoLocation";
 
-const TripMenu = ({trip, swapStops,addTrip,changeName,changeDescription,submit,remove, editable})=>{
+const TripMenu = ({ trip, swapStops, addTrip, changeName, changeDescription, submit, remove, editable }) => {
     const [addLocation, setAddLocation] = useState("");
 
     const styleSheet = {
@@ -35,30 +35,29 @@ const TripMenu = ({trip, swapStops,addTrip,changeName,changeDescription,submit,r
     const addLoc = async () => {
         let location = await getLoc(addLocation);
         console.log(location);
-        addTrip({bigStop:{name:addLocation, lat:location.lat, lng:location.lng}});
+        addTrip({ bigStop: { name: addLocation, lat: location.lat, lng: location.lng } });
     }
 
     const getBigStops = () => {
         return trip.tripData.stops.map(stop => stop.bigStop);
     }
 
-
     return (
         <div style={styleSheet.container}>
-            {editable ? <EditableText text={trip.meta.name} setText={changeName}/> : <h1>{trip.meta.name}</h1>}
-            {editable ? <EditableText fontSize="10px" text={trip.meta.description} setText={changeDescription}/> : <h1>{trip.meta.description}</h1>}
-            {editable ? 
-                <DraggableList remove = {remove} swapStops = {swapStops} stops={getBigStops()}/> 
-                : 
+            {editable ? <EditableText text={trip.meta.name} setText={changeName} /> : <h1>{trip.meta.name}</h1>}
+            {editable ? <EditableText fontSize="1em" text={trip.meta.description} setText={changeDescription} /> : <h1>{trip.meta.description}</h1>}
+            {editable ?
+                <DraggableList remove={remove} swapStops={swapStops} stops={trip.tripData.stops} />
+                :
                 <ol>{[getBigStops()].map(({
                     name,
-                })=><li>{name}</li>)}</ol>
+                }) => <li>{name}</li>)}</ol>
             }
-            <br/>
-            <div style={styleSheet.add}>{editable && <AutoComplete inputColor="grey" placeholder="Add a Stop" setName={setAddLocation} clearOnSelect={true}/> }<button style={styleSheet.addButton} onClick={addLoc}>Add Place</button></div>
+            <br />
+            <div style={styleSheet.add}>{editable && <AutoComplete inputColor="grey" placeholder="Add a Stop" setName={setAddLocation} clearOnSelect={true} />}<button style={styleSheet.addButton} onClick={addLoc}>Add Place</button></div>
             {editable && <button onClick={submit}>Update Button</button>}
         </div>
-    );    
+    );
 }
 
 export default TripMenu; 
