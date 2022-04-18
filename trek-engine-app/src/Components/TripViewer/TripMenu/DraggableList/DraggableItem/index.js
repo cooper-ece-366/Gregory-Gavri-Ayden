@@ -2,10 +2,11 @@ import { useRef } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
 
 const style = {
-    border: '1px dashed gray',
-    marginBottom: '.5rem',
+    paddingTop: '0.5rem',
+    paddingBottom: '0.5rem',
     cursor: 'move',
     width: '100%',
+    borderBottom: '1px solid #eee',
 }
 
 const DraggableItem = ({ id, text, index, moveCard, dnd, item }) => {

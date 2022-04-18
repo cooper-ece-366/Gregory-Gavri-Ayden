@@ -3,8 +3,11 @@ import DraggableItem from './DraggableItem'
 import DnDList from 'react-dnd-list';
 
 const style = {
-    // width: "100%",
+    width: "85%",
     userSelect: "none",
+    listStyle: "none",
+    padding: "0",
+    backgroundColor: "rgba(255,255,255,0.25)",
 }
 
 const DraggableList = ({ stops, swapStops }) => {
