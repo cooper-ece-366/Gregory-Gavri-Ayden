@@ -10,7 +10,7 @@ const stopSet = new Set();
 
 const nearby = async (location,type,radius)=>axios.get(`http://localhost:4567/api/v1/geo/nearby?location=${location}&type=${type}&radius=${radius}`);
 const search = async (address)=>axios.get(`http://localhost:4567/api/v1/geo/search?address=${address}`);
-const nearby2 = async (lng,lat,kinds,rate,radius)=>axios.get(`http://api.opentripmap.com/0.1/en/places/radius?lon=-73.989563&lat=40.726589&kinds=gardens_and_parks&rate=3h&radius=12000&apikey=5ae2e3f221c38a28845f05b61bac2d9ae3fa1ac023ab5025d99abd3c`)
+const nearby2 = async (lng,lat,kinds,rate,radius)=>axios.get(`http://api.opentripmap.com/0.1/en/places/radius?lon=${lng}&lat=${lat}&kinds=${kinds}&rate=${rate}&radius=${radius}&limit=200&apikey=5ae2e3f221c38a28845f05b61bac2d9ae3fa1ac023ab5025d99abd3c`)
 
 const lodging = ["alpine_hut",
     "campsites",
@@ -128,7 +128,7 @@ const cult = ["sculptures",
     "wall_painting"
 ];
 
-const types = []
+const types = [].concat(lodging,nature,nightlife,food,shopping,sports,entertainment,museums,zoos,relig,hist,cult);
 
 const insert = (obj)=>{
     if (stopSet.has(obj.name)) return; 
@@ -136,56 +136,81 @@ const insert = (obj)=>{
     stops.push(obj);
 }
 
-const getTag = (p_type)=>{
-    if (p_type == 'natural_feature' || p_type == 'park' || p_type == 'national_park') return 'nature';
-    if (p_type == 'museum' || p_type == 'art_gallery') return 'landmark';
-    if (p_type == 'rv_park' || p_type == 'campground') return 'lodging';
-    if (p_type == 'casino' || p_type == 'zoo' || p_type == 'tourist_attraction' || p_type == 'stadium' || p_type == 'night_club' || p_type == 'amusement_park') return 'entertainment';
-    return p_type;
+const getTag = (t)=>{
+    if (lodging.includes(t)) return 'lodging';
+    if (nature.includes(t)) return 'nature';
+    if (nightlife.includes(t)) return 'nightlife';
+    if (food.includes(t)) return 'food';
+    if (shopping.includes(t)) return 'shopping';
+    if (sports.includes(t)) return 'sports';
+    if (entertainment.includes(t)) return 'entertainment';
+    if (museums.includes(t)) return 'museums';
+    if (zoos.includes(t)) return 'zoos';
+    if (relig.includes(t)) return 'religion';
+    if (hist.includes(t)) return 'hist';
+    if (cult.includes(t)) return 'culture';
 }
 
-const getStop = (obj,tag1)=>{
-    const stop = {
-        name: obj.name,
-        lat: obj.lat,
-        lng: obj.lng,
-        g_types: obj.types,
-        tag: getTag(tag1)
+const getStop = (obj,tag)=>{
+    //console.log(obj);
+    if(tag == 'city' || tag == 'national_park' || tag == 'state_park' || tag == 'national_forest'){
+        const stop = {
+            name: obj.name,
+            lat: obj.lat,
+            lng: obj.lng,
+            types: [tag],
+            tag: tag
+        }
+        return stop;
     }
-    return stop;
+
+    else{
+        const stop = {
+            name: obj.properties.name,
+            lat: obj.geometry.coordinates[1],
+            lng: obj.geometry.coordinates[0],
+            types: obj.properties.kinds.split(','),
+            tag: getTag(tag)
+        }
+        return stop;
+    }
 }
 
 const test = async(obj)=>{
-    const {data} = await nearby2(obj[0].lng,obj[0].lat,'parks_and_gardens','3h',12000); 
-    console.log(data);
+    const {data} = await nearby2(obj[0].lng,obj[0].lat,'gardens_and_parks','3h',5000);
+
+    //console.log(data.features[0].properties);
+    const s = getStop(data.features[0],'gardens_and_parks');
+    console.log(s);
 }
 
 const generateStops = async (obj)=>{
     
     for (let i = 0; i < 1; i++) {
         console.log("Starting: ", obj[i].name);
-        const {data} = await search(obj[i].name); 
-        insert(getStop(data, obj[i].type));
+        //const {data} = await search(obj[i].name);
+        insert(getStop(obj[i], obj[i].type));
 
-        let latlng = obj[i].lat.toString().concat(" ").concat(obj[i].lng.toString());
+        //let latlng = obj[i].lat.toString().concat(" ").concat(obj[i].lng.toString());
 
-        for(let j = 0; j < p_types.length; j++){
-            const {data} = await nearby(latlng, p_types[j],"50000"); 
-
-            for(let k = 0; k < data.length; k++){
-                insert(getStop(data[k],p_types[j])); 
+        for(let j = 0; j < types.length; j++){
+            //const {data} = await nearby(latlng, ts[j],"50000"); 
+            const {data} = await nearby2(obj[i].lng,obj[i].lat,types[j],'3',10000);
+            console.log("places in this type: ", data.features.length);
+            for(let k = 0; k < data.features.length; k++){
+                insert(getStop(data.features[k],types[j])); 
             }
-            console.log("finished: ", p_types[j]);
+            console.log("finished: ", types[j]);
         }
     }
     return(stops);
 }
-(async ()=>{
+/*(async ()=>{
     const jsonObj = await csv().fromFile(csvFilePath); 
     fs.writeFileSync(stopsFilePath,JSON.stringify(await test(jsonObj))); 
 })();
-
-/*(async ()=>{
+*/
+(async ()=>{
     const jsonObj = await csv().fromFile(csvFilePath); 
     fs.writeFileSync(stopsFilePath,JSON.stringify(await generateStops(jsonObj))); 
-})();*/
+})();
