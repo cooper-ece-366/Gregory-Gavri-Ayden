@@ -5,8 +5,7 @@ const axios = require("axios");
 const csv = require('csvtojson');
 const csvFilePath = './data.csv';
 
-const stops = [];
-const stopSet = new Set();
+const big_stops = [];
 
 const nearby = async (location,type,radius)=>axios.get(`http://localhost:4567/api/v1/geo/nearby?location=${location}&type=${type}&radius=${radius}`);
 const search = async (address)=>axios.get(`http://localhost:4567/api/v1/geo/search?address=${address}`);
@@ -104,7 +103,6 @@ const hist = ["historical_places",
     "unclassified_objects",
     "aqueducts",
     "footbridges",
-    "roman_bridges",
     "viaducts",
     "stone_bridges",
     "lighthouses",
@@ -115,9 +113,6 @@ const hist = ["historical_places",
     "destroyed_objects",
     "manor_houses",
     "palaces",
-    "triumphal_archs",
-    "amphitheatres",
-    "pyramids",
     "fortifications"
 ];
 
@@ -128,12 +123,13 @@ const cult = ["sculptures",
     "wall_painting"
 ];
 
-const types = [].concat(lodging,nature,nightlife,food,shopping,sports,entertainment,museums,zoos,relig,hist,cult);
+const types = [].concat(lodging,nature,nightlife,zoos,museums,shopping,sports,entertainment,relig,hist,cult,food);
 
-const insert = (obj)=>{
+const insert = (obj,stops,stopSet)=>{
     if (stopSet.has(obj.name)) return; 
     stopSet.add(obj.name); 
     stops.push(obj);
+    return 
 }
 
 const getTag = (t)=>{
@@ -177,7 +173,7 @@ const getStop = (obj,tag)=>{
 }
 
 const test = async(obj)=>{
-    const {data} = await nearby2(obj[0].lng,obj[0].lat,'gardens_and_parks','3h',5000);
+    const {data} = await nearby2(obj[0].lng,obj[0].lat,'gardens_and_parks','3h',8000);
 
     //console.log(data.features[0].properties);
     const s = getStop(data.features[0],'gardens_and_parks');
@@ -185,25 +181,43 @@ const test = async(obj)=>{
 }
 
 const generateStops = async (obj)=>{
-    
-    for (let i = 0; i < 1; i++) {
-        console.log("Starting: ", obj[i].name);
+    let total = 0;
+    for (let i = 0; i < obj.length; i++) {
+        const stops = [];
+        const stopSet = new Set();
+
+        console.log(i," Starting: ", obj[i].name);
         //const {data} = await search(obj[i].name);
-        insert(getStop(obj[i], obj[i].type));
+        //insert(getStop(obj[i], obj[i].type));
 
         //let latlng = obj[i].lat.toString().concat(" ").concat(obj[i].lng.toString());
 
         for(let j = 0; j < types.length; j++){
-            //const {data} = await nearby(latlng, ts[j],"50000"); 
-            const {data} = await nearby2(obj[i].lng,obj[i].lat,types[j],'3',10000);
-            console.log("places in this type: ", data.features.length);
+            //const {data} = await nearby(latlng, ts[j],"50000");
+            let rating = '3';
+            if(getTag(types[j]) == 'nature' || getTag(types[j]) == 'religion' || getTag(types[j]) == 'hist') rating = '3h';
+
+            const {data} = await nearby2(obj[i].lng,obj[i].lat,types[j],rating, 15000);
+            console.log("places in ", types[j], data.features.length);
             for(let k = 0; k < data.features.length; k++){
-                insert(getStop(data.features[k],types[j])); 
+                stop = getStop(data.features[k],types[j]);
+                if(stopSet.has(stop.name)) continue; 
+                stopSet.add(stop.name); 
+                stops.push(stop);
+                //insert(getStop(data.features[k],types[j]), stops, stopSet); 
             }
-            console.log("finished: ", types[j]);
+            console.log("finished: ", types[j], " #", j);
         }
+        total += stops.length;
+        console.log("Total stops: ", total);
+        let big_stop = {
+            info: obj[i],
+            stops: stops
+        }
+
+        big_stops.push(big_stop);
     }
-    return(stops);
+    return(big_stops);
 }
 /*(async ()=>{
     const jsonObj = await csv().fromFile(csvFilePath); 
