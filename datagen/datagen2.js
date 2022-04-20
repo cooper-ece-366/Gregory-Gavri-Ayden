@@ -9,121 +9,62 @@ const big_stops = [];
 
 const nearby = async (location,type,radius)=>axios.get(`http://localhost:4567/api/v1/geo/nearby?location=${location}&type=${type}&radius=${radius}`);
 const search = async (address)=>axios.get(`http://localhost:4567/api/v1/geo/search?address=${address}`);
-const nearby2 = async (lng,lat,kinds,rate,radius)=>axios.get(`http://api.opentripmap.com/0.1/en/places/radius?lon=${lng}&lat=${lat}&kinds=${kinds}&rate=${rate}&radius=${radius}&limit=200&apikey=5ae2e3f221c38a28845f05b61bac2d9ae3fa1ac023ab5025d99abd3c`)
+const nearby2 = async (lng,lat,kinds,rate,radius)=>axios.get(`http://api.opentripmap.com/0.1/en/places/radius?lon=${lng}&lat=${lat}&kinds=${kinds}&rate=${rate}&radius=${radius}&limit=300&apikey=5ae2e3f221c38a28845f05b61bac2d9ae3fa1ac023ab5025d99abd3c`)
 
 const lodging = ["alpine_hut",
     "campsites",
     "hostels",
     "other_hotels",
-    "motels",
-    "resorts",
-    "villas_and_chalet"
+    "resorts"
     ];
 
 const nature = ["view_points",
-    "gardens_and_parks",
     "farms",
     "picnic_site",
+    "beaches",
+    "geological_formations",
     "glaciers",
     "nature_reserves",
-    "beaches",
-    "other_lakes",
-    "lagoons",
-    "waterfalls",
-    "canals",
-    "rivers",
-    "reservoirs",
-    "dry_lakes",
-    "salt_lakes",
-    "rift_lakes",
-    "crater_lakes",
-    "rock_formations",
-    "canyons",
-    "caves"
+    "natural_springs",
+    "water"
 ];
 
 const nightlife = ["bars","pubs","nightclubs"];
 
-const food = ["cafes",
-    "restaurants",
-    "foods",
-    "bakeries",
+const food = ["restaurants",
+    "cafes",
     "wineries",
     "biergartens"
     ];
 
 const shopping = ["marketplaces","malls"];
 
-const sports = ["bicycle_rental",
-    "stadiums",
-    "kitesurfing",
-    "surfing",
-    "climbing",
-    "diving",
-    "pools"
-    ];
+const sports = ["sports"];
 
 const entertainment = ["casino",
-    "other_amusement_rides",
-    "ferris_wheels",
-    "roller_coasters",
-    "water_parks",
-    "miniature_parks",
-    "amusement_parks",
+    "amusements",
     "circuses"
 ];
 
-const museums = ["other_museums",
-    "art_galleries",
-    "historic_house_museums",
-    "children_museums",
-    "fashion_museums",
-    "open_air_museums",
-    "biographical_museums",
-    "archaeological_museums",
-    "history_museums",
-    "military_museums",
-    "planetariums",
-    "science_museums",
-    "museums_of_science_and_technology",
-    "local_museums",
-    "national_museums"
-];
-
-const zoos = ["zoos","aquariums"];
+const museums_and_zoos= ["museums"];
 
 const relig = ["religion"];
 
 const hist = ["historical_places",
+    "fortifications",
     "monuments_and_memorials",
-    "castles",
-    "bunkers",
-    "war_memorials",
     "archaeology",
-    "unclassified_objects",
-    "aqueducts",
-    "footbridges",
-    "viaducts",
-    "stone_bridges",
+    "bridges",
     "lighthouses",
-    "bell_towers",
-    "clock_towers",
-    "observation_towers",
-    "watchtowers",
-    "destroyed_objects",
-    "manor_houses",
-    "palaces",
-    "fortifications"
+    "towers",
+    "historic_architecture"
 ];
 
-const cult = ["sculptures",
-    "fountains",
-    "installation",
-    "squares",
-    "wall_painting"
-];
+const cult = ["urban_enviroment"];
 
-const types = [].concat(lodging,nature,nightlife,zoos,museums,shopping,sports,entertainment,relig,hist,cult,food);
+const types = [].concat(lodging,nature,nightlife,museums_and_zoos,shopping,sports,entertainment,relig,hist,cult,food);
+
+console.log(types.length);
 
 const insert = (obj,stops,stopSet)=>{
     if (stopSet.has(obj.name)) return; 
@@ -141,14 +82,13 @@ const getTag = (t)=>{
     if (sports.includes(t)) return 'sports';
     if (entertainment.includes(t)) return 'entertainment';
     if (museums.includes(t)) return 'museums';
-    if (zoos.includes(t)) return 'zoos';
     if (relig.includes(t)) return 'religion';
     if (hist.includes(t)) return 'hist';
     if (cult.includes(t)) return 'culture';
 }
 
 const getStop = (obj,tag)=>{
-    //console.log(obj);
+
     if(tag == 'city' || tag == 'national_park' || tag == 'state_park' || tag == 'national_forest'){
         const stop = {
             name: obj.name,
@@ -187,17 +127,15 @@ const generateStops = async (obj)=>{
         const stopSet = new Set();
 
         console.log(i," Starting: ", obj[i].name);
-        //const {data} = await search(obj[i].name);
-        //insert(getStop(obj[i], obj[i].type));
-
-        //let latlng = obj[i].lat.toString().concat(" ").concat(obj[i].lng.toString());
+        
+        //const {data} = await search(obj[i].name);a
 
         for(let j = 0; j < types.length; j++){
             //const {data} = await nearby(latlng, ts[j],"50000");
             let rating = '3';
             if(getTag(types[j]) == 'nature' || getTag(types[j]) == 'religion' || getTag(types[j]) == 'hist') rating = '3h';
 
-            const {data} = await nearby2(obj[i].lng,obj[i].lat,types[j],rating, 15000);
+            const {data} = await nearby2(obj[i].lng,obj[i].lat,types[j],rating, 25000);
             console.log("places in ", types[j], data.features.length);
             for(let k = 0; k < data.features.length; k++){
                 stop = getStop(data.features[k],types[j]);
@@ -223,8 +161,8 @@ const generateStops = async (obj)=>{
     const jsonObj = await csv().fromFile(csvFilePath); 
     fs.writeFileSync(stopsFilePath,JSON.stringify(await test(jsonObj))); 
 })();
-*/
+
 (async ()=>{
     const jsonObj = await csv().fromFile(csvFilePath); 
     fs.writeFileSync(stopsFilePath,JSON.stringify(await generateStops(jsonObj))); 
-})();
+})();*/
