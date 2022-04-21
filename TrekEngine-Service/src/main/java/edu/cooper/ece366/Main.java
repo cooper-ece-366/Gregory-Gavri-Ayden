@@ -7,9 +7,8 @@ import edu.cooper.ece366.Mongo.Stops.BigStops.BigStopHandler;
 import edu.cooper.ece366.Mongo.Stops.SmallStops.SmallStopHandler;
 import edu.cooper.ece366.Mongo.Trips.TripHandler;
 import edu.cooper.ece366.Mongo.User.UserHandler;
-import edu.cooper.ece366.Utils.GeoLocationHandler;
-
 import edu.cooper.ece366.RouteInterfaces.UserBodyParser;
+import edu.cooper.ece366.Utils.GeoLocation.GeoLocationHandler;
 import edu.cooper.ece366.Endpoints.TripGenAPI;
 import edu.cooper.ece366.Endpoints.GeoLocAPI;
 import edu.cooper.ece366.Endpoints.UserAPI;

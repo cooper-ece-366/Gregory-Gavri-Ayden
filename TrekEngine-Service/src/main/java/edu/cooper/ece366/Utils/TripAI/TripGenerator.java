@@ -1,14 +1,19 @@
 package edu.cooper.ece366.Utils.TripAI;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.bson.types.ObjectId;
 
+import edu.cooper.ece366.Exceptions.InvalidTripException;
 import edu.cooper.ece366.Mongo.Stops.BigStops.BigStopHandler;
 import edu.cooper.ece366.Mongo.Stops.BigStops.BigStops;
 import edu.cooper.ece366.Mongo.Trips.Trip;
-import edu.cooper.ece366.Utils.GeoLocationHandler;
+import edu.cooper.ece366.Utils.GeoLocation.GeoLocationHandler;
+import edu.cooper.ece366.Utils.GeoLocation.LngLat;
+
 
 public class TripGenerator {
 
@@ -18,6 +23,7 @@ public class TripGenerator {
     private long minTripLen; 
     private List<BigStops> stops; 
     private Trip templateTrip; 
+    private LngLat[] boundingBox; // LngLat[2] = [lower, upper]
 
     private class Generator {
         private List<BigStops> stopOptions;
@@ -35,6 +41,7 @@ public class TripGenerator {
             this.doubleDelta = doubleDelta; 
         }
 
+        // TODO implement
         public Trip generate(){
             boolean criteria_met = false;
             int timeAlpha = initalTimeAlpha;
@@ -48,7 +55,8 @@ public class TripGenerator {
             return null; 
 
         }
-
+        
+        // TODO implement 
         public void iterate(int timeAlpha, int weightAlpha){
 
         }
@@ -56,19 +64,24 @@ public class TripGenerator {
     }
 
 
-    public TripGenerator(Trip templateTrip,BigStopHandler stopHandler, int stopsPerDay){
+    public TripGenerator(Trip templateTrip,BigStopHandler stopHandler, int distPerDay){
         this.templateTrip = templateTrip;
         this.stopHandler = stopHandler;
         this.geoHandler = new GeoLocationHandler();
         this.minTripLen = calculateMinTripLen(); 
-        this.stops = getStops(stopsPerDay); 
+        this.boundingBox = getBoundingBox();
+        this.stops = getStops(distPerDay); 
+    }
+
+    public long getMinTripLen() {
+        return minTripLen;
     }
 
     public Trip generateTrip(){
         return new Generator(stops).generate(); 
-
     }
 
+    // TODO implement
     private static int calculateScore(List<BigStops> stops){
         return 0; 
     }
@@ -79,34 +92,68 @@ public class TripGenerator {
     }
 
     // Prob don't use 
-    private static int calculateScore(List<BigStops> stops, BigStops stopToExclue){
-        stops.remove(stopToExclue);
-        return calculateScore(stops);
-    }
+    // private static int calculateScore(List<BigStops> stops, BigStops stopToExclue){
+    //     stops.remove(stopToExclue);
+    //     return calculateScore(stops);
+    // }
 
-
-    // TODO implement 
     private long calculateMinTripLen(){
-        return 0; 
+
+        ArrayList<String> list = new ArrayList<String>(){{
+            BigStops start = stopHandler.getById(templateTrip.getTripData().getStartLocation()); 
+            BigStops end = stopHandler.getById(templateTrip.getTripData().getEndLocation()); 
+            add(start.getLat() + " " + start.getLng());
+            add(end.getLat() + " " + end.getLng()); 
+        }};
+        try {
+            return geoHandler.directions(list).getDurtaionS(); 
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new InvalidTripException(); 
+        }
     }
 
-    private ArrayList<BigStops> getStops(int stopsPerDay){
-        int[] bounds = getBoundingBox(); 
-        int lnglb = bounds[0];
-        int latlb = bounds[1];
-        int lngup = bounds[2];
-        int latup = bounds[3];  
+    private ArrayList<BigStops> getStops(int distPerDay){
+
+        LngLat lb = boundingBox[0]; 
+        LngLat ub = boundingBox[1];
 
         ObjectId startLoc = templateTrip.getTripData().getStartLocation();
         ObjectId endLoc = templateTrip.getTripData().getEndLocation();
 
-        return stopHandler.getStopsByLocIgnore(lnglb, latlb, lngup, latup,startLoc,endLoc); 
+        return stopHandler.getStopsByLocIgnore(lb.getLng(), lb.getLat(), ub.getLng(), ub.getLat(),startLoc,endLoc); 
     }
 
-    // TODO implement
+    // This fucntion will return the bounding box of
+    // This boudning box will be approximite 
     // @returns the first element is the lnglb, the second is the latlb, the third is the lngub, the fourth is the latub
-    private int[] getBoundingBox(){
-        return new int[4]; 
+    private LngLat[] getBoundingBox(){
+        final int speed = 27; // ~60 miles per hour in m/s
+        final long delta = TripGeneratorUtils.convertDaysToSeconds(templateTrip.getDetails().getTripLength()) - minTripLen;
+        
+        // s * m/s = m 
+        final long height = (delta/2)*speed;  // this is the height over the horizontal in meters
+
+        LngLat start = templateTrip.getTripData().getStartLocation(stopHandler).toLngLat(); 
+        LngLat end = templateTrip.getTripData().getEndLocation(stopHandler).toLngLat();
+        
+        if(start.getLng() > end.getLng()) {
+            LngLat temp = start; 
+            start = end; 
+            end = temp; 
+        }
+
+        final double angle = start.getBearing(end); 
+        final double angleUp = angle + (Math.PI/2); 
+        final double angleDown = angle - (Math.PI/2); 
+
+        LngLat A = start.getDest(height, angleUp); 
+        LngLat B = start.getDest(height, angleDown);
+        LngLat C = end.getDest(height, angleUp); 
+        LngLat D = end.getDest(height, angleDown); 
+
+        return null; 
+
     }
 
     

@@ -7,6 +7,7 @@ import org.bson.types.ObjectId;
 
 import edu.cooper.ece366.Mongo.IDInterface;
 import edu.cooper.ece366.Mongo.SerializingInterface;
+import edu.cooper.ece366.Utils.GeoLocation.LngLat;
 
 public abstract class Loacation implements SerializingInterface, IDInterface{
     @BsonProperty("_id") protected final ObjectId id;
@@ -48,6 +49,10 @@ public abstract class Loacation implements SerializingInterface, IDInterface{
     }
     public String getType(){
         return type; 
+    }
+
+    public LngLat toLngLat(){
+        return new LngLat(this); 
     }
 
     @Override

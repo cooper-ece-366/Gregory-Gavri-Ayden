@@ -1,14 +1,19 @@
 package edu.cooper.ece366.Mongo.Stops;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
+import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Filters;
 
+import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 
 import edu.cooper.ece366.Mongo.CollectionHandler;
 import edu.cooper.ece366.Mongo.MongoHandler;
+import edu.cooper.ece366.Utils.GeoLocation.LngLat;
 
 public abstract class StopHandler<T extends Loacation> extends CollectionHandler<T>{
 

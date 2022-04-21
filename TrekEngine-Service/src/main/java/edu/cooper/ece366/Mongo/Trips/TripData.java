@@ -42,11 +42,19 @@ public class TripData implements SerializingInterface{
     public ObjectId getStartLocation(){
         return startLocation; 
     }
+
+    public BigStops getStartLocation(BigStopHandler handler){
+        return handler.getById(startLocation);
+    }
+
     public void setStartLocation(ObjectId startLocation){
         this.startLocation = startLocation; 
     }
     public ObjectId getEndLocation(){
         return endLocation; 
+    }
+    public BigStops getEndLocation(BigStopHandler handler){
+        return handler.getById(endLocation);
     }
     public void setEndLocation(ObjectId endLocation){
         this.endLocation = endLocation; 
