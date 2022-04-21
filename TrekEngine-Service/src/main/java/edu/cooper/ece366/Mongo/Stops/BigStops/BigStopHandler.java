@@ -8,6 +8,7 @@ import org.bson.conversions.Bson;
 
 import edu.cooper.ece366.Mongo.MongoHandler;
 import edu.cooper.ece366.Mongo.Stops.StopHandler;
+import edu.cooper.ece366.Utils.GeoLocation.LngLat;
 
 public class BigStopHandler extends StopHandler<BigStops> {
 
@@ -23,12 +24,17 @@ public class BigStopHandler extends StopHandler<BigStops> {
         Bson filter = getStopsByTypeFilter(type);
         return rawQuery(andModifier(filter));  
     }
-    public ArrayList<BigStops> getCuratedStopsByLoc(double lnglb, double latlb, double lngup, double latup){
-        Bson filter = getStopByLocFilter(lnglb, latlb, lngup, latup);
-        return rawQuery(andModifier(filter));
-    }
     public ArrayList<BigStops> getCuratedStopsByName(String name){
         Bson filter = getStopByNameFilter(name); 
+        return rawQuery(andModifier(filter));
+    }
+
+    public ArrayList<BigStops> getCuratedStopsInGeoP(ArrayList<ArrayList<Double>> polygon){
+        Bson filter = getStopsInGeoPFilter(polygon);
+        return rawQuery(andModifier(filter));
+    }
+    public ArrayList<BigStops> getCuratedStopsInGeoP(LngLat[] polygon){
+        Bson filter = getStopsInGeoPFilterL(polygon);
         return rawQuery(andModifier(filter));
     }
 

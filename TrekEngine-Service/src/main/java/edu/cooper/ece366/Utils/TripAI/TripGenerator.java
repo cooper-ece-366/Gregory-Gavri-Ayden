@@ -3,7 +3,6 @@ package edu.cooper.ece366.Utils.TripAI;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.bson.types.ObjectId;
 
@@ -115,13 +114,10 @@ public class TripGenerator {
 
     private ArrayList<BigStops> getStops(int distPerDay){
 
-        LngLat lb = boundingBox[0]; 
-        LngLat ub = boundingBox[1];
-
         ObjectId startLoc = templateTrip.getTripData().getStartLocation();
         ObjectId endLoc = templateTrip.getTripData().getEndLocation();
 
-        return stopHandler.getStopsByLocIgnore(lb.getLng(), lb.getLat(), ub.getLng(), ub.getLat(),startLoc,endLoc); 
+        return stopHandler.getCuratedStopsInGeoP(boundingBox); 
     }
 
     // This fucntion will return the bounding box of
@@ -152,7 +148,9 @@ public class TripGenerator {
         LngLat C = end.getDest(height, angleUp); 
         LngLat D = end.getDest(height, angleDown); 
 
-        return null; 
+        LngLat[] l = {A,B,C,D}; 
+
+        return l; 
 
     }
 

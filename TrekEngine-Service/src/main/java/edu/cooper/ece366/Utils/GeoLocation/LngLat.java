@@ -1,5 +1,8 @@
 package edu.cooper.ece366.Utils.GeoLocation;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import edu.cooper.ece366.Exceptions.InvalidLngLatException;
 import edu.cooper.ece366.Mongo.Stops.Loacation;
 
@@ -79,10 +82,18 @@ public class LngLat {
         final double phi = Math.asin( Math.sin(this.getPhi())*Math.cos(d/R) +
                       Math.cos(this.getPhi())*Math.sin(d/R)*Math.cos(brng) );
 
-        final double gamma = this.getGamma() + Math.atan2(Math.sin(brng)*Math.sin(d/R)*Math.cos(this.getPhi()),
-                                                          Math.cos(d/R)-Math.sin(this.getPhi())*Math.sin(phi));
+        final double gamma = this.getGamma() + 
+            Math.atan2(Math.sin(brng)*Math.sin(d/R)*Math.cos(this.getPhi()),
+                        Math.cos(d/R)-Math.sin(this.getPhi())*Math.sin(phi));
 
         return new LngLat((gamma+540)%360-180, phi);
+    }
+
+    public ArrayList<Double> getList (){
+        return new ArrayList<Double>(){{
+            add(lng);
+            add(lat);
+        }};
     }
 
 

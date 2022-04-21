@@ -1,6 +1,10 @@
 package edu.cooper.ece366.Mongo.Stops.BigStops;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bson.codecs.pojo.annotations.BsonCreator;
+import org.bson.codecs.pojo.annotations.BsonIgnore;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 import org.bson.types.ObjectId;
 
@@ -16,12 +20,22 @@ public class BigStops extends Loacation implements SerializingInterface {
     public BigStops(
         @BsonProperty("_id") ObjectId id,
         @BsonProperty("name") String name,
-        @BsonProperty("lat") Double lat,
-        @BsonProperty("lng") Double lng,
+        @BsonProperty("cords") List<Double> cords,
         @BsonProperty("type") String type,
         @BsonProperty("isCurated") Boolean isCurated) {
-            super(id,name,lat,lng,type); 
+            super(id,name,cords.get(1),cords.get(0),type); 
             this.isCurated = isCurated; 
+    }
+
+    public BigStops(
+        ObjectId id,
+        String name,
+        Double lat,
+        Double lng, 
+        String type,
+        Boolean isCurated
+    ){
+        this(id,name,new ArrayList<Double>(){{add(lng);add(lat);}},type,isCurated); 
     }
 
     public Boolean getIsCurated() {
