@@ -70,7 +70,7 @@ public class LngLat {
         return (p2.getLat() - this.lat) * Math.PI / 180; 
     }
 
-    public double getBearing(LngLat p2){
+    public double  getBearing(LngLat p2){
         final double y = Math.sin(this.getGammaD(p2)) * Math.cos(p2.getPhi());
         final double x = Math.cos(this.getPhi()) * Math.sin(p2.getPhi()) - 
             Math.sin(this.getPhi()) * Math.cos(p2.getPhi()) * Math.cos(this.getGammaD(p2));
@@ -86,7 +86,11 @@ public class LngLat {
             Math.atan2(Math.sin(brng)*Math.sin(d/R)*Math.cos(this.getPhi()),
                         Math.cos(d/R)-Math.sin(this.getPhi())*Math.sin(phi));
 
-        return new LngLat((gamma+540)%360-180, phi);
+        return new LngLat((convertFromRad(gamma)+540)%360-180, convertFromRad(phi));
+    }
+
+    private static double convertFromRad(double rad){
+        return rad * 180 / Math.PI; 
     }
 
     public ArrayList<Double> getList (){
@@ -94,6 +98,13 @@ public class LngLat {
             add(lng);
             add(lat);
         }};
+    }
+
+    public String toString() {
+        return "LngLat{" +
+                "lng=" + lng +
+                ", lat=" + lat +
+                '}';
     }
 
 

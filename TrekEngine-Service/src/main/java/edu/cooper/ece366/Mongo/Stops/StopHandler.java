@@ -39,11 +39,14 @@ public abstract class StopHandler<T extends Loacation> extends CollectionHandler
     }
 
     protected Bson getStopsInGeoPFilter(ArrayList<ArrayList<Double>> polygon){
+        polygon.add(polygon.get(0)); // close the loop 
+        ArrayList<ArrayList<ArrayList<Double>>> p = new ArrayList<ArrayList<ArrayList<Double>>>();
+        p.add(polygon);
         return new Document().append("cords",
-            new Document().append("$geowithin", 
+            new Document().append("$geoWithin", 
                 new Document().append("$geometry", 
                     new Document().append("type", "Polygon")
-                    .append("coordinates",polygon
+                    .append("coordinates",p
             )))
         ); 
     }

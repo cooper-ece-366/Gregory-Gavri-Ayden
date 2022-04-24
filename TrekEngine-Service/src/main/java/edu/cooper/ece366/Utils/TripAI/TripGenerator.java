@@ -90,12 +90,6 @@ public class TripGenerator {
         return calculateScore(stops);
     }
 
-    // Prob don't use 
-    // private static int calculateScore(List<BigStops> stops, BigStops stopToExclue){
-    //     stops.remove(stopToExclue);
-    //     return calculateScore(stops);
-    // }
-
     private long calculateMinTripLen(){
 
         ArrayList<String> list = new ArrayList<String>(){{
@@ -124,12 +118,18 @@ public class TripGenerator {
     // This boudning box will be approximite 
     // @returns the first element is the lnglb, the second is the latlb, the third is the lngub, the fourth is the latub
     private LngLat[] getBoundingBox(){
+
+        System.out.println("minTripLen: " + minTripLen);
         final int speed = 27; // ~60 miles per hour in m/s
-        final long delta = TripGeneratorUtils.convertDaysToSeconds(templateTrip.getDetails().getTripLength()) - minTripLen;
+
+        final double maxSeconds = (0.125)*TripGeneratorUtils.convertDaysToSeconds(templateTrip.getDetails().getTripLength()); 
+        final long delta = ((long)Math.floor(maxSeconds)) - minTripLen;
         
+        System.out.println("delta: " + delta);
         // s * m/s = m 
         final long height = (delta/2)*speed;  // this is the height over the horizontal in meters
 
+        System.out.println("height: " + height);
         LngLat start = templateTrip.getTripData().getStartLocation(stopHandler).toLngLat(); 
         LngLat end = templateTrip.getTripData().getEndLocation(stopHandler).toLngLat();
         
@@ -139,14 +139,26 @@ public class TripGenerator {
             end = temp; 
         }
 
+        System.out.println("start: " + start);
+        System.out.println("end: " + end);
+
         final double angle = start.getBearing(end); 
         final double angleUp = angle + (Math.PI/2); 
         final double angleDown = angle - (Math.PI/2); 
 
+        System.out.println("Angle: " + angle);
+        System.out.println("AngleUp: " + angleUp);
+        System.out.println("AngleDown: " + angleDown);
+
         LngLat A = start.getDest(height, angleUp); 
         LngLat B = start.getDest(height, angleDown);
-        LngLat C = end.getDest(height, angleUp); 
-        LngLat D = end.getDest(height, angleDown); 
+        LngLat C = end.getDest(height, angleDown); 
+        LngLat D = end.getDest(height, angleUp); 
+
+        System.out.println("A: " + A);
+        System.out.println("B: " + B);
+        System.out.println("C: " + C);
+        System.out.println("D: " + D);
 
         LngLat[] l = {A,B,C,D}; 
 
