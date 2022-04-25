@@ -16,6 +16,7 @@ const DraggableItem = ({ id, text, index, moveCard, dnd, item }) => {
             className={dnd.item.classes}
             ref={dnd.item.ref}
             {...dnd.handler.listeners}
+            key={item.bigStop.name}
         >
             {item.bigStop.name}
         </li>

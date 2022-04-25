@@ -6,9 +6,9 @@ import EditableText from './EditableText';
 import CustomSelect from '../../Utils/FormUtils/CustomSelect';
 import DaysInput from './DaysInput';
 import AutoList from './AutoList';
+import { useUserContext } from '../../../Contexts/UserContext';
+import { insertNewTrip } from '../../../utils/Trip';
 import "./styles.css";
-// import AutoComplete from "../../Utils/AutoComplete"
-import axios from "axios";
 
 const styleSheet = {
     container: {
@@ -61,6 +61,7 @@ const styleSheet = {
 }
 
 const TripForm = (props) => {
+    const { user, getIdToken } = useUserContext();
     const [duration, setDuration] = useState(0); // 0: duration, 1: dates, 2: indefinite
     const [from, setFrom] = useState("");
     const [to, setTo] = useState("");
@@ -102,7 +103,7 @@ const TripForm = (props) => {
 
     const handleFormSubmit = async (e) => {
         e.preventDefault();
-
+        console.log(user);
         let finalDays = days;
 
         if (duration === 1) {
@@ -121,7 +122,29 @@ const TripForm = (props) => {
             prefs
         }
 
-        console.log(data);
+        let trip = {
+            details: {
+                startDate,
+                tags: prefs,
+                tripLength: parseInt(finalDays),
+            },
+            meta: {
+                created: null,
+                description: "",
+                private: false,
+                name,
+                updated: null,
+                user: user.email
+            },
+            trip: {
+                endLocation: to,
+                startLocation: from,
+                stops: required,
+            }
+        }
+
+        const id_token = await getIdToken();
+        insertNewTrip(data, id_token);
     }
 
     const handleDayChange = (e) => setDays(e.target.value);

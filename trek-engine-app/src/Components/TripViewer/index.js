@@ -67,7 +67,10 @@ const TripViewer = () => {
         setTrip(newTrip);
     }
 
-    const addTrip = loc => setTrip(t => ({ ...t, tripData: { ...t.tripData, stops: [...t.tripData.stops, loc] } }));
+    const addTrip = loc => setTrip(t => {
+        let newTrip = { ...t, tripData: { ...t.tripData, endLocation: loc, stops: [...t.tripData.stops, loc] } };
+        return newTrip;
+    });
 
     const changeName = name => setTrip(t => ({ ...t, meta: { ...t.meta, name } }));
 
@@ -110,7 +113,6 @@ const TripViewer = () => {
         else
             (async () => setTrip(await getTripById(params.id)))();
     }, [user]);
-
 
     return (
         <div style={styleSheet.fullPage}>

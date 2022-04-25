@@ -11,7 +11,6 @@ const style = {
 }
 
 const DraggableList = ({ stops, swapStops }) => {
-    console.log(stops);
     return (
         <ul style={style}>
             <DnDList

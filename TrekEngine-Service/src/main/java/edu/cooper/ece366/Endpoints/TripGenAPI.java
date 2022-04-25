@@ -23,46 +23,48 @@ public class TripGenAPI {
         return "trips trips blah blah blah";
     }
 
-    public static void paths(TripHandler tripHandler,UserHandler userHandler, BigStopHandler bigStopHandler, SmallStopHandler smallStopHandler) {
+    public static void paths(TripHandler tripHandler, UserHandler userHandler, BigStopHandler bigStopHandler,
+            SmallStopHandler smallStopHandler) {
         path("/tripgen", () -> {
             post("/submit", (req, res) -> GetRelevantTrips());
-            
-            post("/unsafeInsert", (BodyParserRoute)(req,res,body)->{
-                Trip trip = new Trip(body.get("trip").getAsJsonObject()); 
-                tripHandler.insert(trip);
-                return "Insert Succesfull";
-            }); 
 
-            post("/insert", (AuthRoute)(req,res,body,user)->{
-                JsonObject tripJ = body.get("trip").getAsJsonObject(); 
-                tripJ.get("meta").getAsJsonObject().addProperty("user",user.getEmail());
-                Trip trip = new Trip(body); 
+            post("/unsafeInsert", (BodyParserRoute) (req, res, body) -> {
+                Trip trip = new Trip(body.get("trip").getAsJsonObject());
                 tripHandler.insert(trip);
                 return "Insert Succesfull";
             });
 
-            post("/getById", (QAuthRoute)(req,res,body,user)->{
-                String id = body.get("trip_id").getAsString(); 
-                Trip trip = tripHandler.getById(id); 
-                if(trip.getMeta().getIsPrivate() && 
+            post("/insert", (AuthRoute) (req, res, body, user) -> {
+                JsonObject tripJ = body.get("trip").getAsJsonObject();
+                System.out.println(tripJ);
+                tripJ.get("meta").getAsJsonObject().addProperty("user", user.getEmail());
+                Trip trip = new Trip(body);
+                tripHandler.insert(trip);
+                return "Insert Succesfull";
+            });
+
+            post("/getById", (QAuthRoute) (req, res, body, user) -> {
+                String id = body.get("trip_id").getAsString();
+                Trip trip = tripHandler.getById(id);
+                if (trip.getMeta().getIsPrivate() &&
                         (user == null || !user.getEmail().equals(trip.getMeta().getUser()))) {
                     res.status(400);
                     return "Trip is private";
                 }
-                return trip.toJSONString(bigStopHandler,smallStopHandler);
+                return trip.toJSONString(bigStopHandler, smallStopHandler);
             });
 
-            post("/update", (AuthRoute)(req,res,body,user)->{
-                Trip trip = new Trip(body.get("trip").getAsJsonObject()); 
-                // do checks first to make sure it is legal 
-                Trip currentTrip = tripHandler.getByIdAndUser(trip.getId(), user.getEmail()); 
-                if(currentTrip == null || !currentTrip.getMeta().getUser().equals(user.getEmail())) {
+            post("/update", (AuthRoute) (req, res, body, user) -> {
+                Trip trip = new Trip(body.get("trip").getAsJsonObject());
+                // do checks first to make sure it is legal
+                Trip currentTrip = tripHandler.getByIdAndUser(trip.getId(), user.getEmail());
+                if (currentTrip == null || !currentTrip.getMeta().getUser().equals(user.getEmail())) {
                     res.status(400);
                     return "Unkown Error User doesn't have permission to edit this trip";
                 }
                 tripHandler.update(trip);
                 return "Update Succesfull";
             });
-        }); 
+        });
     }
 }
