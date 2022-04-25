@@ -50,7 +50,7 @@ public class TripGeneratorUnitTest {
 
         //If this fails um there could be traffic
         //Better test might be needed 
-        assert (tripGenerator.getMinTripLen() >= 40000 && tripGenerator.getMinTripLen() <= 50000);
+        assert (tripGenerator.getMinTripLen().getDurtaionS() >= 40000 && tripGenerator.getMinTripLen().getDurtaionS() <= 50000);
     }
     
     

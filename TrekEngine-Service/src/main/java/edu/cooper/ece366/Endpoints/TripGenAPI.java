@@ -49,8 +49,7 @@ public class TripGenAPI {
                     res.status(400);
                     return "Trip is private";
                 }
-                // return trip.toJSONString(bigStopHandler,smallStopHandler);
-                return trip.toJSONString(); 
+                return trip.toJSONString(bigStopHandler,smallStopHandler);
             });
 
             post("/update", (AuthRoute)(req,res,body,user)->{

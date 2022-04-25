@@ -60,17 +60,18 @@ public class LngLat {
     }
 
     public double getGamma(){
-        return this.lng * Math.PI / 180; 
+        return convertToRad(this.lng); 
     }
 
     public double getPhi(){
-        return this.lat * Math.PI / 180; 
+        return convertToRad(this.lat); 
     }
     public double getPhiD(LngLat p2){
-        return (p2.getLat() - this.lat) * Math.PI / 180; 
+        return convertToRad(p2.getLat() - this.lat);
     }
 
     public double  getBearing(LngLat p2){
+
         final double y = Math.sin(this.getGammaD(p2)) * Math.cos(p2.getPhi());
         final double x = Math.cos(this.getPhi()) * Math.sin(p2.getPhi()) - 
             Math.sin(this.getPhi()) * Math.cos(p2.getPhi()) * Math.cos(this.getGammaD(p2));
@@ -79,19 +80,29 @@ public class LngLat {
     }
 
     public LngLat getDest(long d, double brng) {
-        final double phi = Math.asin( Math.sin(this.getPhi())*Math.cos(d/R) +
-                      Math.cos(this.getPhi())*Math.sin(d/R)*Math.cos(brng) );
 
-        final double gamma = this.getGamma() + 
-            Math.atan2(Math.sin(brng)*Math.sin(d/R)*Math.cos(this.getPhi()),
-                        Math.cos(d/R)-Math.sin(this.getPhi())*Math.sin(phi));
+        final double phi1 = this.getPhi();
+        final double gamma1 = this.getGamma(); 
+        final double sPhi1 = Math.sin(phi1);
+        final double cPhi1 = Math.cos(phi1);
 
-        return new LngLat((convertFromRad(gamma)+540)%360-180, convertFromRad(phi));
+        final double dr = ((double)d) / ((double)R);
+
+        final double cDR = Math.cos(dr);
+        final double sDR = Math.sin(dr);
+
+        final double phi = Math.asin(sPhi1*cDR +
+                      cPhi1*sDR*Math.cos(brng) );
+
+
+        final double gamma = gamma1 + 
+            Math.atan2(Math.sin(brng)*sDR*cPhi1,
+                        cDR-sPhi1*Math.sin(phi));
+
+        return new LngLat(convertFromRad(gamma), convertFromRad(phi));
     }
 
-    private static double convertFromRad(double rad){
-        return rad * 180 / Math.PI; 
-    }
+    
 
     public ArrayList<Double> getList (){
         return new ArrayList<Double>(){{
@@ -105,6 +116,14 @@ public class LngLat {
                 "lng=" + lng +
                 ", lat=" + lat +
                 '}';
+    }
+
+    private static double convertFromRad(double rad){
+        return rad * 180 / Math.PI; 
+    }
+
+    private static double convertToRad(double deg){
+        return deg * Math.PI / 180; 
     }
 
 
