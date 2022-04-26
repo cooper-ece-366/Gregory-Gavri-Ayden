@@ -10,6 +10,7 @@ import java.util.Map;
 import edu.cooper.ece366.Exceptions.InvalidTripException;
 import edu.cooper.ece366.Mongo.Stops.BigStops.BigStopHandler;
 import edu.cooper.ece366.Mongo.Stops.BigStops.BigStops;
+import edu.cooper.ece366.Mongo.Trips.Tag;
 import edu.cooper.ece366.Mongo.Trips.Trip;
 import edu.cooper.ece366.Utils.GeoLocation.DirData;
 import edu.cooper.ece366.Utils.GeoLocation.GeoLocationHandler;
@@ -69,7 +70,7 @@ public class TripGenerator {
         this.templateTrip = templateTrip;
         this.stopHandler = stopHandler;
         this.minTripLen = calculateMinTripLen(); 
-        this.stops = getStops(distPerDay); 
+        this.stops = makeStops(distPerDay); 
         this.currentScore = this.calculateScore(); 
     }
 
@@ -94,10 +95,13 @@ public class TripGenerator {
         }
 
         final long timeData = geoHandler.directions(stopStr).getDurtaionS();
-        final double timeScore = (timeData - (minTripLen).getDurtaionS()) / ((double)(minTripLen.getDurtaionS()));
+        final double timeScore = (timeData - TripGeneratorUtils.convertDaysToSeconds(templateTrip.getDetails().getTripLength())) / ((double)(TripGeneratorUtils.convertDaysToSeconds(templateTrip.getDetails().getTripLength())));
         Map<String,Double> tagScores = new HashMap<String,Double>();
-        for(Map.Entry<String,Integer> entry: tags.entrySet()){
-            tagScores.put(entry.getKey(), (double)entry.getValue() / (double)stopCount); 
+        for (Tag tag: templateTrip.getDetails().getTags()){
+            tagScores.put(
+                tag.getTag(),
+                tags.getOrDefault(tag.getTag(), 0) - (tag.getWeight()*stopCount) / (double)stopCount
+            );
         }
 
         return new Score(timeScore,tagScores); 
@@ -121,14 +125,14 @@ public class TripGenerator {
 
 
 
-    private ArrayList<StopBox> getStops(int distPerDay){
+    private ArrayList<StopBox> makeStops(int distPerDay){
         ArrayList<StopBox> stopBoxes = new ArrayList<StopBox>();
         LngLat boxes[][] = getBoundingBox(distPerDay); 
         for(int i = 0; i<distPerDay; i++){
             List<BigStops> stopsB = stopHandler.getCuratedRandomStopsInGeoPWR(
                 boxes[i],
                 10,
-                templateTrip.getTripData().getBigStops(stopHandler)
+                templateTrip.getTripData().getBigStops()
             );
             Collections.sort(
                 stopsB,
@@ -138,6 +142,12 @@ public class TripGenerator {
         }
         return stopBoxes;  
     }
+
+    public List<StopBox> getStops() {
+        return stops; 
+    }
+
+
 
     // This fucntion will return the bounding box of
     // This boudning box will be approximite 
@@ -154,7 +164,7 @@ public class TripGenerator {
         LngLat start = templateTrip.getTripData().getStartLocation(stopHandler).toLngLat(); 
         LngLat end = templateTrip.getTripData().getEndLocation(stopHandler).toLngLat();
         
-        if(start.getLng() > end.getLng()) {
+        if(start.getLng() < end.getLng()) {
             LngLat temp = start; 
             start = end; 
             end = temp; 
@@ -164,14 +174,21 @@ public class TripGenerator {
         final double angleUp = angle + (Math.PI/2); 
         final double angleDown = angle - (Math.PI/2); 
 
-        LngLat[][] boxList = new LngLat[distPerDay][4]; 
+        LngLat startUp = start.getDest(height, angleUp);
+        LngLat startDown = start.getDest(height, angleDown);
+        LngLat endUp = end.getDest(height, angleUp);
+        LngLat endDown = end.getDest(height, angleDown);
+
+        LngLat[][] boxList = new LngLat[distPerDay][6]; 
 
         for(int i = 0; i<distPerDay; i++){
-            LngLat A = i == 0 ? start.getDest(height, angleUp) : boxList[i-1][0];
-            LngLat B = i == 0 ? A.getDest(2*height, angleDown) : boxList[i-1][1];
-            LngLat C = B.getDest(minTripLen.getDurationM()/distPerDay, angle);
-            LngLat D = C.getDest(2*height, angleUp);
-            LngLat box[] = {A,B,C,D};
+            LngLat A = i == 0 ? start : boxList[i-1][3];
+            LngLat B = i == 0 ? startUp : boxList[i-1][2];
+            LngLat C = startUp.getIntermidiatePoint(endUp, minTripLen.getDurationM(), (i+1)/((double)distPerDay));
+            LngLat D = start.getIntermidiatePoint(end, minTripLen.getDurationM(), (i+1)/((double)distPerDay));
+            LngLat E = startDown.getIntermidiatePoint(endDown, minTripLen.getDurationM(), (i+1)/((double)distPerDay));
+            LngLat F = i == 0 ? startDown : boxList[i-1][4];
+            LngLat box[] = {A,B,C,D,E,F};
             boxList[i] = box; 
         }
 

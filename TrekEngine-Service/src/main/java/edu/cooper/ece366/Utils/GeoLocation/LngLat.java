@@ -110,6 +110,21 @@ public class LngLat {
         return new LngLat(convertFromRad(gamma), convertFromRad(phi));
     }
 
+    public LngLat getIntermidiatePoint(LngLat p2, long d, double f){
+        final double del = ((double)d)/((double)R);
+        final double a = Math.sin((1.0-f)*del) / Math.sin(del);
+        final double b = Math.sin(f*del) / Math.sin(del);
+        final double x = a*Math.cos(this.getPhi()) * Math.cos(this.getGamma()) + 
+            b*Math.cos(p2.getPhi()) * Math.cos(p2.getGamma());
+        final double y = a*Math.cos(this.getPhi()) * Math.sin(this.getGamma()) +
+            b*Math.cos(p2.getPhi()) * Math.sin(p2.getGamma());
+        final double z = a*Math.sin(this.getPhi()) + b*Math.sin(p2.getPhi());
+        final double phi = Math.atan2(z, Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)));
+        final double gamma = Math.atan2(y, x);
+
+        return new LngLat(convertFromRad(gamma), convertFromRad(phi));
+    }
+
     public LngLat sub(LngLat p2){
         return new LngLat(this.lng - p2.getLng(), this.lat - p2.getLat());
     }

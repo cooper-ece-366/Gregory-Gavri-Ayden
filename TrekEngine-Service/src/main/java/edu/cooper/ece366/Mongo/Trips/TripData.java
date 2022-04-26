@@ -6,6 +6,7 @@ import java.util.List;
 import com.google.gson.JsonObject;
 
 import org.bson.codecs.pojo.annotations.BsonCreator;
+import org.bson.codecs.pojo.annotations.BsonIgnore;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 import org.bson.types.ObjectId;
 
@@ -67,6 +68,15 @@ public class TripData implements SerializingInterface{
         List<BigStops> bigStops = new ArrayList<BigStops>();
         for(Stop stop : stops){
             bigStops.add(handler.getById(stop.getBigStop()));
+        }
+        return bigStops;
+    }
+
+    @BsonIgnore
+    public List<ObjectId> getBigStops(){
+        List<ObjectId> bigStops = new ArrayList<ObjectId>();
+        for(Stop stop : stops){
+            bigStops.add(stop.getBigStop());
         }
         return bigStops;
     }

@@ -37,13 +37,16 @@ public class TripGeneratorUnitTest {
             new Meta("Test Trip 1","Description","gpress2222@gmail.com",false,new Date(),new Date()),
             new TripData(
                 stops.get(0).getId(),
-                stops.get(1).getId(),
+                stops.get(2).getId(),
                 new ArrayList<Stop>(){{
                     add(new Stop(stops.get(0).getId(),new ArrayList<ObjectId>()));
-                    add(new Stop(stops.get(1).getId(),new ArrayList<ObjectId>()));
+                    add(new Stop(stops.get(2).getId(),new ArrayList<ObjectId>()));
                 }}
             ),
-            new Detail(new Date(), 10, new ArrayList<Tag>())
+            new Detail(new Date(), 10, new ArrayList<Tag>(){{
+                add(new Tag("City", .5));
+                add(new Tag("Park", .5));
+            }})
         );  
     }
 
@@ -51,10 +54,14 @@ public class TripGeneratorUnitTest {
     public void testInit() throws IOException{
         TripGenerator tripGenerator = new TripGenerator(trip, bigStopHandler,6);
         assert (tripGenerator != null);
+        assert(tripGenerator.getStops().size() == 6); 
+        assert(tripGenerator.getStops().get(0).stops.get(0).getId().equals(trip.getTripData().getStartLocation()));
+        assert(tripGenerator.getStops().get(5).stops.get(0).getId().equals(trip.getTripData().getEndLocation()));
+        
 
         //If this fails um there could be traffic
         //Better test might be needed 
-        assert (tripGenerator.getMinTripLen().getDurtaionS() >= 40000 && tripGenerator.getMinTripLen().getDurtaionS() <= 50000);
+        assert (tripGenerator.getMinTripLen().getDurationM() == 4511806);
     }
     
     

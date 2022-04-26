@@ -6,6 +6,7 @@ import java.util.List;
 import com.mongodb.client.model.Filters;
 
 import org.bson.conversions.Bson;
+import org.bson.types.ObjectId;
 
 import edu.cooper.ece366.Mongo.MongoHandler;
 import edu.cooper.ece366.Mongo.Stops.StopHandler;
@@ -54,12 +55,12 @@ public class BigStopHandler extends StopHandler<BigStops> {
         return aggregateRandomWithFilter(filter, size); 
     }
 
-    public ArrayList<BigStops> getCuratedRandomStopsInGeoPWR(LngLat[] polygon, int size, List<BigStops> include){
+    public ArrayList<BigStops> getCuratedRandomStopsInGeoPWR(LngLat[] polygon, int size, List<ObjectId> include){
         Bson filter = andModifier(getStopsInGeoPFilterL(polygon));
         ArrayList<BigStops> l1 = aggregateRandomWithFilter(filter, size); 
         Bson including[] = new Bson[include.size()]; 
         for(int i = 0; i<include.size(); i++){
-            including[i] = Filters.eq("_id", include.get(i).getId());
+            including[i] = Filters.eq("_id", include.get(i));
         }
         ArrayList<BigStops> l2 = rawQuery(Filters.and(getStopsInGeoPFilterL(polygon),isCuratedFilter(), Filters.or(including)));
         

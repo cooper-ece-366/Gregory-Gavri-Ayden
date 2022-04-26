@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import edu.cooper.ece366.Mongo.MongoHandler;
 import edu.cooper.ece366.Mongo.Stops.BigStops.BigStopHandler;
 import edu.cooper.ece366.Mongo.Stops.BigStops.BigStops;
+import edu.cooper.ece366.Utils.GeoLocation.LngLat;
 
 public class BigStopHandlerUnitTest {
     private static MongoHandler mongoHandler;
@@ -50,26 +51,43 @@ public class BigStopHandlerUnitTest {
         assert(underTest.getStopsByType("type1").size() == 2);
         assert(underTest.getStopsByType("type2").size() == 2);
     }
-    // @Test
-    // public void testGetStopsByLoc(){ 
-    //     BigStops stop1 = new BigStops(new ObjectId(),"New York", 70.0,70.0,"city",true); 
+    @Test
+    public void testGetStopsInGeoP(){ 
+        BigStops stop1 = new BigStops(new ObjectId(),"New York", 40.7,-74.0,"city",true); 
         
-    //     BigStops stop2 = new BigStops( new ObjectId(),"New York", 75.0,65.0,"city",true); 
+        BigStops stop2 = new BigStops( new ObjectId(),"LA", 34.052235,-118.243683,"city",true); 
             
-    //     BigStops stop3 = new BigStops(new ObjectId(),"Chicago", 80.0,70.0,"city",true); 
+        BigStops stop3 = new BigStops(new ObjectId(),"Chicago", 41.881832,-87.623177,"city",true); 
 
-    //     List<BigStops> stops = new ArrayList<BigStops>(){{
-    //         add(stop1);
-    //         add(stop2); 
-    //         add(stop3); 
-    //     }};
-    //     underTest.insert(stops); 
-    //     assert(underTest.getCount() == 3);
+        List<BigStops> stops = new ArrayList<BigStops>(){{
+            add(stop1);
+            add(stop2); 
+            add(stop3); 
+        }};
+        underTest.insert(stops); 
+        assert(underTest.getCount() == 3);
+
+        LngLat[] box1 = new LngLat[]{
+            new LngLat(-60.0, 45.0), 
+            new LngLat(-120.0,45.0),
+            new LngLat(-120.0, 20.0),
+            new LngLat(-60.0, 20.0),
+        };
+
+        List<BigStops> test1 = underTest.getStopsInGeoP(box1);
+        assert(test1.size() == 3);
+
+        LngLat[] box2 = new LngLat[]{
+            new LngLat(-60.0, 45.0), 
+            new LngLat(-90.0,45.0),
+            new LngLat(-90.0, 20.0),
+            new LngLat(-60.0, 20.0),
+        };
+        List<BigStops> test2 = underTest.getStopsInGeoP(box2);
+        assert(test2.size() == 2);
         
-    //     // start location by lng lat
-    //     // assert(underTest.getStopsByLoc(-90,-90,90,79).size() == 2);
-
-    // }
+        
+    }
     @Test
     public void testGetStopsByName(){
         BigStops stop1 = new BigStops(new ObjectId(),"New York", 70.0,70.0,"city",true); 
