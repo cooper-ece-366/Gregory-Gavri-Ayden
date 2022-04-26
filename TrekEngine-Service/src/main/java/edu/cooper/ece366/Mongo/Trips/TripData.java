@@ -63,6 +63,14 @@ public class TripData implements SerializingInterface{
         return stops; 
     }
 
+    public List<BigStops> getBigStops(BigStopHandler handler){
+        List<BigStops> bigStops = new ArrayList<BigStops>();
+        for(Stop stop : stops){
+            bigStops.add(handler.getById(stop.getBigStop()));
+        }
+        return bigStops;
+    }
+
     public void addStop(ObjectId smallStop, ObjectId bigStop){
         for(int i = 0; i<stops.size(); i++){
             if(stops.get(i).getBigStop().equals(bigStop)){

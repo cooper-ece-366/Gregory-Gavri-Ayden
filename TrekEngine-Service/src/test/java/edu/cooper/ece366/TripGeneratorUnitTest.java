@@ -1,5 +1,6 @@
 package edu.cooper.ece366;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -37,14 +38,17 @@ public class TripGeneratorUnitTest {
             new TripData(
                 stops.get(0).getId(),
                 stops.get(1).getId(),
-                new ArrayList<Stop>()
+                new ArrayList<Stop>(){{
+                    add(new Stop(stops.get(0).getId(),new ArrayList<ObjectId>()));
+                    add(new Stop(stops.get(1).getId(),new ArrayList<ObjectId>()));
+                }}
             ),
             new Detail(new Date(), 10, new ArrayList<Tag>())
         );  
     }
 
     @Test
-    public void testInit(){
+    public void testInit() throws IOException{
         TripGenerator tripGenerator = new TripGenerator(trip, bigStopHandler,6);
         assert (tripGenerator != null);
 

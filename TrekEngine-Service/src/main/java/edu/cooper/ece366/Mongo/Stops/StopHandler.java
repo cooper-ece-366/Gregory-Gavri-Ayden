@@ -65,4 +65,15 @@ public abstract class StopHandler<T extends Loacation> extends CollectionHandler
     public ArrayList<T> getStopsByName(String name){
         return rawQuery(getStopByNameFilter(name));
     }
+
+    public ArrayList<T> aggregateRandomWithFilter(Bson filter, int size){
+        return collection.aggregate(Arrays.asList(
+            Aggregates.match(filter),
+            Aggregates.sample(size)
+        )).into(new ArrayList<>());
+    }
+
+    public ArrayList<T> geoWithSample(int size){
+        return aggregateRandomWithFilter(Filters.eq("type", "stop"), size);
+    }
 }

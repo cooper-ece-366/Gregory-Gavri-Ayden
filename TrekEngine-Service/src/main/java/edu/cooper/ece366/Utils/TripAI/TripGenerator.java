@@ -2,7 +2,10 @@ package edu.cooper.ece366.Utils.TripAI;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import edu.cooper.ece366.Exceptions.InvalidTripException;
 import edu.cooper.ece366.Mongo.Stops.BigStops.BigStopHandler;
@@ -16,11 +19,12 @@ import edu.cooper.ece366.Utils.GeoLocation.LngLat;
 public class TripGenerator {
 
     private BigStopHandler stopHandler;
-    private GeoLocationHandler geoHandler;
+    private static GeoLocationHandler geoHandler = new GeoLocationHandler();
 
     private DirData minTripLen; 
     private List<StopBox> stops; 
     private Trip templateTrip; 
+    private Score currentScore; 
 
     private class Generator {
         private List<StopBox> stopOptions;
@@ -61,12 +65,12 @@ public class TripGenerator {
     }
 
 
-    public TripGenerator(Trip templateTrip,BigStopHandler stopHandler, int distPerDay){
+    public TripGenerator(Trip templateTrip,BigStopHandler stopHandler, int distPerDay) throws IOException{
         this.templateTrip = templateTrip;
         this.stopHandler = stopHandler;
-        this.geoHandler = new GeoLocationHandler();
         this.minTripLen = calculateMinTripLen(); 
         this.stops = getStops(distPerDay); 
+        this.currentScore = this.calculateScore(); 
     }
 
     public DirData getMinTripLen() {
@@ -77,14 +81,26 @@ public class TripGenerator {
         return new Generator(stops).generate(); 
     }
 
-    // TODO implement
-    private static int calculateScore(List<BigStops> stops){
-        return 0; 
-    }
+    private Score calculateScore() throws IOException{
+        ArrayList<String> stopStr = new ArrayList<String>();
+        Map<String,Integer> tags = new HashMap<String,Integer>(); 
+        int stopCount = 0; 
+        for(StopBox box: stops){
+            stopCount += box.stops.size(); 
+            for(BigStops stop: box.stops){
+                stopStr.add(stop.toLngLat().getDirStr());
+                tags.put(stop.getType(), tags.getOrDefault(stop.getType(), 0) + 1); 
+            }
+        }
 
-    private static int calculateScore(List<BigStops> stops, int indexIgnore){
-        stops.remove(indexIgnore);
-        return calculateScore(stops);
+        final long timeData = geoHandler.directions(stopStr).getDurtaionS();
+        final double timeScore = (timeData - (minTripLen).getDurtaionS()) / ((double)(minTripLen.getDurtaionS()));
+        Map<String,Double> tagScores = new HashMap<String,Double>();
+        for(Map.Entry<String,Integer> entry: tags.entrySet()){
+            tagScores.put(entry.getKey(), (double)entry.getValue() / (double)stopCount); 
+        }
+
+        return new Score(timeScore,tagScores); 
     }
 
     private DirData calculateMinTripLen(){
@@ -92,8 +108,8 @@ public class TripGenerator {
         ArrayList<String> list = new ArrayList<String>(){{
             BigStops start = stopHandler.getById(templateTrip.getTripData().getStartLocation()); 
             BigStops end = stopHandler.getById(templateTrip.getTripData().getEndLocation()); 
-            add(start.getLat() + " " + start.getLng());
-            add(end.getLat() + " " + end.getLng()); 
+            add(start.toLngLat().getDirStr());
+            add(end.toLngLat().getDirStr()); 
         }};
         try {
             return geoHandler.directions(list);  
@@ -103,12 +119,22 @@ public class TripGenerator {
         }
     }
 
+
+
     private ArrayList<StopBox> getStops(int distPerDay){
         ArrayList<StopBox> stopBoxes = new ArrayList<StopBox>();
         LngLat boxes[][] = getBoundingBox(distPerDay); 
         for(int i = 0; i<distPerDay; i++){
-            List<BigStops> stops = stopHandler.getCuratedStopsInGeoP(boxes[i]);
-            stopBoxes.add(new StopBox(stops, boxes[i]));
+            List<BigStops> stopsB = stopHandler.getCuratedRandomStopsInGeoPWR(
+                boxes[i],
+                10,
+                templateTrip.getTripData().getBigStops(stopHandler)
+            );
+            Collections.sort(
+                stopsB,
+                new SortBigStops(templateTrip.getTripData().getStartLocation(stopHandler)).getSort()
+            );
+            stopBoxes.add(new StopBox(stopsB, boxes[i]));
         }
         return stopBoxes;  
     }

@@ -39,6 +39,14 @@ public class LngLat {
         this.lat = lat;
     }
 
+    public String getDirStr(){
+        return lat + " " + lng; 
+    }
+
+    public double abs(){
+        return Math.sqrt(Math.pow(lng, 2) + Math.pow(lat, 2)); 
+    }
+
     public double deltaAsMeters(LngLat p2){
         final double phi1 = this.lat * Math.PI/180;
         final double phi2 = p2.getLat() * Math.PI/180;
@@ -100,6 +108,10 @@ public class LngLat {
                         cDR-sPhi1*Math.sin(phi));
 
         return new LngLat(convertFromRad(gamma), convertFromRad(phi));
+    }
+
+    public LngLat sub(LngLat p2){
+        return new LngLat(this.lng - p2.getLng(), this.lat - p2.getLat());
     }
 
     
