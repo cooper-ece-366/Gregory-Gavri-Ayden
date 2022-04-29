@@ -6,6 +6,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.eclipse.jetty.util.IO;
 
 import edu.cooper.ece366.Exceptions.InvalidTripException;
 import edu.cooper.ece366.Mongo.Stops.BigStops.BigStopHandler;
@@ -28,38 +31,54 @@ public class TripGenerator {
     private Score currentScore; 
 
     private class Generator {
-        private List<StopBox> stopOptions;
-        private int initalTimeAlpha; 
-        private int initalWeightAlpha; 
-        private int doubleDelta; 
+        private List<BigStops> stopOptions;
+        private double minDelta; 
+        private int maxDepth; 
+        private double idealThreshold; 
 
-        public Generator(List<StopBox> stopOptions){
-            this(stopOptions, 10, 10, 1);
+        public Generator(List<BigStops> stopOptions){
+            this(stopOptions, .2 ,10, .1);
         }
-        public Generator(List<StopBox> stopOptions, int initalTimeAlpha, int initalWeightAlpha, int doubleDelta){
+        public Generator(List<BigStops> stopOptions, double minDelta, int maxDepth, double idealThreshold ){
             this.stopOptions = stopOptions;
-            this.initalTimeAlpha = initalTimeAlpha;
-            this.initalWeightAlpha = initalWeightAlpha;
-            this.doubleDelta = doubleDelta; 
+            this.minDelta = minDelta;
+            this.maxDepth = maxDepth;
+            this.idealThreshold = idealThreshold;
         }
 
-        // TODO implement
-        public Trip generate(){
-            boolean criteria_met = false;
-            int timeAlpha = initalTimeAlpha;
-            int weightAlpha = initalWeightAlpha;
-            while(criteria_met){
-                iterate(timeAlpha,weightAlpha); 
-                timeAlpha -= doubleDelta;
-                weightAlpha -= doubleDelta;
+        public Trip generate() throws IOException {
+            double delta = minDelta;
+            int depth = 0; 
+            while(currentScore.getAvgScore() <= currentScore.getAvgScore() + idealThreshold && 
+                currentScore.getAvgScore() >= currentScore.getAvgScore() - idealThreshold
+            ){
+                iterate(delta);
+                currentScore = calculateScore(stopOptions); 
+                delta /= 2;
+                if(depth++ > maxDepth){
+                    break;
+                }
             }
 
             return null; 
 
         }
         
-        // TODO implement 
-        public void iterate(int timeAlpha, int weightAlpha){
+        public void iterate(double delta){
+
+            for(int i = 0; i<stops.size(); i++){
+                Score newScore = TripGeneratorUtils.estimateScore(
+                    currentScore,
+                    stopOptions,
+                    i,
+                    templateTrip.getDetails().getTripLength()
+                ); 
+
+                if(newScore != null && Math.abs(currentScore.getAvgScore() - newScore.getAvgScore()) >= delta){
+                    stopOptions.remove(i);
+                    currentScore = newScore;
+                }
+            }
 
         }
 
@@ -78,8 +97,23 @@ public class TripGenerator {
         return minTripLen;
     }
 
-    public Trip generateTrip(){
-        return new Generator(stops).generate(); 
+    public Trip generateTrip() throws IOException{
+        return new Generator(TripGeneratorUtils.getStops(this.stops)).generate(); 
+    }
+
+
+    private Score calculateScore(List<BigStops> stops) throws IOException{
+        ArrayList<String> stopStr = new ArrayList<String>();
+        Map<String,Integer> tags = new HashMap<String,Integer>(); 
+        int stopCount = stops.size(); 
+        for(BigStops stop: stops){
+            stopStr.add(stop.toLngLat().getDirStr());
+            tags.put(stop.getType(), tags.getOrDefault(stop.getType(), 0) + 1); 
+        }
+
+        final long timeData = geoHandler.directions(stopStr).getDurtaionS();
+
+        return TripGeneratorUtils.calculateScore(timeData, templateTrip.getDetails().getTripLength(), templateTrip.getDetails().getTags(), tags, stopCount); 
     }
 
     private Score calculateScore() throws IOException{
@@ -95,16 +129,8 @@ public class TripGenerator {
         }
 
         final long timeData = geoHandler.directions(stopStr).getDurtaionS();
-        final double timeScore = (timeData - TripGeneratorUtils.convertDaysToSeconds(templateTrip.getDetails().getTripLength())) / ((double)(TripGeneratorUtils.convertDaysToSeconds(templateTrip.getDetails().getTripLength())));
-        Map<String,Double> tagScores = new HashMap<String,Double>();
-        for (Tag tag: templateTrip.getDetails().getTags()){
-            tagScores.put(
-                tag.getTag(),
-                tags.getOrDefault(tag.getTag(), 0) - (tag.getWeight()*stopCount) / (double)stopCount
-            );
-        }
 
-        return new Score(timeScore,tagScores); 
+        return TripGeneratorUtils.calculateScore(timeData, templateTrip.getDetails().getTripLength(), templateTrip.getDetails().getTags(), tags, stopCount); 
     }
 
     private DirData calculateMinTripLen(){

@@ -59,9 +59,6 @@ public class TripGeneratorUnitTest {
         assert(tripGenerator.getStops().get(5).stops.get(0).getId().equals(trip.getTripData().getEndLocation()));
         
 
-        //If this fails um there could be traffic
-        //Better test might be needed 
-        assert (tripGenerator.getMinTripLen().getDurationM() == 4511806);
     }
     
     
