@@ -148,8 +148,11 @@ public class GeoLocationHandler {
                             + start + "&destination=" + end 
                             + "&waypoints=" + waypoints 
                             + "&key=" + API_KEY); 
+
+            JsonArray routes = obj.get("routes").getAsJsonArray();
+            if(routes.size() <= 0) continue; 
             
-            JsonObject legs = obj.get("routes").getAsJsonArray()
+            JsonObject legs = routes
                                 .get(0).getAsJsonObject()
                                 .get("legs").getAsJsonArray().get(0).getAsJsonObject(); 
 

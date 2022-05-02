@@ -3,6 +3,7 @@ package edu.cooper.ece366;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeAll;
@@ -44,8 +45,8 @@ public class TripGeneratorUnitTest {
                 }}
             ),
             new Detail(new Date(), 10, new ArrayList<Tag>(){{
-                add(new Tag("City", .5));
-                add(new Tag("Park", .5));
+                add(new Tag("city", .5));
+                add(new Tag("national_park", .5));
             }})
         );  
     }
@@ -56,9 +57,16 @@ public class TripGeneratorUnitTest {
         assert (tripGenerator != null);
         assert(tripGenerator.getStops().size() == 6); 
         assert(tripGenerator.getStops().get(0).stops.get(0).getId().equals(trip.getTripData().getStartLocation()));
-        assert(tripGenerator.getStops().get(5).stops.get(0).getId().equals(trip.getTripData().getEndLocation()));
-        
+        assert(tripGenerator.getStops().get(5).stops.get(tripGenerator.getStops().get(5).stops.size() - 1).getId().equals(trip.getTripData().getEndLocation()));
+    }
 
+    @Test
+    public void testGenerate() throws IOException{
+        TripGenerator tripGenerator = new TripGenerator(trip, bigStopHandler,6);
+        Trip newTrip = tripGenerator.generateTrip();
+        assert(newTrip != null);
+
+        List<BigStops> stops = newTrip.getTripData().getBigStops(bigStopHandler); 
     }
     
     
