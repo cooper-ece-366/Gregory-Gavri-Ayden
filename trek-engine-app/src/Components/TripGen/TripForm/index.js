@@ -11,6 +11,7 @@ import "./styles.css";
 import axios from "axios";
 import { insertTrip } from '../../../utils/Trip';
 import { useUserContext } from '../../../Contexts/UserContext';
+import { useNavigate } from 'react-router-dom';
 
 const styleSheet = {
     container: {
@@ -72,6 +73,7 @@ const TripForm = (props) => {
     const [prefs, setPrefs] = useState([]);
     const [name, setName] = useState("Trip 1");
     const { user, getIdToken } = useUserContext();
+    const navigate = useNavigate();
 
     const options = [
         { name: "National Parks", value: 0 },
@@ -157,7 +159,8 @@ const TripForm = (props) => {
 
         let id_token = await getIdToken();
 
-        insertTrip(data, id_token);
+        let response = await insertTrip(data, id_token);
+        navigate("/triprecs/" + response.data);
     }
 
     const handleDayChange = (e) => setDays(e.target.value);
