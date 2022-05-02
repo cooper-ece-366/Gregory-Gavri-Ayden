@@ -22,13 +22,6 @@ import edu.cooper.ece366.RouteInterfaces.UserBodyParser.QAuthRoute;
 import org.bson.types.ObjectId;
 
 public class TripGenAPI {
-
-    static String GetRelevantTrips() {
-        // This function will eventually get a mix of relevant Trips from friends,
-        // popular users, and auto generated trips.
-        return "trips trips blah blah blah";
-    }
-
     public static void paths(TripHandler tripHandler, UserHandler userHandler, BigStopHandler bigStopHandler,
             SmallStopHandler smallStopHandler) {
         path("/tripgen", () -> {
@@ -57,7 +50,6 @@ public class TripGenAPI {
             });
 
             post("/insert", (AuthRoute) (req, res, body, user) -> {
-                System.out.println("Inserting new Trip!");
                 JsonObject tripJ = body.get("trip").getAsJsonObject();
                 tripJ.get("meta").getAsJsonObject().addProperty("user", user.getEmail());
                 String startLoc = tripJ.get("trip").getAsJsonObject().get("startLocation").getAsString();
@@ -66,6 +58,7 @@ public class TripGenAPI {
                 ArrayList<BigStops> startBigStops = bigStopHandler.getCuratedStopsByNameFuzzy(startLoc);
                 ArrayList<BigStops> endBigStops = bigStopHandler.getCuratedStopsByNameFuzzy(endLoc);
                 ArrayList<BigStops> allStops = new ArrayList<BigStops>();
+                JsonArray stops = tripJ.get("trip").getAsJsonObject().get("stops").getAsJsonArray();
 
                 BigStops startBigStop = null;
                 BigStops endBigStop = null;
@@ -77,7 +70,11 @@ public class TripGenAPI {
                     startBigStop = startBigStops.get(0);
                 }
 
-                JsonArray stops = tripJ.get("trip").getAsJsonObject().get("stops").getAsJsonArray();
+                if (endBigStops.size() == 0) {
+                    // TODO: add it to the database
+                } else {
+                    endBigStop = endBigStops.get(0);
+                }
 
                 for (int i = 0; i < stops.size(); i++) {
                     String stopName = stops.get(i).getAsString();
@@ -89,12 +86,6 @@ public class TripGenAPI {
                         Stop stopObj = new Stop(reqStops.get(0).getId());
                         bigStops.add(stopObj);
                     }
-                }
-
-                if (endBigStops.size() == 0) {
-                    // TODO: add it to the database
-                } else {
-                    endBigStop = endBigStops.get(0);
                 }
 
                 Trip trip = new Trip(tripJ, true);
