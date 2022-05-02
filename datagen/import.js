@@ -40,7 +40,7 @@ async function connectToDatabase() {
 
 (async ()=>{
     const {client, db} = await connectToDatabase();
-    const formatStops = stops.map( ({info: {lat,lng,name,type}, stops}) => ({info: {cords: [lng,lat], name, type, isCurated:true}, stops})); 
+    const formatStops = stops.map( ({info: {lat,lng,name,type}, stops}) => ({info: {cords: [Number(lng),Number(lat)], name, type, isCurated:true}, stops})); 
     console.log("starting insert");
 
     for(let i = 0; i<formatStops.length; i++){
@@ -48,7 +48,7 @@ async function connectToDatabase() {
       console.log(`starting insert ${info.name}`); 
         const {insertedId:bigStop, acknowledged  } = await db.collection("bigStops").insertOne(info); 
         console.log(`finished inserting ${info.name} id= ${bigStop} ack=${acknowledged }`);
-        const smallStops = stops.map(({lat,lng,name,tag:type})=>({cords:[lng,lat],name,type,bigStop}));
+        const smallStops = stops.map(({lat,lng,name,tag:type})=>({cords:[Number(lng),Number(lat)],name,type,bigStop}));
         if(smallStops.length > 0){
           console.log(smallStops.length)
           await db.collection("smallStops").insertMany(smallStops); 
