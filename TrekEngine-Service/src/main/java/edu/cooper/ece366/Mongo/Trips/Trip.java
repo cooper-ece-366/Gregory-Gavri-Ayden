@@ -14,7 +14,7 @@ import edu.cooper.ece366.Mongo.Stops.SmallStops.SmallStopHandler;
 
 public class Trip implements SerializingInterface, IDInterface {
     @BsonProperty("_id")
-    private final ObjectId id;
+    private ObjectId id;
     @BsonProperty("meta")
     private final Meta meta;
     @BsonProperty("trip")
@@ -61,6 +61,10 @@ public class Trip implements SerializingInterface, IDInterface {
 
     public ObjectId getId() {
         return id;
+    }
+
+    public void setId(ObjectId id) {
+        this.id = id;
     }
 
     public Meta getMeta() {

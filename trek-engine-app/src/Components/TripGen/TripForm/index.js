@@ -145,12 +145,12 @@ const TripForm = (props) => {
                 private: false,
             },
             trip: {
-                endLocation: "LA",
-                startLocation: "New York",
+                endLocation: "FAKELA",
+                startLocation: "FAKENew York",
                 stops: [
-                    "New York",
-                    "Chicago",
-                    "LA"
+                    "FAKENew York",
+                    "FAKEChicago",
+                    "FAKELA"
                 ]
             }
         }

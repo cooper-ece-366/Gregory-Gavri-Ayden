@@ -10,6 +10,7 @@ import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 import com.google.gson.JsonObject;
+import com.mongodb.client.result.InsertOneResult;
 
 public abstract class CollectionHandler<T extends IDInterface> {
 

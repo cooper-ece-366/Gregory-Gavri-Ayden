@@ -57,6 +57,7 @@ public class TripGenAPI {
             });
 
             post("/insert", (AuthRoute) (req, res, body, user) -> {
+                System.out.println("Inserting new Trip!");
                 JsonObject tripJ = body.get("trip").getAsJsonObject();
                 tripJ.get("meta").getAsJsonObject().addProperty("user", user.getEmail());
                 String startLoc = tripJ.get("trip").getAsJsonObject().get("startLocation").getAsString();
@@ -101,9 +102,9 @@ public class TripGenAPI {
                 trip.getTripData().setEndLocation(endBigStop.getId());
                 trip.getTripData().setStops(bigStops);
 
-                tripHandler.insert(trip);
+                String id = tripHandler.insertTrip(trip);
 
-                return "Insert Succesfull";
+                return id;
             });
 
             post("/getById", (QAuthRoute) (req, res, body, user) -> {
