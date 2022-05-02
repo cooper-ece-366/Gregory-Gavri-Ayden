@@ -137,7 +137,7 @@ const TripForm = (props) => {
         let data = {
             details: {
                 tripLength: 10,
-                tags: ["national_parks"],
+                tags: [{ tag: "national_parks", weight: 1 }],
             },
             meta: {
                 name: "trip" + Math.floor(Math.random() * 1000),
@@ -145,12 +145,12 @@ const TripForm = (props) => {
                 private: false,
             },
             trip: {
-                endLocation: "Los Angeles",
+                endLocation: "LA",
                 startLocation: "New York",
                 stops: [
                     "New York",
                     "Chicago",
-                    "Los Angeles"
+                    "LA"
                 ]
             }
         }

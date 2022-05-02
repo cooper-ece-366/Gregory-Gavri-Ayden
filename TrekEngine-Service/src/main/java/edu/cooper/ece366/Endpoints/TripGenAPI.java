@@ -1,8 +1,10 @@
+// Written by Greg Presser and Gavri Kepets
 package edu.cooper.ece366.Endpoints;
 
 import static spark.Spark.*;
 
 import com.google.gson.JsonObject;
+import com.google.gson.JsonArray;
 
 import org.bson.types.ObjectId;
 import java.util.ArrayList;
@@ -12,10 +14,12 @@ import edu.cooper.ece366.Mongo.Stops.SmallStops.SmallStopHandler;
 import edu.cooper.ece366.Mongo.Trips.Trip;
 import edu.cooper.ece366.Mongo.Trips.TripHandler;
 import edu.cooper.ece366.Mongo.Stops.BigStops.BigStops;
+import edu.cooper.ece366.Mongo.Trips.Stop;
 import edu.cooper.ece366.Mongo.User.UserHandler;
 import edu.cooper.ece366.RouteInterfaces.BodyParserRoute;
 import edu.cooper.ece366.RouteInterfaces.UserBodyParser.AuthRoute;
 import edu.cooper.ece366.RouteInterfaces.UserBodyParser.QAuthRoute;
+import org.bson.types.ObjectId;
 
 public class TripGenAPI {
 
@@ -57,12 +61,48 @@ public class TripGenAPI {
                 tripJ.get("meta").getAsJsonObject().addProperty("user", user.getEmail());
                 String startLoc = tripJ.get("trip").getAsJsonObject().get("startLocation").getAsString();
                 String endLoc = tripJ.get("trip").getAsJsonObject().get("endLocation").getAsString();
-                BigStops start = bigStopHandler.getCuratedStopsByNameFuzzy(startLoc)[0];
-                BigStops end = bigStopHandler.getCuratedStopsByNameFuzzy(endLoc)[0];
-                // TODO set start and end locations to the object id for insertion
 
-                // Trip trip = new Trip(tripJ);
-                // tripHandler.insert(trip);
+                ArrayList<BigStops> startBigStops = bigStopHandler.getCuratedStopsByNameFuzzy(startLoc);
+                ArrayList<BigStops> endBigStops = bigStopHandler.getCuratedStopsByNameFuzzy(endLoc);
+                ArrayList<BigStops> allStops = new ArrayList<BigStops>();
+
+                BigStops startBigStop = null;
+                BigStops endBigStop = null;
+                ArrayList<Stop> bigStops = new ArrayList<Stop>();
+
+                if (startBigStops.size() == 0) {
+                    // TODO: add it to the database
+                } else {
+                    startBigStop = startBigStops.get(0);
+                }
+
+                JsonArray stops = tripJ.get("trip").getAsJsonObject().get("stops").getAsJsonArray();
+
+                for (int i = 0; i < stops.size(); i++) {
+                    String stopName = stops.get(i).getAsString();
+                    ArrayList<BigStops> reqStops = bigStopHandler.getCuratedStopsByNameFuzzy(stopName);
+
+                    if (reqStops.size() == 0) {
+                        // TODO: add it to the database
+                    } else {
+                        Stop stopObj = new Stop(reqStops.get(0).getId());
+                        bigStops.add(stopObj);
+                    }
+                }
+
+                if (endBigStops.size() == 0) {
+                    // TODO: add it to the database
+                } else {
+                    endBigStop = endBigStops.get(0);
+                }
+
+                Trip trip = new Trip(tripJ, true);
+                trip.getTripData().setStartLocation(startBigStop.getId());
+                trip.getTripData().setEndLocation(endBigStop.getId());
+                trip.getTripData().setStops(bigStops);
+
+                tripHandler.insert(trip);
+
                 return "Insert Succesfull";
             });
 
