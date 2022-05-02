@@ -9,6 +9,8 @@ import AutoList from './AutoList';
 import "./styles.css";
 // import AutoComplete from "../../Utils/AutoComplete"
 import axios from "axios";
+import { insertTrip } from '../../../utils/Trip';
+import { useUserContext } from '../../../Contexts/UserContext';
 
 const styleSheet = {
     container: {
@@ -69,6 +71,7 @@ const TripForm = (props) => {
     const [required, setRequired] = useState([]);
     const [prefs, setPrefs] = useState([]);
     const [name, setName] = useState("Trip 1");
+    const { user, getIdToken } = useUserContext();
 
     const options = [
         { name: "National Parks", value: 0 },
@@ -109,18 +112,52 @@ const TripForm = (props) => {
             setDays(finalDays);
         }
 
+        // let data = {
+        //     details: {
+        //         tripLength: days,
+        //         tags: prefs,
+        //         startDate
+        //     },
+        //     meta: {
+        //         name,
+        //         description: "",
+        //         private: false,
+        //     },
+        //     trip: {
+        //         endLocation: to,
+        //         startLocation: from,
+        //         stops: [
+        //             from,
+        //             ...required,
+        //             to
+        //         ]
+        //     }
+        // };
+
         let data = {
-            name,
-            from,
-            to,
-            days: parseInt(finalDays),
-            startDate,
-            endDate,
-            required,
-            prefs
+            details: {
+                tripLength: 10,
+                tags: ["national_parks"],
+            },
+            meta: {
+                name: "trip" + Math.floor(Math.random() * 1000),
+                description: "",
+                private: false,
+            },
+            trip: {
+                endLocation: "Los Angeles",
+                startLocation: "New York",
+                stops: [
+                    "New York",
+                    "Chicago",
+                    "Los Angeles"
+                ]
+            }
         }
 
-        console.log(data);
+        let id_token = await getIdToken();
+
+        insertTrip(data, id_token);
     }
 
     const handleDayChange = (e) => setDays(e.target.value);

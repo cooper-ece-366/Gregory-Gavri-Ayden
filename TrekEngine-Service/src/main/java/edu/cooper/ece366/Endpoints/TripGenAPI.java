@@ -5,11 +5,13 @@ import static spark.Spark.*;
 import com.google.gson.JsonObject;
 
 import org.bson.types.ObjectId;
+import java.util.ArrayList;
 
 import edu.cooper.ece366.Mongo.Stops.BigStops.BigStopHandler;
 import edu.cooper.ece366.Mongo.Stops.SmallStops.SmallStopHandler;
 import edu.cooper.ece366.Mongo.Trips.Trip;
 import edu.cooper.ece366.Mongo.Trips.TripHandler;
+import edu.cooper.ece366.Mongo.Stops.BigStops.BigStops;
 import edu.cooper.ece366.Mongo.User.UserHandler;
 import edu.cooper.ece366.RouteInterfaces.BodyParserRoute;
 import edu.cooper.ece366.RouteInterfaces.UserBodyParser.AuthRoute;
@@ -27,15 +29,21 @@ public class TripGenAPI {
             SmallStopHandler smallStopHandler) {
         path("/tripgen", () -> {
             post("/allrecs", (BodyParserRoute) (req, res, body) -> {
+                JsonObject json = body.getAsJsonObject();
+                Trip trip = new Trip(json);
 
+                return "hiya";
             });
 
             post("/userrecs", (BodyParserRoute) (req, res, body) -> {
+                JsonObject json = body.getAsJsonObject();
+                Trip trip = new Trip(json);
 
+                return "user";
             });
 
             post("/autorecs", (BodyParserRoute) (req, res, body) -> {
-
+                return "auto";
             });
 
             post("/unsafeInsert", (BodyParserRoute) (req, res, body) -> {
@@ -47,8 +55,14 @@ public class TripGenAPI {
             post("/insert", (AuthRoute) (req, res, body, user) -> {
                 JsonObject tripJ = body.get("trip").getAsJsonObject();
                 tripJ.get("meta").getAsJsonObject().addProperty("user", user.getEmail());
-                Trip trip = new Trip(body);
-                tripHandler.insert(trip);
+                String startLoc = tripJ.get("trip").getAsJsonObject().get("startLocation").getAsString();
+                String endLoc = tripJ.get("trip").getAsJsonObject().get("endLocation").getAsString();
+                BigStops start = bigStopHandler.getCuratedStopsByNameFuzzy(startLoc)[0];
+                BigStops end = bigStopHandler.getCuratedStopsByNameFuzzy(endLoc)[0];
+                // TODO set start and end locations to the object id for insertion
+
+                // Trip trip = new Trip(tripJ);
+                // tripHandler.insert(trip);
                 return "Insert Succesfull";
             });
 
