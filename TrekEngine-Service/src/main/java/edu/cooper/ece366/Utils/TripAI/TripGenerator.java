@@ -46,7 +46,7 @@ public class TripGenerator {
             this.idealThreshold = idealThreshold;
         }
 
-        public Trip generate() throws IOException {
+        public List<BigStops> generate() throws IOException {
             double delta = minDelta;
             int depth = 0; 
             while(currentScore.getAvgScore() <= currentScore.getAvgScore() + idealThreshold && 
@@ -60,7 +60,7 @@ public class TripGenerator {
                 }
             }
 
-            return null; 
+            return stopOptions; 
 
         }
         
@@ -98,7 +98,13 @@ public class TripGenerator {
     }
 
     public Trip generateTrip() throws IOException{
-        return new Generator(TripGeneratorUtils.getStops(this.stops)).generate(); 
+        List<BigStops> stops = new Generator(TripGeneratorUtils.getStops(this.stops)).generate(); 
+
+        Trip trip = new Trip(templateTrip);
+        trip.replaceStops(stops); 
+
+        return trip; 
+
     }
 
 

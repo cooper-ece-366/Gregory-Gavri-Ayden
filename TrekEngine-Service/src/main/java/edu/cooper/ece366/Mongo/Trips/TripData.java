@@ -40,6 +40,15 @@ public class TripData implements SerializingInterface{
         });
     }
 
+    public TripData(TripData t){
+        this.startLocation = t.startLocation;
+        this.endLocation = t.endLocation;
+        this.stops = new ArrayList<Stop> ();
+        t.stops.forEach(stop -> {
+            this.stops.add(new Stop(stop));
+        });
+    }
+
     public ObjectId getStartLocation(){
         return startLocation; 
     }
@@ -62,6 +71,13 @@ public class TripData implements SerializingInterface{
     }
     public List<Stop> getStops(){
         return stops; 
+    }
+
+    public void replaceStops(List<BigStops> stops){
+        this.stops.clear(); 
+        stops.forEach(stop -> {
+            this.stops.add(new Stop(stop.getId(), new ArrayList<ObjectId>()));
+        });
     }
 
     public List<BigStops> getBigStops(BigStopHandler handler){
