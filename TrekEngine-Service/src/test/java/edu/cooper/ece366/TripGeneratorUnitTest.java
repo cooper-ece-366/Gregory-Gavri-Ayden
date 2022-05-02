@@ -67,6 +67,7 @@ public class TripGeneratorUnitTest {
         assert(newTrip != null);
 
         List<BigStops> stops = newTrip.getTripData().getBigStops(bigStopHandler); 
+        assert(stops.size() > 2);
     }
     
     
