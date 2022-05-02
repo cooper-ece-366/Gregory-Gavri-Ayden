@@ -59,26 +59,13 @@ public class TripHandler extends CollectionHandler<Trip>{
         return this.rawQuery(filter);
     }
 
-    private ArrayList<Trip> getTripByLoc(double lnglb, double lngup, double latlb, double latup, boolean isStart,BigStopHandler stopHandler){
-        
-        ArrayList<BigStops> stops = stopHandler.getStopsByLoc(lnglb, lngup, latlb, latup); 
-        String base = "trip." + (isStart ? "startLocation" : "endLocation"); 
-        Bson filter = Filters.in(base, stops); 
-        return this.rawQuery(filter);
-    }
 
     public ArrayList<Trip> getTripByStartLoc(String loc,BigStopHandler stopHandler){
         return getTripByLoc(loc, true,stopHandler);
     }
-    public ArrayList<Trip> getTripByStartLoc(double lnglb, double lngup, double latlb, double latup,BigStopHandler stopHandler){
-        return getTripByLoc( lnglb, lngup, latlb, latup, true,stopHandler); 
-    }
 
     public ArrayList<Trip> getTripByEndLoc(String loc,BigStopHandler stopHandler){
         return getTripByLoc(loc, false,stopHandler);
-    }
-    public ArrayList<Trip> getTripByEndLoc(double lnglb, double lngup, double latlb, double latup,BigStopHandler stopHandler){
-        return getTripByLoc( lnglb, lngup, latlb, latup, false,stopHandler); 
     }
 
 }

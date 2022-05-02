@@ -61,11 +61,12 @@ const TripViewer = ()=>{
             { trip ? (
                 <div style={styleSheet.fullPage} >
                     <Map ref={mapRef} addMarkerArgs={
-                        [trip.tripData.startLocation, ...trip.tripData.stops, trip.tripData.endLocation]
+                        // [trip.tripData.startLocation, ...trip.tripData.stops, trip.tripData.endLocation]
+                        trip.tripData.stops.map(({bigStop})=>bigStop)
                     }
                     addPathArgs={
                         [{
-                            stops: [trip.tripData.startLocation, ...trip.tripData.stops, trip.tripData.endLocation].map(({name})=>name),
+                            stops: trip.tripData.stops.map(({bigStop})=>bigStop),
                             id: trip.meta.name
                         }]
                     }/>
