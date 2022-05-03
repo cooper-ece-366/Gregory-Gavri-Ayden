@@ -43,12 +43,6 @@ public class TripGenAPI {
                 return "auto";
             });
 
-            post("/unsafeInsert", (BodyParserRoute) (req, res, body) -> {
-                Trip trip = new Trip(body.get("trip").getAsJsonObject());
-                tripHandler.insert(trip);
-                return "Insert Succesfull";
-            });
-
             post("/insert", (AuthRoute) (req, res, body, user) -> {
                 JsonObject tripJ = body.get("trip").getAsJsonObject();
                 tripJ.get("meta").getAsJsonObject().addProperty("user", user.getEmail());
