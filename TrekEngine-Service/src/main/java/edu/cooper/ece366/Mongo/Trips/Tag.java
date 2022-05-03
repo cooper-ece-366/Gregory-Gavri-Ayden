@@ -22,6 +22,11 @@ public class Tag implements SerializingInterface{
         this.tag = tagObj.get("tag").getAsString();
         this.weight = tagObj.get("weight").getAsDouble();
     }
+
+    public Tag(Tag tag) {
+        this.tag = tag.tag;
+        this.weight = tag.weight;
+    }
     public String getTag(){
         return tag; 
     }
