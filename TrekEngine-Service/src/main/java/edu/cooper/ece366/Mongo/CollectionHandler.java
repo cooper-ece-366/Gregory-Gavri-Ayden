@@ -9,21 +9,23 @@ import com.mongodb.client.model.Filters;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
+import com.google.gson.JsonObject;
+import com.mongodb.client.result.InsertOneResult;
 
 public abstract class CollectionHandler<T extends IDInterface> {
 
     protected MongoCollection<T> collection;
 
     public CollectionHandler(MongoHandler handler, String name, Class<T> clazz) {
-        collection = handler.getCollection(name, clazz); 
+        collection = handler.getCollection(name, clazz);
     }
 
-    public T getById(String id){
+    public T getById(String id) {
         return getById(new ObjectId(id));
     }
 
-    public T getById(ObjectId id){
-        ArrayList<T> lst = collection.find(Filters.eq("_id",id)).into(new ArrayList<>());
+    public T getById(ObjectId id) {
+        ArrayList<T> lst = collection.find(Filters.eq("_id", id)).into(new ArrayList<>());
         return lst.size() > 0 ? lst.get(0) : null;
     }
 
@@ -31,35 +33,35 @@ public abstract class CollectionHandler<T extends IDInterface> {
         collection.insertOne(obj);
     }
 
-    public void insert(List<T> objs){
+    public void insert(List<T> objs) {
         collection.insertMany(objs);
     }
 
-    public void delete(ObjectId objectId){
-        collection.deleteOne(Filters.eq("_id",objectId));
+    public void delete(ObjectId objectId) {
+        collection.deleteOne(Filters.eq("_id", objectId));
     }
 
-    public void delete(String objectId){
+    public void delete(String objectId) {
         delete(new ObjectId(objectId));
     }
 
-    public void update(T obj){
-        collection.updateOne(Filters.eq("_id",obj.getId()), new Document().append("$set", obj));
+    public void update(T obj) {
+        collection.updateOne(Filters.eq("_id", obj.getId()), new Document().append("$set", obj));
     }
 
-    public void flush(){
+    public void flush() {
         collection.drop();
     }
 
-    public long getCount(){
+    public long getCount() {
         return collection.countDocuments();
     }
 
-    public long getCount(Bson filter){
+    public long getCount(Bson filter) {
         return collection.countDocuments(filter);
     }
 
-    public ArrayList<T> rawQuery (Bson filter){
+    public ArrayList<T> rawQuery(Bson filter) {
         return collection.find(filter).into(new ArrayList<>());
     }
 

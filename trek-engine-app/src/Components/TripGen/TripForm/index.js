@@ -1,5 +1,5 @@
 // Written by Gavri Kepets
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Multiselect from 'multiselect-react-dropdown';
 import AutoComplete from "../../Utils/AutoComplete";
 import EditableText from './EditableText';
@@ -9,6 +9,9 @@ import AutoList from './AutoList';
 import "./styles.css";
 // import AutoComplete from "../../Utils/AutoComplete"
 import axios from "axios";
+import { insertTrip } from '../../../utils/Trip';
+import { useUserContext } from '../../../Contexts/UserContext';
+import { useNavigate } from 'react-router-dom';
 
 const styleSheet = {
     container: {
@@ -56,6 +59,27 @@ const styleSheet = {
         fontFamily: "'Sen', sans-serif",
         cursor: "pointer",
         padding: "10px",
+    },
+    greysubmit: {
+        position: "absolute",
+        bottom: "0",
+        marginBottom: "20px",
+        minWidth: "100px",
+        maxWidth: "300px",
+        width: "80%",
+        fontSize: "1.5em",
+        backgroundColor: "rgba(222, 45, 22, 0.5)",
+        color: "white",
+        background: "#DE2D16",
+        border: "4px solid #781C10",
+        boxSizing: "border-box",
+        boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+        borderRadius: "25px",
+        fontSize: "1.5em",
+        fontFamily: "'Sen', sans-serif",
+        cursor: "not-allowed",
+        padding: "10px",
+        opacity: "0.5",
     }
 }
 
@@ -69,6 +93,9 @@ const TripForm = (props) => {
     const [required, setRequired] = useState([]);
     const [prefs, setPrefs] = useState([]);
     const [name, setName] = useState("Trip 1");
+    const { user, getIdToken } = useUserContext();
+    const [submittable, setSubmittable] = useState(false);
+    const navigate = useNavigate();
 
     const options = [
         { name: "National Parks", value: 0 },
@@ -99,6 +126,16 @@ const TripForm = (props) => {
         }
     }
 
+    useEffect(() => {
+        console.log("HERER");
+        if (days > 0 && from != "" && to != "") {
+            setSubmittable(true);
+        }
+        else {
+            setSubmittable(false);
+        }
+    }, [days, from, to]);
+
     const handleFormSubmit = async (e) => {
         e.preventDefault();
 
@@ -109,18 +146,53 @@ const TripForm = (props) => {
             setDays(finalDays);
         }
 
+        // let data = {
+        //     details: {
+        //         tripLength: days,
+        //         tags: prefs,
+        //         startDate
+        //     },
+        //     meta: {
+        //         name,
+        //         description: "",
+        //         private: false,
+        //     },
+        //     trip: {
+        //         endLocation: to,
+        //         startLocation: from,
+        //         stops: [
+        //             from,
+        //             ...required,
+        //             to
+        //         ]
+        //     }
+        // };
+
         let data = {
-            name,
-            from,
-            to,
-            days: parseInt(finalDays),
-            startDate,
-            endDate,
-            required,
-            prefs
+            details: {
+                tripLength: 10,
+                tags: [{ tag: "national_parks", weight: 1 }],
+            },
+            meta: {
+                name: "trip" + Math.floor(Math.random() * 1000),
+                description: "",
+                private: false,
+            },
+            trip: {
+                endLocation: "Los Angeles",
+                startLocation: "New York",
+                stops: [
+                    "New York",
+                    "Chicago",
+                    "Los Angeles"
+                ]
+            }
         }
 
-        console.log(data);
+        let id_token = await getIdToken();
+
+        let response = await insertTrip(data, id_token);
+        navigate("/triprecs/" + response.data);
     }
 
     const handleDayChange = (e) => setDays(e.target.value);
@@ -162,7 +234,7 @@ const TripForm = (props) => {
                     displayValue="name" // Property name to display in the dropdown options
                 />
 
-                <button style={styleSheet.submit} onClick={handleFormSubmit}>Make my Trip!</button>
+                <button style={submittable ? styleSheet.submit : styleSheet.greysubmit} onClick={handleFormSubmit}>Make my Trip!</button>
             </form>
         </div>
     )

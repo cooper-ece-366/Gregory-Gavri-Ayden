@@ -19,6 +19,7 @@ public class BigStopHandler extends StopHandler<BigStops> {
         super(handler, "bigStops", BigStops.class);
     }
 
+
     private Bson isCuratedFilter() {
         return Filters.eq("isCurated", true);
     }
@@ -26,11 +27,17 @@ public class BigStopHandler extends StopHandler<BigStops> {
     private Bson andModifier(Bson filter){
         return Filters.and(filter,isCuratedFilter() );
     }
-    
-    public ArrayList<BigStops> getCuratedStopsByType(String type){
+
+    public ArrayList<BigStops> getCuratedStopsByType(String type) {
         Bson filter = getStopsByTypeFilter(type);
-        return rawQuery(andModifier(filter));  
+        return rawQuery(andModifier(filter));
     }
+
+    public ArrayList<BigStops> getCuratedStopsByNameFuzzy(String name) {
+        Bson filter = getStopByNameFilterFuzzy(name);
+        return rawQuery(andModifier(filter));
+    }
+
     public ArrayList<BigStops> getCuratedStopsByName(String name){
         Bson filter = getStopByNameFilter(name); 
         return rawQuery(andModifier(filter));
@@ -72,8 +79,4 @@ public class BigStopHandler extends StopHandler<BigStops> {
         return l1;
 
     }
-
-
-
 }
-

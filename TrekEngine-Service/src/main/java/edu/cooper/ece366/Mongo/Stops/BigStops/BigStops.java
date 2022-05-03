@@ -14,7 +14,8 @@ import edu.cooper.ece366.Mongo.Stops.SmallStops.SmallStopHandler;
 
 public class BigStops extends Loacation implements SerializingInterface {
 
-    @BsonProperty("isCurated") private final Boolean isCurated; 
+    @BsonProperty("isCurated")
+    private final Boolean isCurated;
 
     @BsonCreator
     public BigStops(
@@ -42,34 +43,38 @@ public class BigStops extends Loacation implements SerializingInterface {
         return isCurated;
     }
 
+    public ObjectId getId() {
+        return id;
+    }
+
     private class BigStopsSerilizer implements SerializingInterface {
         private final String id;
-        private final String name; 
+        private final String name;
         private final Double lat;
         private final Double lng;
         private final String type;
-        private final Boolean isCurated; 
+        private final Boolean isCurated;
 
-        public BigStopsSerilizer(BigStops stops){
-            this.id = stops.getId().toHexString(); 
-            this.name = stops.getName(); 
-            this.lat = stops.getLat(); 
-            this.lng = stops.getLng(); 
-            this.type = stops.getType(); 
+        public BigStopsSerilizer(BigStops stops) {
+            this.id = stops.getId().toHexString();
+            this.name = stops.getName();
+            this.lat = stops.getLat();
+            this.lng = stops.getLng();
+            this.type = stops.getType();
             this.isCurated = stops.getIsCurated();
         }
     }
 
     @Override
-    public String toJSONString(){
-        return new BigStopsSerilizer(this).toJSONString(); 
+    public String toJSONString() {
+        return new BigStopsSerilizer(this).toJSONString();
     }
 
     @Override
-    public String toJSONString(BigStopHandler bigStopHandler, SmallStopHandler smallstopHandler ){
+    public String toJSONString(BigStopHandler bigStopHandler, SmallStopHandler smallstopHandler) {
         if (bigStopHandler == null || smallstopHandler == null)
             return this.toJSONString();
-        return new BigStopsSerilizer(this).toJSONString(bigStopHandler,smallstopHandler); 
+        return new BigStopsSerilizer(this).toJSONString(bigStopHandler, smallstopHandler);
     }
 
 }
