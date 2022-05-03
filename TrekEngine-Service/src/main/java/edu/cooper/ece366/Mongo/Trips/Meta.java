@@ -49,6 +49,15 @@ public class Meta implements SerializingInterface{
         this.updated = new Date (metaJson.get("updated").getAsLong()); 
     }
 
+    public Meta(Meta meta){
+        this.name = meta.name;
+        this.description = meta.description;
+        this.user = meta.user;
+        this.isPrivate = meta.isPrivate;
+        this.created = meta.created;
+        this.updated = meta.updated;
+    }
+
 
     public User getUserObj(UserHandler userHandler){
         return userHandler.getUserFromEmail(user);

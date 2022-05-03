@@ -6,6 +6,7 @@ import java.util.List;
 import com.google.gson.JsonObject;
 
 import org.bson.codecs.pojo.annotations.BsonCreator;
+import org.bson.codecs.pojo.annotations.BsonIgnore;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 import org.bson.types.ObjectId;
 
@@ -15,44 +16,109 @@ import edu.cooper.ece366.Mongo.Stops.BigStops.BigStops;
 import edu.cooper.ece366.Mongo.Stops.SmallStops.SmallStopHandler;
 import edu.cooper.ece366.Mongo.Stops.SmallStops.SmallStops;
 
-public class TripData implements SerializingInterface{
-    @BsonProperty("startLocation") private ObjectId startLocation;
-    @BsonProperty("endLocation") private ObjectId endLocation;
-    @BsonProperty("stops") private final List<Stop> stops;
+public class TripData implements SerializingInterface {
+    @BsonProperty("startLocation")
+    private ObjectId startLocation;
+    @BsonProperty("endLocation")
+    private ObjectId endLocation;
+    @BsonProperty("stops")
+    private List<Stop> stops;
 
     @BsonCreator
     public TripData(
-        @BsonProperty("startLocation") ObjectId startLocation, 
-        @BsonProperty("endLocation") ObjectId endLocation, 
-        @BsonProperty("stops") List<Stop> stops) {
+            @BsonProperty("startLocation") ObjectId startLocation,
+            @BsonProperty("endLocation") ObjectId endLocation,
+            @BsonProperty("stops") List<Stop> stops) {
         this.startLocation = startLocation;
         this.endLocation = endLocation;
         this.stops = stops;
     }
 
-    public TripData(JsonObject tripObj){
+    public TripData(JsonObject tripObj) {
         this.endLocation = new ObjectId(tripObj.get("endLocation").getAsString());
         this.startLocation = new ObjectId(tripObj.get("startLocation").getAsString());
-        this.stops = new ArrayList<Stop> (); 
+        this.stops = new ArrayList<Stop>();
         tripObj.get("stops").getAsJsonArray().forEach(stop -> {
             this.stops.add(new Stop(stop.getAsJsonObject()));
+        });
+    }
+
+    public TripData(boolean needsParsing) {
+        this.endLocation = null;
+        this.startLocation = null;
+        this.stops = new ArrayList<Stop>();
+    }
+
+     public TripData(TripData t){
+        this.startLocation = t.startLocation;
+        this.endLocation = t.endLocation;
+        this.stops = new ArrayList<Stop> ();
+        t.stops.forEach(stop -> {
+            this.stops.add(new Stop(stop));
         });
     }
 
     public ObjectId getStartLocation(){
         return startLocation; 
     }
+
+    public BigStops getStartLocation(BigStopHandler handler){
+        return handler.getById(startLocation);
+    }
+
     public void setStartLocation(ObjectId startLocation){
         this.startLocation = startLocation; 
     }
-    public ObjectId getEndLocation(){
-        return endLocation; 
+
+    public void setStartLocation(ObjectId startLocation) {
+        this.startLocation = startLocation;
+    }
+
+    public ObjectId getEndLocation() {
+        return endLocation;
+     }
+
+    public BigStops getEndLocation(BigStopHandler handler){
+        return handler.getById(endLocation);
     }
     public void setEndLocation(ObjectId endLocation){
         this.endLocation = endLocation; 
     }
-    public List<Stop> getStops(){
-        return stops; 
+
+    public void setEndLocation(ObjectId endLocation) {
+        this.endLocation = endLocation;
+    }
+
+    public List<Stop> getStops() {
+        return stops;
+    }
+
+    public void setStops(List<Stop> stops) {
+        this.stops = stops;
+    }
+              
+    public void replaceStops(List<BigStops> stops){
+        this.stops.clear(); 
+        stops.forEach(stop -> {
+            this.stops.add(new Stop(stop.getId(), new ArrayList<ObjectId>()));
+        });
+    }
+
+    public List<BigStops> getBigStops(BigStopHandler handler){
+        List<BigStops> bigStops = new ArrayList<BigStops>();
+        for(Stop stop : stops){
+            bigStops.add(handler.getById(stop.getBigStop()));
+        }
+        return bigStops;
+    }
+
+    @BsonIgnore
+    public List<ObjectId> getBigStops(){
+        List<ObjectId> bigStops = new ArrayList<ObjectId>();
+        for(Stop stop : stops){
+            bigStops.add(stop.getBigStop());
+        }
+        return bigStops;
     }
 
     public void addStop(ObjectId smallStop, ObjectId bigStop){
@@ -66,80 +132,81 @@ public class TripData implements SerializingInterface{
         }
     }
 
-
     @Override
     public boolean equals(Object o) {
-        if (o == this) return true;
+        if (o == this)
+            return true;
         if (!(o instanceof TripData)) {
             return false;
         }
         TripData trip = (TripData) o;
         return startLocation.equals(trip.startLocation) &&
-               endLocation.equals(trip.endLocation) &&
-               stops.equals(trip.stops);
+                endLocation.equals(trip.endLocation) &&
+                stops.equals(trip.stops);
     }
 
     private class SerializedTripData implements SerializingInterface {
 
         private class SerializedStop implements SerializingInterface {
             private final String bigStop;
-            private final List<String> smallStops; 
+            private final List<String> smallStops;
 
-            public SerializedStop(Stop stop){
+            public SerializedStop(Stop stop) {
                 this.bigStop = stop.getBigStop().toHexString();
-                this.smallStops = new ArrayList<String> ();
-                for(ObjectId id: stop.getSmallStops()){
-                    smallStops.add(id.toHexString()); 
+                this.smallStops = new ArrayList<String>();
+                for (ObjectId id : stop.getSmallStops()) {
+                    smallStops.add(id.toHexString());
                 }
             }
         }
 
-        private final String startLocation; 
+        private final String startLocation;
         private final String endLocation;
         private final List<SerializedStop> stops;
 
-        public SerializedTripData(TripData tripData){
-            this.startLocation = tripData.startLocation.toHexString(); 
+        public SerializedTripData(TripData tripData) {
+            this.startLocation = tripData.startLocation.toHexString();
             this.endLocation = tripData.endLocation.toHexString();
             this.stops = new ArrayList<SerializedStop>();
-            for(Stop stop: tripData.getStops()){
-                this.stops.add(new SerializedStop(stop)); 
+            for (Stop stop : tripData.getStops()) {
+                this.stops.add(new SerializedStop(stop));
             }
 
         }
     }
 
-
     private class SerializedTripDataExpanded implements SerializingInterface {
 
         private class SerializedStop implements SerializingInterface {
             private final BigStops bigStop;
-            private final List<SmallStops> smallStops; 
+            private final List<SmallStops> smallStops;
 
             public SerializedStop(Stop stop, BigStopHandler bigStopHandler, SmallStopHandler smallStopHandler) {
 
-                this.bigStop = bigStopHandler.getById(stop.getBigStop()); 
-                this.smallStops = new ArrayList<SmallStops> ();
-                for(ObjectId id: stop.getSmallStops()){
-                    SmallStops temp = smallStopHandler.getById(id); 
-                    // maybe change this to like correcting it or something in the db but if managed correctly it should never happen
-                    if(temp == null)
-                        continue; 
-                    smallStops.add(temp); 
+                this.bigStop = bigStopHandler.getById(stop.getBigStop());
+                this.smallStops = new ArrayList<SmallStops>();
+                for (ObjectId id : stop.getSmallStops()) {
+                    SmallStops temp = smallStopHandler.getById(id);
+                    // maybe change this to like correcting it or something in the db but if managed
+                    // correctly it should never happen
+                    if (temp == null)
+                        continue;
+                    smallStops.add(temp);
                 }
             }
         }
 
-        private final BigStops startLocation; 
+        private final BigStops startLocation;
         private final BigStops endLocation;
         private final List<SerializedStop> stops;
 
-        public SerializedTripDataExpanded(TripData tripData, BigStopHandler bigStopHandler, SmallStopHandler smallStopHandler){
-            this.startLocation = bigStopHandler.getById(tripData.startLocation); 
+        public SerializedTripDataExpanded(TripData tripData, BigStopHandler bigStopHandler,
+                SmallStopHandler smallStopHandler) {
+            this.startLocation = bigStopHandler.getById(tripData.startLocation);
             this.endLocation = bigStopHandler.getById(tripData.endLocation);
             this.stops = new ArrayList<SerializedStop>();
-            for(Stop stop: tripData.getStops()){
-                this.stops.add(new SerializedStop(stop, bigStopHandler,smallStopHandler)); 
+            for (Stop stop : tripData.getStops()) {
+                this.stops.add(new SerializedStop(stop, bigStopHandler, smallStopHandler));
             }
 
         }
@@ -154,9 +221,8 @@ public class TripData implements SerializingInterface{
     public String toJSONString(BigStopHandler bigStopHandler, SmallStopHandler smallStopHandler) {
         if (bigStopHandler == null || smallStopHandler == null)
             return this.toJSONString();
-        SerializedTripDataExpanded temp = new SerializedTripDataExpanded(this, bigStopHandler, smallStopHandler); 
-        return temp.toJSONString(bigStopHandler,smallStopHandler);
+        SerializedTripDataExpanded temp = new SerializedTripDataExpanded(this, bigStopHandler, smallStopHandler);
+        return temp.toJSONString(bigStopHandler, smallStopHandler);
     }
 
-    
 }
