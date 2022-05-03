@@ -18,8 +18,8 @@ const TripMenu = ({trip, swapStops,addTrip,changeName,changeDescription,submit,r
             {editable ? 
                 <DraggableList remove = {remove} swapStops = {swapStops} stops={[trip.tripData.startLocation, ...trip.tripData.stops,trip.tripData.endLocation]}/> 
                 : 
-                <ol>{[trip.tripData.startLocation, ...trip.tripData.stops, trip.tripData.endLocation].map(({
-                    name,
+                <ol>{trip.tripData.stops.map(({
+                    bigStop : {name},
                 })=><li>{name}</li>)}</ol>
             }
             {editable && <AutoComplete placeholder="Add a Stop" setName={addLoc} clearOnSelect={true}/> }

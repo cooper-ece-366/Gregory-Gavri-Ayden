@@ -43,6 +43,14 @@ public class Stop implements SerializingInterface {
         this.bigStop = id;
         this.smallStops = new ArrayList<ObjectId>();
     }
+  
+    public Stop (Stop s){
+        this.bigStop = s.bigStop;
+        this.smallStops = new ArrayList<ObjectId> ();
+        s.smallStops.forEach(stop -> {
+            this.smallStops.add(stop);
+        });
+    }
 
     public ObjectId getBigStop() {
         return bigStop;

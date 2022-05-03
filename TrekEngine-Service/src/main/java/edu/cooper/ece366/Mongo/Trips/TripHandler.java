@@ -70,7 +70,7 @@ public class TripHandler extends CollectionHandler<Trip> {
     public ArrayList<Trip> getTripByStartLoc(String loc, BigStopHandler stopHandler) {
         return getTripByLoc(loc, true, stopHandler);
     }
-
+  
     public ArrayList<Trip> getTripByStartLoc(double lnglb, double lngup, double latlb, double latup,
             BigStopHandler stopHandler) {
         return getTripByLoc(lnglb, lngup, latlb, latup, true, stopHandler);

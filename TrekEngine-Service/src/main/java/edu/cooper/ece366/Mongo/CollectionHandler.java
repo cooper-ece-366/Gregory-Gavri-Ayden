@@ -64,4 +64,8 @@ public abstract class CollectionHandler<T extends IDInterface> {
     public ArrayList<T> rawQuery(Bson filter) {
         return collection.find(filter).into(new ArrayList<>());
     }
+
+    public ArrayList<T> getAll (){
+        return collection.find().into(new ArrayList<>());
+    }
 }

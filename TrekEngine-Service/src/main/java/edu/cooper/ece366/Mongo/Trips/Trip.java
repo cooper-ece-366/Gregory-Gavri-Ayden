@@ -1,5 +1,7 @@
 package edu.cooper.ece366.Mongo.Trips;
 
+import java.util.List;
+
 import com.google.gson.JsonObject;
 
 import org.bson.codecs.pojo.annotations.BsonCreator;
@@ -10,6 +12,7 @@ import edu.cooper.ece366.Exceptions.IllegalJsonException;
 import edu.cooper.ece366.Mongo.IDInterface;
 import edu.cooper.ece366.Mongo.SerializingInterface;
 import edu.cooper.ece366.Mongo.Stops.BigStops.BigStopHandler;
+import edu.cooper.ece366.Mongo.Stops.BigStops.BigStops;
 import edu.cooper.ece366.Mongo.Stops.SmallStops.SmallStopHandler;
 
 public class Trip implements SerializingInterface, IDInterface {
@@ -34,8 +37,16 @@ public class Trip implements SerializingInterface, IDInterface {
         this.details = details;
     }
 
-    public Trip(JsonObject tripJson) {
-        if (tripJson.has("_id"))
+
+    public Trip(Trip t){
+        this.id = t.id;
+        this.meta = new Meta(t.meta);
+        this.tripData = new TripData(t.tripData);
+        this.details = new Detail(t.details);
+    }
+
+    public Trip(JsonObject tripJson){
+        if(tripJson.has("_id"))
             this.id = new ObjectId(tripJson.get("_id").getAsString());
         else
             this.id = new ObjectId();
@@ -79,8 +90,12 @@ public class Trip implements SerializingInterface, IDInterface {
         this.tripData.addStop(smallStop, bigStop);
     }
 
-    public Detail getDetails() {
-        return details;
+    public void replaceStops(List<BigStops> stops){
+        this.tripData.replaceStops(stops); 
+    }
+
+    public Detail getDetails(){
+        return details; 
     }
 
     @Override

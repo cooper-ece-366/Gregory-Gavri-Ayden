@@ -6,6 +6,7 @@ import java.util.List;
 import com.google.gson.JsonObject;
 
 import org.bson.codecs.pojo.annotations.BsonCreator;
+import org.bson.codecs.pojo.annotations.BsonIgnore;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 import org.bson.types.ObjectId;
 
@@ -48,8 +49,25 @@ public class TripData implements SerializingInterface {
         this.stops = new ArrayList<Stop>();
     }
 
-    public ObjectId getStartLocation() {
-        return startLocation;
+     public TripData(TripData t){
+        this.startLocation = t.startLocation;
+        this.endLocation = t.endLocation;
+        this.stops = new ArrayList<Stop> ();
+        t.stops.forEach(stop -> {
+            this.stops.add(new Stop(stop));
+        });
+    }
+
+    public ObjectId getStartLocation(){
+        return startLocation; 
+    }
+
+    public BigStops getStartLocation(BigStopHandler handler){
+        return handler.getById(startLocation);
+    }
+
+    public void setStartLocation(ObjectId startLocation){
+        this.startLocation = startLocation; 
     }
 
     public void setStartLocation(ObjectId startLocation) {
@@ -58,6 +76,13 @@ public class TripData implements SerializingInterface {
 
     public ObjectId getEndLocation() {
         return endLocation;
+     }
+
+    public BigStops getEndLocation(BigStopHandler handler){
+        return handler.getById(endLocation);
+    }
+    public void setEndLocation(ObjectId endLocation){
+        this.endLocation = endLocation; 
     }
 
     public void setEndLocation(ObjectId endLocation) {
@@ -71,10 +96,34 @@ public class TripData implements SerializingInterface {
     public void setStops(List<Stop> stops) {
         this.stops = stops;
     }
+              
+    public void replaceStops(List<BigStops> stops){
+        this.stops.clear(); 
+        stops.forEach(stop -> {
+            this.stops.add(new Stop(stop.getId(), new ArrayList<ObjectId>()));
+        });
+    }
 
-    public void addStop(ObjectId smallStop, ObjectId bigStop) {
-        for (int i = 0; i < stops.size(); i++) {
-            if (stops.get(i).getBigStop().equals(bigStop)) {
+    public List<BigStops> getBigStops(BigStopHandler handler){
+        List<BigStops> bigStops = new ArrayList<BigStops>();
+        for(Stop stop : stops){
+            bigStops.add(handler.getById(stop.getBigStop()));
+        }
+        return bigStops;
+    }
+
+    @BsonIgnore
+    public List<ObjectId> getBigStops(){
+        List<ObjectId> bigStops = new ArrayList<ObjectId>();
+        for(Stop stop : stops){
+            bigStops.add(stop.getBigStop());
+        }
+        return bigStops;
+    }
+
+    public void addStop(ObjectId smallStop, ObjectId bigStop){
+        for(int i = 0; i<stops.size(); i++){
+            if(stops.get(i).getBigStop().equals(bigStop)){
                 Stop temp = stops.get(i);
                 temp.addStop(smallStop);
                 stops.set(i, temp);

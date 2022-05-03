@@ -38,8 +38,18 @@ public class Detail implements SerializingInterface {
         });
     }
 
-    public Date getStartDate() {
-        return startDate;
+
+    public Detail(Detail d){
+        this.startDate = d.startDate;
+        this.tripLength = d.tripLength;
+        this.tags = new ArrayList<Tag> ();
+        d.tags.forEach(tag -> {
+            this.tags.add(new Tag(tag));
+        });
+    }
+
+    public Date getStartDate(){
+        return startDate; 
     }
 
     public void setStartDate(Date startDate) {

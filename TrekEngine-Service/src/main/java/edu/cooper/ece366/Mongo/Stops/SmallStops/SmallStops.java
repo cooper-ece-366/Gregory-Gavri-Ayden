@@ -1,5 +1,8 @@
 package edu.cooper.ece366.Mongo.Stops.SmallStops;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 import org.bson.types.ObjectId;
@@ -15,13 +18,23 @@ public class SmallStops extends Loacation implements SerializingInterface{
     public SmallStops(
         @BsonProperty("_id") ObjectId id,
         @BsonProperty("name") String name,
-        @BsonProperty("lat") Double lat,
-        @BsonProperty("lng") Double lng,
+        @BsonProperty("cords") List<Double> cords,
         @BsonProperty("type") String type,
         @BsonProperty("bigStop") ObjectId bigStop) {
-            super(id,name,lat,lng,type); 
+            super(id,name,cords.get(1),cords.get(0),type); 
             this.bigStop = bigStop;
         }
+    
+    public SmallStops(
+        ObjectId id,
+        String name,
+        Double lat,
+        Double lng, 
+        String type,
+        ObjectId bigStop
+    ){
+        this(id,name,Arrays.asList(lng,lat),type,bigStop); 
+    }
 
         private class SmallStopsSerilizer implements SerializingInterface {
             private final String id;
