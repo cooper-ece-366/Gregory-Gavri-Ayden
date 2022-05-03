@@ -33,7 +33,8 @@ public class TripGeneratorUtils {
     }
 
     private static double calucuateTimeScore(long timeData, int tripLen ){
-        return  (timeData - convertDaysToSeconds(tripLen)) / ((double)(convertDaysToSeconds(tripLen)));
+        long lenS = convertDaysToSeconds(tripLen); 
+        return  ((double)(timeData) / (double)lenS);
     }
 
     private static Map<String,Double> calculasteTagScore(List<Tag> templateTags, int stopCount, Map<String,Integer> tags){
@@ -41,7 +42,7 @@ public class TripGeneratorUtils {
         for (Tag tag: templateTags){
             tagScores.put(
                 tag.getTag(),
-                tags.getOrDefault(tag.getTag(), 0) - (tag.getWeight()*stopCount) / (double)stopCount
+                (tags.getOrDefault(tag.getTag(), 0) / (double)stopCount) / tag.getWeight()
             );
         }
         return tagScores;
@@ -52,7 +53,7 @@ public class TripGeneratorUtils {
 
         // can't remove the desination stop or the origin stop
         if(rIndex == 0 || rIndex == stops.size() - 1){
-            return prevScore;
+            return null;
         }
         
         // to get the time delta instead of doing an API call we are going to caculate the time difference 

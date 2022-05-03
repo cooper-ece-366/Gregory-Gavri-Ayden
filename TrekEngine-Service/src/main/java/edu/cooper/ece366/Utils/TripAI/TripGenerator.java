@@ -66,7 +66,8 @@ public class TripGenerator {
         
         public void iterate(double delta){
 
-            for(int i = 0; i<stops.size(); i++){
+            int i = 0; 
+            while(i<stops.size()){
                 Score newScore = TripGeneratorUtils.estimateScore(
                     currentScore,
                     stopOptions,
@@ -74,10 +75,18 @@ public class TripGenerator {
                     templateTrip.getDetails().getTripLength()
                 ); 
 
-                if(newScore != null && Math.abs(currentScore.getAvgScore() - newScore.getAvgScore()) >= delta){
-                    stopOptions.remove(i);
-                    currentScore = newScore;
+                if(newScore != null){
+
+                    double newSocreA = newScore.getAvgScore(); 
+                    double currentScoreA = currentScore.getAvgScore();
+
+                    if(Math.abs(currentScoreA - newSocreA) >= delta){
+                        stopOptions.remove(i);
+                        currentScore = newScore;
+                        continue; 
+                    }
                 }
+                i++; 
             }
 
         }
@@ -118,8 +127,9 @@ public class TripGenerator {
         }
 
         final long timeData = geoHandler.directions(stopStr).getDurtaionS();
+        final int len3 = (int)Math.round((double)templateTrip.getDetails().getTripLength()/3.0); 
 
-        return TripGeneratorUtils.calculateScore(timeData, templateTrip.getDetails().getTripLength(), templateTrip.getDetails().getTags(), tags, stopCount); 
+        return TripGeneratorUtils.calculateScore(timeData, len3, templateTrip.getDetails().getTags(), tags, stopCount); 
     }
 
     private Score calculateScore() throws IOException{
@@ -134,9 +144,12 @@ public class TripGenerator {
             }
         }
 
-        final long timeData = geoHandler.directions(stopStr).getDurtaionS();
+        
 
-        return TripGeneratorUtils.calculateScore(timeData, templateTrip.getDetails().getTripLength(), templateTrip.getDetails().getTags(), tags, stopCount); 
+        final long timeData = geoHandler.directions(stopStr).getDurtaionS();
+        final int len3 = (int)Math.round((double)templateTrip.getDetails().getTripLength()/3.0); 
+
+        return TripGeneratorUtils.calculateScore(timeData, len3, templateTrip.getDetails().getTags(), tags, stopCount); 
     }
 
     private DirData calculateMinTripLen(){

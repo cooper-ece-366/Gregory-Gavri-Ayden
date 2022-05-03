@@ -46,7 +46,9 @@ public class TripGeneratorUnitTest {
             ),
             new Detail(new Date(), 10, new ArrayList<Tag>(){{
                 add(new Tag("city", .5));
-                add(new Tag("national_park", .5));
+                add(new Tag("national_park", .5/3));
+                add(new Tag("national_forest", .5/3));
+                add(new Tag("state_park", .5/3));
             }})
         );  
     }
