@@ -70,19 +70,12 @@ public class TripData implements SerializingInterface {
         this.startLocation = startLocation; 
     }
 
-    public void setStartLocation(ObjectId startLocation) {
-        this.startLocation = startLocation;
-    }
-
     public ObjectId getEndLocation() {
         return endLocation;
      }
 
     public BigStops getEndLocation(BigStopHandler handler){
         return handler.getById(endLocation);
-    }
-    public void setEndLocation(ObjectId endLocation){
-        this.endLocation = endLocation; 
     }
 
     public void setEndLocation(ObjectId endLocation) {

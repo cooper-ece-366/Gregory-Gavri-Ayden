@@ -78,10 +78,6 @@ public abstract class StopHandler<T extends Loacation> extends CollectionHandler
         return rawQuery(getStopsInGeoPFilterL(polygon));
     }
 
-    protected Bson getStopByNameFilter(String name){
-        return Filters.eq("name", name); 
-
-    }
 
     public ArrayList<T> getStopsByName(String name) {
         return rawQuery(getStopByNameFilter(name));
