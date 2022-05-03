@@ -1,20 +1,21 @@
-import React, { useRef, useEffect, useState,useImperativeHandle,forwardRef } from 'react';
-import {renderToString} from 'react-dom/server';
-import Popup from "./Popup"; 
+// Written by Gregory Pressor, Ayden Shankman, and Gavri Kepets
+import React, { useRef, useEffect, useState, useImperativeHandle, forwardRef } from 'react';
+import { renderToString } from 'react-dom/server';
+import Popup from "./Popup";
 import mapboxgl from 'mapbox-gl';
-import env from "../../../env"; 
-import {getDirection,getLatLng} from "../../../utils/GeoLocation";
+import env from "../../../env";
+import { getDirection, getLatLng } from "../../../utils/GeoLocation";
 
-mapboxgl.accessToken = env.MAP_BOX_ACCESS_TOKEN; 
+mapboxgl.accessToken = env.MAP_BOX_ACCESS_TOKEN;
 
 const styleSheet = {
-    mapContainer: {
-        width: "100%",
-        height: "100%",
-    },
+  mapContainer: {
+    width: "100%",
+    height: "100%",
+  },
 }
 
-const Map = ({lng_i=-87.65,lat_i=41.84,addMarkerArgs=[],addPathArgs=[]},ref) => {
+const Map = ({ lng_i = -87.65, lat_i = 41.84, addMarkerArgs = [], addPathArgs = [] }, ref) => {
   const mapContainerRef = useRef(null);
   const map = useRef(null);
   const [lng, setLng] = useState(lng_i);
@@ -76,8 +77,6 @@ const Map = ({lng_i=-87.65,lat_i=41.84,addMarkerArgs=[],addPathArgs=[]},ref) => 
         delete paths.current[id];
     }
 
-
-
   // Initialize map when component mounts
   useEffect(() => {
     map.current = new mapboxgl.Map({
@@ -94,28 +93,25 @@ const Map = ({lng_i=-87.65,lat_i=41.84,addMarkerArgs=[],addPathArgs=[]},ref) => 
       setZoom(map.current.getZoom().toFixed(2));
     });
 
-    map.current.on("load", ()=>{
-      console.log(addMarkerArgs); 
-      console.log(addPathArgs); 
-      addMarkerArgs.forEach(({lat,lng,name:id})=>addMarkerLngLat(lng,lat,id));
-      addPathArgs.forEach(({stops,id})=>{
-        console.log(stops); 
-        addPath(stops,id)}
-      ); 
-    }); 
+    map.current.on("load", () => {
+      for (let i = 0; i < addMarkerArgs.length - 1; i++) {
+        // console.log(addMarkerArgs[i].bigStop.id, addMarkerArgs[i+1].bigStop.id)
+        addPath([addMarkerArgs[i].bigStop, addMarkerArgs[i + 1].bigStop], addMarkerArgs[i].bigStop.id + "-" + addMarkerArgs[i + 1].bigStop.id);
+      }
+    });
 
     // Clean up on unmount
     return () => map.current.remove();
   }, []);
 
   // Functions exposed to the parent component 
-  useImperativeHandle(ref,()=>({
+  useImperativeHandle(ref, () => ({
     addMarker,
     addMarkerLngLat,
     removeMarker,
     addPath,
     removePath
-  })); 
+  }));
 
   return (
     <div style={styleSheet.mapContainer}>

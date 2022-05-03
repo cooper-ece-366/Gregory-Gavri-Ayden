@@ -6,6 +6,8 @@ import EditableText from './EditableText';
 import CustomSelect from '../../Utils/FormUtils/CustomSelect';
 import DaysInput from './DaysInput';
 import AutoList from './AutoList';
+import { useUserContext } from '../../../Contexts/UserContext';
+import { insertNewTrip } from '../../../utils/Trip';
 import "./styles.css";
 // import AutoComplete from "../../Utils/AutoComplete"
 import axios from "axios";
@@ -13,12 +15,15 @@ import { insertTrip } from '../../../utils/Trip';
 import { useUserContext } from '../../../Contexts/UserContext';
 import { useNavigate } from 'react-router-dom';
 
+
 const styleSheet = {
     container: {
         width: "100%",
-        background: "linear-gradient(180deg, #050D2B 0%, #010514 100%)",
-        borderRadius: "10px",
+        margin: "5px",
         color: "white",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
     },
     form: {
         display: "flex",
@@ -26,6 +31,8 @@ const styleSheet = {
         justifyContent: "center",
         alignItems: "center",
         width: "100%",
+        overflow: "auto",
+        overflowX: "hidden",
     },
     duration: {
         display: "flex",
@@ -36,18 +43,15 @@ const styleSheet = {
         padding: "10px",
     },
     text: {
-        fontSize: "25px",
+        fontSize: "1.5em",
         marginTop: "20px",
         marginBottom: "5px",
     },
     submit: {
-        position: "absolute",
-        bottom: "0",
-        marginBottom: "20px",
-        minWidth: "100px",
+        minWidth: "200px",
         maxWidth: "300px",
+        margin: "20px",
         width: "80%",
-        fontSize: "1.5em",
         backgroundColor: "rgba(222, 45, 22, 0.5)",
         color: "white",
         background: "#DE2D16",
@@ -55,7 +59,7 @@ const styleSheet = {
         boxSizing: "border-box",
         boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
         borderRadius: "25px",
-        fontSize: "1.5em",
+        fontSize: "1.25em",
         fontFamily: "'Sen', sans-serif",
         cursor: "pointer",
         padding: "10px",
@@ -80,10 +84,12 @@ const styleSheet = {
         cursor: "not-allowed",
         padding: "10px",
         opacity: "0.5",
+        padding: "5px",
     }
 }
 
 const TripForm = (props) => {
+    const { user, getIdToken } = useUserContext();
     const [duration, setDuration] = useState(0); // 0: duration, 1: dates, 2: indefinite
     const [from, setFrom] = useState("");
     const [to, setTo] = useState("");
@@ -138,7 +144,7 @@ const TripForm = (props) => {
 
     const handleFormSubmit = async (e) => {
         e.preventDefault();
-
+        console.log(user);
         let finalDays = days;
 
         if (duration === 1) {
@@ -233,7 +239,6 @@ const TripForm = (props) => {
                     onRemove={handlePrefChange} // Function will trigger on remove event
                     displayValue="name" // Property name to display in the dropdown options
                 />
-
                 <button style={submittable ? styleSheet.submit : styleSheet.greysubmit} onClick={handleFormSubmit}>Make my Trip!</button>
             </form>
         </div>
