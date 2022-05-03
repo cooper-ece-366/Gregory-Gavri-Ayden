@@ -6,7 +6,6 @@ import EditableText from './EditableText';
 import CustomSelect from '../../Utils/FormUtils/CustomSelect';
 import DaysInput from './DaysInput';
 import AutoList from './AutoList';
-import { useUserContext } from '../../../Contexts/UserContext';
 import { insertNewTrip } from '../../../utils/Trip';
 import "./styles.css";
 // import AutoComplete from "../../Utils/AutoComplete"
@@ -99,7 +98,6 @@ const TripForm = (props) => {
     const [required, setRequired] = useState([]);
     const [prefs, setPrefs] = useState([]);
     const [name, setName] = useState("Trip 1");
-    const { user, getIdToken } = useUserContext();
     const [submittable, setSubmittable] = useState(false);
     const navigate = useNavigate();
 

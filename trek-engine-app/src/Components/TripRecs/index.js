@@ -26,6 +26,8 @@ const styleSheet = {
 
 
 const About = () => {
+    // let trip = GET TRIP HERE!
+
     return (
         <div style={styleSheet.fullPage}>
             <Map />

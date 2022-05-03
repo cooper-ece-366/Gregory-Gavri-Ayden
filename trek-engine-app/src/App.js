@@ -33,7 +33,7 @@ const App = () => {
             <Route path="/tripgen" element={<TripGen />} />
             <Route path="/explore" element={<Explore />} />
             <Route path="/viewTrip/:id" element={<TripViewer />} />
-            <Route path="/triprecs" element={<TripRecs />} />
+            <Route path="/triprecs/:id" element={<TripRecs />} />
             <Route path="/about" element={<About />} />
           </Routes>
         </BrowserRouter>
