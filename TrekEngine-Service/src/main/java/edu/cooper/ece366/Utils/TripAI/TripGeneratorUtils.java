@@ -49,19 +49,19 @@ public class TripGeneratorUtils {
     }
 
     // returns a new score or null if it is not to be removed 
-    public static Score estimateScore(Score prevScore, List<BigStops> stops, int rIndex, int tripLen) {
+    public static Score estimateScore(Score prevScore, List<BigStops> stops, int rIndex, int tripLen, BigStops prevBox, BigStops nextBox) {
 
         // can't remove the desination stop or the origin stop
-        if(rIndex == 0 || rIndex == stops.size() - 1){
+        if(stops.size() <= 1){
             return null;
         }
         
         // to get the time delta instead of doing an API call we are going to caculate the time difference 
         // as crow flies between the stops assuming a driving speed of 60 mph = 27 m/s
 
-        BigStops prevStop = stops.get(rIndex - 1);
+        BigStops prevStop = rIndex == 0 ? prevBox : stops.get(rIndex - 1);
         BigStops currStop = stops.get(rIndex);
-        BigStops nextStop = stops.get(rIndex + 1);
+        BigStops nextStop = rIndex == stops.size() -1 ? nextBox: stops.get(rIndex + 1);
 
         final double initalDelta = prevStop.toLngLat().deltaAsMeters(currStop.toLngLat()) + 
                              currStop.toLngLat().deltaAsMeters(nextStop.toLngLat());
@@ -78,11 +78,13 @@ public class TripGeneratorUtils {
         Map<String,Integer> tagCounts = prevScore.getTagCounts(); 
 
         tagCounts.put(currStop.getType(), tagCounts.get(currStop.getType()) - 1);
-        Map<String,Double> tagScores = calculasteTagScore(prevScore.getIdealTags(),stops.size()-1,tagCounts);
+        Map<String,Double> tagScores = calculasteTagScore(prevScore.getIdealTags(),prevScore.getStopCount()-1,tagCounts);
 
-        Score newScore = new Score(timeScore,tagScores, timeData, prevScore.getIdealTags(), tagCounts);
+        Score newScore = new Score(timeScore,tagScores, timeData, prevScore.getIdealTags(), tagCounts,prevScore.getStopCount()-1);
+        final double newScoreA = newScore.getAvgScore();
+        final double prevScoreA = prevScore.getAvgScore();
 
-        if( Math.abs(newScore.getAvgScore() - 1) < Math.abs(prevScore.getAvgScore() - 1)){
+        if( Math.abs(newScoreA - 1) < Math.abs(prevScoreA - 1)){
             return newScore;
         }
 

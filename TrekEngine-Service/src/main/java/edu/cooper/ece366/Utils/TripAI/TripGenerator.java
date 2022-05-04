@@ -31,15 +31,20 @@ public class TripGenerator {
     private Score currentScore; 
 
     private class Generator {
-        private List<BigStops> stopOptions;
+        private List<StopBox> stopOptions;
         private double minDelta; 
         private int maxDepth; 
         private double idealThreshold; 
 
-        public Generator(List<BigStops> stopOptions){
+        public Generator(List<StopBox> stopOptions){
             this(stopOptions, .2 ,10, .1);
         }
-        public Generator(List<BigStops> stopOptions, double minDelta, int maxDepth, double idealThreshold ){
+        public Generator(List<StopBox> stopOptions, double minDelta, int maxDepth, double idealThreshold ){
+
+            // removes the start and end location from the list (since they can't be removed )
+            stopOptions.get(0).stops.remove(0); 
+            stopOptions.get(stopOptions.size()-1).stops.remove(stopOptions.get(stopOptions.size()-1).stops.size() - 1 ); 
+            
             this.stopOptions = stopOptions;
             this.minDelta = minDelta;
             this.maxDepth = maxDepth;
@@ -53,38 +58,49 @@ public class TripGenerator {
                 currentScore.getAvgScore() >= currentScore.getAvgScore() - idealThreshold
             ){
                 iterate(delta);
-                currentScore = calculateScore(stopOptions); 
+                currentScore = calculateScore(stopOptions,true); 
                 delta /= 2;
                 if(depth++ > maxDepth){
                     break;
                 }
             }
 
-            return stopOptions; 
+            return TripGeneratorUtils.getStops(stopOptions); 
 
         }
         
         public void iterate(double delta){
 
             int i = 0; 
-            while(i<stops.size()){
-                Score newScore = TripGeneratorUtils.estimateScore(
-                    currentScore,
-                    stopOptions,
-                    i,
-                    templateTrip.getDetails().getTripLength()
-                ); 
-
-                if(newScore != null){
-
-                    double newSocreA = newScore.getAvgScore(); 
-                    double currentScoreA = currentScore.getAvgScore();
-
-                    if(Math.abs(currentScoreA - newSocreA) >= delta){
-                        stopOptions.remove(i);
-                        currentScore = newScore;
-                        continue; 
+            int j = 0; 
+            while(i<stopOptions.size()){
+                while(j<stopOptions.get(i).stops.size()){
+                    Score newScore = TripGeneratorUtils.estimateScore(
+                        currentScore,
+                        stopOptions.get(i).stops,
+                        j,
+                        // templateTrip.getDetails().getTripLength(),
+                        (int)Math.round(((double)templateTrip.getDetails().getTripLength())/3.0),
+                        i == 0 ? 
+                            stops.get(0).stops.get(0) : // start loc
+                            stopOptions.get(i-1).stops.get(stopOptions.get(i-1).stops.size()-1), // prev box last item
+                        i == stopOptions.size()-1 ? 
+                            stops.get(stops.size()-1).stops.get(stops.get(stops.size()-1).stops.size() -1) : // end loc
+                            stopOptions.get(i+1).stops.get(0) // next box first item 
+                    ); 
+    
+                    if(newScore != null){
+    
+                        double newSocreA = newScore.getAvgScore(); 
+                        double currentScoreA = currentScore.getAvgScore();
+    
+                        if(Math.abs(currentScoreA - newSocreA) >= delta){
+                            stopOptions.get(i).stops.remove(j);
+                            currentScore = newScore;
+                            continue; 
+                        }
                     }
+                    j++; 
                 }
                 i++; 
             }
@@ -107,7 +123,15 @@ public class TripGenerator {
     }
 
     public Trip generateTrip() throws IOException{
-        List<BigStops> stops = new Generator(TripGeneratorUtils.getStops(this.stops)).generate(); 
+
+        List<StopBox> ops = new ArrayList<StopBox>(); 
+        for(StopBox s : stops){
+            ops.add(new StopBox(s)); 
+        }
+
+        List<BigStops> stops = new Generator(ops).generate(); 
+        stops.add(0,this.stops.get(0).stops.get(0)); 
+        stops.add(stops.size()-1,this.stops.get(this.stops.size()-1).stops.get(this.stops.get(this.stops.size()-1).stops.size()-1));
 
         Trip trip = new Trip(templateTrip);
         trip.replaceStops(stops); 
@@ -132,11 +156,11 @@ public class TripGenerator {
         return TripGeneratorUtils.calculateScore(timeData, len3, templateTrip.getDetails().getTags(), tags, stopCount); 
     }
 
-    private Score calculateScore() throws IOException{
+    private Score calculateScore(List<StopBox> sbl, boolean boxF) throws IOException{
         ArrayList<String> stopStr = new ArrayList<String>();
         Map<String,Integer> tags = new HashMap<String,Integer>(); 
         int stopCount = 0; 
-        for(StopBox box: stops){
+        for(StopBox box: sbl){
             stopCount += box.stops.size(); 
             for(BigStops stop: box.stops){
                 stopStr.add(stop.toLngLat().getDirStr());
@@ -150,6 +174,27 @@ public class TripGenerator {
         final int len3 = (int)Math.round((double)templateTrip.getDetails().getTripLength()/3.0); 
 
         return TripGeneratorUtils.calculateScore(timeData, len3, templateTrip.getDetails().getTags(), tags, stopCount); 
+    }
+
+    private Score calculateScore() throws IOException{
+        return calculateScore(stops,true); 
+        // ArrayList<String> stopStr = new ArrayList<String>();
+        // Map<String,Integer> tags = new HashMap<String,Integer>(); 
+        // int stopCount = 0; 
+        // for(StopBox box: stops){
+        //     stopCount += box.stops.size(); 
+        //     for(BigStops stop: box.stops){
+        //         stopStr.add(stop.toLngLat().getDirStr());
+        //         tags.put(stop.getType(), tags.getOrDefault(stop.getType(), 0) + 1); 
+        //     }
+        // }
+
+        
+
+        // final long timeData = geoHandler.directions(stopStr).getDurtaionS();
+        // final int len3 = (int)Math.round((double)templateTrip.getDetails().getTripLength()/3.0); 
+
+        // return TripGeneratorUtils.calculateScore(timeData, len3, templateTrip.getDetails().getTags(), tags, stopCount); 
     }
 
     private DirData calculateMinTripLen(){

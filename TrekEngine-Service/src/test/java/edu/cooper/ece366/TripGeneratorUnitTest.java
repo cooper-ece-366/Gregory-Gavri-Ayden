@@ -38,17 +38,17 @@ public class TripGeneratorUnitTest {
             new Meta("Test Trip 1","Description","gpress2222@gmail.com",false,new Date(),new Date()),
             new TripData(
                 stops.get(0).getId(),
-                stops.get(2).getId(),
+                stops.get(4).getId(),
                 new ArrayList<Stop>(){{
                     add(new Stop(stops.get(0).getId(),new ArrayList<ObjectId>()));
-                    add(new Stop(stops.get(2).getId(),new ArrayList<ObjectId>()));
+                    add(new Stop(stops.get(4).getId(),new ArrayList<ObjectId>()));
                 }}
             ),
-            new Detail(new Date(), 10, new ArrayList<Tag>(){{
+            new Detail(new Date(), 3, new ArrayList<Tag>(){{
                 add(new Tag("city", .5));
-                add(new Tag("national_park", .5/3));
-                add(new Tag("national_forest", .5/3));
-                add(new Tag("state_park", .5/3));
+                add(new Tag("national_park", .5/3.0));
+                add(new Tag("national_forest", .5/3.0));
+                add(new Tag("state_park", .5/3.0));
             }})
         );  
     }
