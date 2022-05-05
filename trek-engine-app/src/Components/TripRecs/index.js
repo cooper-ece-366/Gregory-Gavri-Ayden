@@ -3,7 +3,7 @@ import Map from "../Utils/Map";
 import FloatingMenu from "../Utils/FloatingMenu";
 import { useUserContext } from '../../Contexts/UserContext';
 import { useParams } from "react-router-dom";
-import { getTripById } from "../../utils/Trip";
+import { getTripById, getStopById } from "../../utils/Trip";
 
 const styleSheet = {
     fullPage: {
@@ -34,14 +34,19 @@ const About = () => {
     const [trip, setTrip] = useState(null);
 
     useEffect(async () => {
-        let trip = await getTripById(params.id, await getIdToken());
+        console.log("HERE!")
+        let trip = await getTripById(params.id);
+        console.log(trip);
+        trip = JSON.parse(trip);
         setTrip(trip);
+        console.log(trip);
     }, [params.id]);
 
     return (
         <div style={styleSheet.fullPage}>
             <Map />
             <FloatingMenu>
+                <h1>{trip ? "HERE" : "Loading..."}</h1>
             </FloatingMenu>
         </div>
     );
