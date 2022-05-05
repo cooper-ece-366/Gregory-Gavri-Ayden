@@ -1,6 +1,5 @@
 import axios from "axios";
 
-import { useUserContext } from "../../Contexts/UserContext";
 export const getTripById = async (trip_id, id_token) => {
     if (id_token) {
         console.log("getTripById: trip_id: ", trip_id);

@@ -1,5 +1,9 @@
+import React, { useEffect, useState } from 'react';
 import Map from "../Utils/Map";
 import FloatingMenu from "../Utils/FloatingMenu";
+import { useUserContext } from '../../Contexts/UserContext';
+import { useParams } from "react-router-dom";
+import { getTripById } from "../../utils/Trip";
 
 const styleSheet = {
     fullPage: {
@@ -24,9 +28,15 @@ const styleSheet = {
     }
 };
 
-
 const About = () => {
-    // let trip = GET TRIP HERE!
+    const params = useParams();
+    const { user, getIdToken } = useUserContext();
+    const [trip, setTrip] = useState(null);
+
+    useEffect(async () => {
+        let trip = await getTripById(params.id, await getIdToken());
+        setTrip(trip);
+    }, [params.id]);
 
     return (
         <div style={styleSheet.fullPage}>
