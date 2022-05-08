@@ -106,9 +106,16 @@ public class TripGenAPI {
                     bigStops.add(bigStopHandler.getById(trip.getTripData().getStops().get(i).getBigStop()));
                 }
 
-                String stopsJson = bigStops.toString();
+                String stopList = "[";
+                for (int i = 0; i < bigStops.size(); i++) {
+                    stopList += bigStops.get(i).toJSONString();
+                    if (i != bigStops.size() - 1) {
+                        stopList += ",";
+                    }
+                }
+                stopList += "]";
 
-                return "{\"trip\":" + trip.toJSONString() + "} , \"stops\":{" + stopsJson + "}";
+                return "{\"trip\":" + trip.toJSONString() + " , \"stops\":" + stopList + "}";
             });
 
             post("/update", (AuthRoute) (req, res, body, user) -> {

@@ -35,18 +35,25 @@ const About = () => {
 
     useEffect(async () => {
         console.log("HERE!")
-        let trip = await getTripById(params.id);
-        console.log(trip);
-        trip = JSON.parse(trip);
-        setTrip(trip);
-        console.log(trip);
+        let data = await getTripById(params.id);
+        let rawTrip = data.trip;
+        let stops = data.stops;
+
+        let enrichedStops = rawTrip.tripData.stops.map(stop => {
+            let bigStop = stops.find(s => s.bigStop === stop.id);
+            return { ...bigStop };
+        });
+
+        rawTrip.stops = enrichedStops;
+
+        setTrip(rawTrip);
     }, [params.id]);
 
     return (
         <div style={styleSheet.fullPage}>
             <Map />
             <FloatingMenu>
-                <h1>{trip ? "HERE" : "Loading..."}</h1>
+                <h1>{trip ? trip.meta.name : "Loading..."}</h1>
             </FloatingMenu>
         </div>
     );
