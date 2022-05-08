@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Map from "../Utils/Map";
 import FloatingMenu from "../Utils/FloatingMenu";
 import { useUserContext } from '../../Contexts/UserContext';
 import { useParams } from "react-router-dom";
 import { getTripById, getStopById } from "../../utils/Trip";
+import AutoRec from './AutoRec';
+import tinycolor from 'tinycolor2';
 
 const styleSheet = {
     fullPage: {
@@ -12,8 +14,10 @@ const styleSheet = {
         display: "flex",
     },
     contentContainer: {
-        paddingTop: "70px",
-        width: "25%"
+        width: "25%",
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
     },
     about: {
         width: "80%",
@@ -28,35 +32,67 @@ const styleSheet = {
     }
 };
 
-const About = () => {
+const TripRecs = () => {
     const params = useParams();
     const { user, getIdToken } = useUserContext();
     const [trip, setTrip] = useState(null);
+    const [tripRecs, setTripRecs] = useState(null);
+    let mapRef = useRef(null);
 
     useEffect(async () => {
-        console.log("HERE!")
         let data = await getTripById(params.id);
         let rawTrip = data.trip;
         let stops = data.stops;
+        console.log(data);
 
         let enrichedStops = rawTrip.tripData.stops.map(stop => {
-            let bigStop = stops.find(s => s.bigStop === stop.id);
+            console.log(stop);
+            let bigStop = stops.find(s => s.id === stop.bigStop);
+            console.log(bigStop);
             return { ...bigStop };
         });
 
-        rawTrip.stops = enrichedStops;
-
+        rawTrip.tripData.stops = enrichedStops;
         setTrip(rawTrip);
+        setTripRecs([rawTrip])
     }, [params.id]);
+
+    useEffect(async () => {
+        console.log(tripRecs)
+        let i = 0;
+        for (let rec of tripRecs) {
+            for (let stop of rec.tripData.stops) {
+                mapRef.current.addMarkerLngLat(stop.lng, stop.lat, stop.id);
+            }
+
+            mapRef.current.addPath(rec.tripData.stops, "trip" + i++, tinycolor.random().toString());
+        }
+    }, [tripRecs]);
 
     return (
         <div style={styleSheet.fullPage}>
-            <Map />
+            <Map
+                ref={mapRef}
+            />
             <FloatingMenu>
-                <h1>{trip ? trip.meta.name : "Loading..."}</h1>
+                <div style={styleSheet.contentContainer}>
+                    <h1>{trip ? trip.meta.name : "Loading..."}</h1>
+                    <div>
+                        {
+                            tripRecs ?
+                                tripRecs.map(trip => {
+                                    return (
+                                        <AutoRec trip={trip} />
+                                    )
+                                })
+                                :
+                                <div>Loading...</div>
+                        }
+                    </div>
+                </div>
             </FloatingMenu>
         </div>
     );
 };
 
-export default About;
+export default TripRecs;
