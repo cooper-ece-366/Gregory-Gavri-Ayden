@@ -3,7 +3,7 @@ import Map from "../Utils/Map";
 import FloatingMenu from "../Utils/FloatingMenu";
 import { useUserContext } from '../../Contexts/UserContext';
 import { useParams } from "react-router-dom";
-import { getTripById, getStopById } from "../../utils/Trip";
+import { getTripById, getAutoRecs } from "../../utils/Trip";
 import AutoRec from './AutoRec';
 import tinycolor from 'tinycolor2';
 
@@ -39,33 +39,38 @@ const TripRecs = () => {
     const [tripRecs, setTripRecs] = useState(null);
     let mapRef = useRef(null);
 
+    useEffect(() => {
+        (async () => {
+            if (user === null) return;
+            let id_token = await getIdToken();
+            console.log("id_token: ", id_token);
+
+            let data = await getTripById(params.id);
+            let rawTrip = data.trip;
+            let stops = data.stops;
+
+            let enrichedStops = rawTrip.tripData.stops.map(stop => {
+                let bigStop = stops.find(s => s.id === stop.bigStop);
+                return { ...bigStop };
+            });
+
+            rawTrip.tripData.stops = enrichedStops;
+            setTrip(rawTrip);
+            console.log("HERE!");
+            let tripRecs = await getAutoRecs(params.id, id_token);
+            setTripRecs([tripRecs])
+        })();
+    }, [params.id, user]);
+
     useEffect(async () => {
-        let data = await getTripById(params.id);
-        let rawTrip = data.trip;
-        let stops = data.stops;
-        console.log(data);
-
-        let enrichedStops = rawTrip.tripData.stops.map(stop => {
-            console.log(stop);
-            let bigStop = stops.find(s => s.id === stop.bigStop);
-            console.log(bigStop);
-            return { ...bigStop };
-        });
-
-        rawTrip.tripData.stops = enrichedStops;
-        setTrip(rawTrip);
-        setTripRecs([rawTrip])
-    }, [params.id]);
-
-    useEffect(async () => {
-        console.log(tripRecs)
-        let i = 0;
+        let i = 1;
         for (let rec of tripRecs) {
-            for (let stop of rec.tripData.stops) {
+            for (let { bigStop: stop } of rec.tripData.stops) {
+                console.log("stop: ", stop);
                 mapRef.current.addMarkerLngLat(stop.lng, stop.lat, stop.id);
             }
 
-            mapRef.current.addPath(rec.tripData.stops, "trip" + i++, tinycolor.random().toString());
+            mapRef.current.addPath(rec.tripData.stops.map(stop => stop.bigStop), "trip" + (i++), tinycolor.random().toString());
         }
     }, [tripRecs]);
 

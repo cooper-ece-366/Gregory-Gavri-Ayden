@@ -30,3 +30,10 @@ export const insertTrip = async (trip, id_token) => {
 
     return response;
 }
+
+export const getAutoRecs = async (trip_id, id_token) => {
+    console.log("getAutoRecs: trip_id: ", trip_id);
+    const { data: recs } = await axios.post("http://localhost:4567/api/v1/tripgen/autorecs", { trip_id, id_token });
+    console.log("trip rec recieved: ", recs);
+    return recs;
+}

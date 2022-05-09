@@ -149,49 +149,34 @@ const TripForm = (props) => {
             finalDays = Math.round((new Date(endDate) - new Date(startDate)) / (1000 * 60 * 60 * 24));
             setDays(finalDays);
         }
-
-        // let data = {
-        //     details: {
-        //         tripLength: days,
-        //         tags: prefs,
-        //         startDate
-        //     },
-        //     meta: {
-        //         name,
-        //         description: "",
-        //         private: false,
-        //     },
-        //     trip: {
-        //         endLocation: to,
-        //         startLocation: from,
-        //         stops: [
-        //             from,
-        //             ...required,
-        //             to
-        //         ]
-        //     }
-        // };
+        let startLocation = from.split(",")[0];
+        let endLocation = to.split(",")[0];
+        let stops = required.map(stop => stop.split(",")[0]);
 
         let data = {
             details: {
-                tripLength: 10,
-                tags: [{ tag: "national_parks", weight: 1 }],
+                tripLength: days,
+                tags: prefs.map(pref => {
+                    return { tag: pref, weight: 1 };
+                }),
             },
             meta: {
-                name: "trip" + Math.floor(Math.random() * 1000),
+                name: name,
                 description: "",
                 private: false,
             },
             trip: {
-                endLocation: "Los Angeles",
-                startLocation: "New York",
+                endLocation: endLocation,
+                startLocation: startLocation,
                 stops: [
-                    "New York",
-                    "Chicago",
-                    "Los Angeles"
+                    startLocation,
+                    ...stops,
+                    endLocation
                 ]
             }
         }
+
+        console.log(data);
 
         let id_token = await getIdToken();
 

@@ -8,7 +8,7 @@ import com.google.gson.JsonArray;
 
 import org.bson.types.ObjectId;
 import java.util.ArrayList;
-
+import java.lang.Exception;
 import edu.cooper.ece366.Mongo.Stops.BigStops.BigStopHandler;
 import edu.cooper.ece366.Mongo.Stops.SmallStops.SmallStopHandler;
 import edu.cooper.ece366.Mongo.Trips.Trip;
@@ -19,7 +19,7 @@ import edu.cooper.ece366.Mongo.User.UserHandler;
 import edu.cooper.ece366.RouteInterfaces.BodyParserRoute;
 import edu.cooper.ece366.RouteInterfaces.UserBodyParser.AuthRoute;
 import edu.cooper.ece366.RouteInterfaces.UserBodyParser.QAuthRoute;
-import org.bson.types.ObjectId;
+import edu.cooper.ece366.Utils.TripAI.TripGenerator;
 
 public class TripGenAPI {
     public static void paths(TripHandler tripHandler, UserHandler userHandler, BigStopHandler bigStopHandler,
@@ -40,7 +40,16 @@ public class TripGenAPI {
             });
 
             post("/autorecs", (BodyParserRoute) (req, res, body) -> {
-                return "auto";
+                String trip_id = body.get("trip_id").getAsString();
+                Trip trip = tripHandler.getById(trip_id);
+
+                try {
+                    TripGenerator tripGenerator = new TripGenerator(trip, bigStopHandler, 6);
+                    Trip newTrip = tripGenerator.generateTrip();
+                    return newTrip.toJSONString(bigStopHandler, smallStopHandler);
+                } catch (Exception e) {
+                    return "error";
+                }
             });
 
             post("/insert", (AuthRoute) (req, res, body, user) -> {
