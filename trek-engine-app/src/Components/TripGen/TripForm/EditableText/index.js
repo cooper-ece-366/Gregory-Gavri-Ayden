@@ -9,6 +9,8 @@ const styleSheet = {
         justifyContent: "space-between",
         fontSize: "15px",
         margin: "10px",
+        width: "80%",
+        overflow: "hidden",
     },
     input: {
         width: "100%",
@@ -21,6 +23,8 @@ const styleSheet = {
     },
     edit: {
         fontSize: "10px",
+        position: "absolute",
+        right: "10px",
     }
 }
 

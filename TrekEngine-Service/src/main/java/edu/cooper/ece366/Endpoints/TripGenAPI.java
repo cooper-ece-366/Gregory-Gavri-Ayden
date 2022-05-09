@@ -100,8 +100,22 @@ public class TripGenAPI {
                     res.status(400);
                     return "Trip is private";
                 }
-                // return trip.toJSONString(bigStopHandler,smallStopHandler);
-                return trip.toJSONString();
+
+                ArrayList<BigStops> bigStops = new ArrayList<BigStops>();
+                for (int i = 0; i < trip.getTripData().getStops().size(); i++) {
+                    bigStops.add(bigStopHandler.getById(trip.getTripData().getStops().get(i).getBigStop()));
+                }
+
+                String stopList = "[";
+                for (int i = 0; i < bigStops.size(); i++) {
+                    stopList += bigStops.get(i).toJSONString();
+                    if (i != bigStops.size() - 1) {
+                        stopList += ",";
+                    }
+                }
+                stopList += "]";
+
+                return "{\"trip\":" + trip.toJSONString() + " , \"stops\":" + stopList + "}";
             });
 
             post("/update", (AuthRoute) (req, res, body, user) -> {

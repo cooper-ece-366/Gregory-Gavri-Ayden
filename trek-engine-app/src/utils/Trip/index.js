@@ -1,5 +1,4 @@
 import axios from "axios";
-import { useUserContext } from "../../Contexts/UserContext";
 
 export const getTripById = async (trip_id, id_token) => {
     if (id_token) {
@@ -11,7 +10,6 @@ export const getTripById = async (trip_id, id_token) => {
     const { data: trip } = await axios.post("http://localhost:4567/api/v1/tripgen/getById", { trip_id });
     return trip;
 };
-
 
 export const updateTrip = async (trip, id_token) => {
     console.log(trip);
@@ -29,5 +27,6 @@ export const insertTrip = async (trip, id_token) => {
     console.log(trip);
     const response = await axios.post("http://localhost:4567/api/v1/tripgen/insert", { trip, id_token });
     console.log(response);
+
     return response;
 }
