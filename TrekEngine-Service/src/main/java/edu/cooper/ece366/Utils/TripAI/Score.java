@@ -11,13 +11,28 @@ public class Score {
     private long timeDelta; 
     private List<Tag> idealTags; 
     private Map<String,Integer> tagCounts; 
+    private int stopCount; 
 
     public Score(double timeScore, Map<String,Double> tagScores, long timeDelta, List<Tag> idealTags, Map<String,Integer> tagCounts) {
+        // this.timeScore = timeScore;
+        // this.tagScores = tagScores;
+        // this.timeDelta = timeDelta;
+        // this.idealTags = idealTags;
+        // this.tagCounts = tagCounts;
+        this(timeScore, tagScores,  timeDelta,  idealTags, tagCounts,  0);
+        for(Integer i : tagCounts.values()){
+            this.stopCount += i;
+        }
+    }
+
+
+    public Score(double timeScore, Map<String,Double> tagScores, long timeDelta, List<Tag> idealTags, Map<String,Integer> tagCounts, int stopCount) {
         this.timeScore = timeScore;
         this.tagScores = tagScores;
         this.timeDelta = timeDelta;
         this.idealTags = idealTags;
         this.tagCounts = tagCounts;
+        this.stopCount = stopCount; 
     }
 
     public double getTimeScore() {
@@ -43,7 +58,11 @@ public class Score {
         for(Map.Entry<String,Double> entry : tagScores.entrySet()){
             sum += entry.getValue();
         }      
-        return sum/(tagScores.size() + 1); 
+        return sum/((double)(tagScores.size() + 1)); 
+    }
+
+    public int getStopCount() {
+        return stopCount;
     }
 
     
