@@ -15,11 +15,6 @@ public class Score {
     private int stopCount; 
 
     public Score(double timeScore, Map<String,Double> tagScores, long timeDelta, List<Tag> idealTags, Map<String,Integer> tagCounts) {
-        // this.timeScore = timeScore;
-        // this.tagScores = tagScores;
-        // this.timeDelta = timeDelta;
-        // this.idealTags = idealTags;
-        // this.tagCounts = tagCounts;
         this(timeScore, tagScores,  timeDelta,  idealTags, tagCounts,  0);
         for(Integer i : tagCounts.values()){
             this.stopCount += i;
