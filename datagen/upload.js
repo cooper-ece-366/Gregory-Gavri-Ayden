@@ -1,4 +1,3 @@
-
 // NOTE ALL DATES SHOULD BE IN LONG FORMAT 
 const axios = require("axios"); 
 

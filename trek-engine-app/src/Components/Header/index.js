@@ -1,3 +1,4 @@
+// Written By Gregory Presser and styled by Gavri Kepets
 import LoginButton from "./LoginButton"
 import Logo from "../Utils/Logo"
 import LogoutButton from "./LogoutButton";

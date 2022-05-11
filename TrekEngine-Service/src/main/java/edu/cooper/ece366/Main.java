@@ -21,6 +21,7 @@ public class Main {
     private static BigStopHandler bigStopHandler;
     private static SmallStopHandler smallStopHandler;
 
+    // Written By Gregory Presser
     private static void enableCORS() {
 
         options("/*", (request, response) -> {
@@ -45,6 +46,7 @@ public class Main {
         });
     }
 
+    // Written By Gregory Presser
     public static void init() {
         MongoHandler mongoHandler = new MongoHandler();
         userHandler = new UserHandler(mongoHandler);
@@ -56,6 +58,7 @@ public class Main {
         enableCORS();
     }
 
+    // Written by Everyone
     public static void paths() {
         // login post request authenticator and returns a user object to the client
         UserAPI.paths(userHandler); 

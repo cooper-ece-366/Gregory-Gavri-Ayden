@@ -1,3 +1,4 @@
+// Written By Gavri Kepets
 import Map from "../Utils/Map"; 
 import Logo from "../Utils/Logo";
 

@@ -1,3 +1,4 @@
+// Written By Ayden Shankman
 package edu.cooper.ece366.Utils.GeoLocation;
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -41,6 +42,7 @@ public class GeoLocationHandler {
             .build();
     }
 
+    // written by Gregory Presser
     private JsonObject apiCall (String url) throws IOException{
         OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();

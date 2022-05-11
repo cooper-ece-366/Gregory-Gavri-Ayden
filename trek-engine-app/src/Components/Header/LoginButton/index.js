@@ -10,6 +10,7 @@ const LoginButton = () => {
 
     const responseGoogle = async (response) => login(response);
 
+    // Written By Gavri Kepets
     const styleSheet = {
         button: {
             background: "#781C10",
@@ -27,6 +28,7 @@ const LoginButton = () => {
         }
     }
 
+    // Written By Gregory Presser
     return (
         <GoogleLogin
             clientId={env.GOOGLE_CLIENT_ID}

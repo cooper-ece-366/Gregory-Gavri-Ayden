@@ -1,3 +1,4 @@
+// Written By Gregory Presser
 package edu.cooper.ece366.Mongo.Trips;
 
 import java.util.List;
@@ -60,6 +61,7 @@ public class Trip implements SerializingInterface, IDInterface {
         this.details = new Detail(tripJson.get("details").getAsJsonObject());
     }
 
+    // Written by Gavri Kepets
     public Trip(JsonObject tripJson, boolean needsParsing) {
         if (tripJson.has("_id"))
             this.id = new ObjectId(tripJson.get("_id").getAsString());

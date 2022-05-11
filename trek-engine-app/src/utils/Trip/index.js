@@ -1,3 +1,4 @@
+// Written By Gavri Kepets
 import axios from "axios";
 
 export const getTripById = async (trip_id, id_token) => {

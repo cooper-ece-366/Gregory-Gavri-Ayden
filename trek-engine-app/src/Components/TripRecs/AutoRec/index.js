@@ -1,3 +1,4 @@
+// Written By Gavri Kepets
 const styleSheet = {
 
 }

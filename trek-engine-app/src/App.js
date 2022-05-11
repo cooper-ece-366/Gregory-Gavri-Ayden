@@ -1,4 +1,4 @@
-
+// CoWritten By Everyone
 import Header from "./Components/Header";
 import UserContext from "./Contexts/UserContext";
 import TripGen from "./Components/TripGen";

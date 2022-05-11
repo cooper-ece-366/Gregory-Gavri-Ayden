@@ -43,6 +43,7 @@ public class TripData implements SerializingInterface {
         });
     }
 
+    // Written By Gavri Kepets
     public TripData(boolean needsParsing) {
         this.endLocation = null;
         this.startLocation = null;

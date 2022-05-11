@@ -1,3 +1,4 @@
+// Written By Gregory Presser
 package edu.cooper.ece366.Mongo.Stops.SmallStops;
 
 import java.util.List;
