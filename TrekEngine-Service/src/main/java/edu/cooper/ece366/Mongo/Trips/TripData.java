@@ -140,67 +140,15 @@ public class TripData implements SerializingInterface {
 
     private class SerializedTripData implements SerializingInterface {
 
-        private class SerializedStop implements SerializingInterface {
-            private final String bigStop;
-            private final List<String> smallStops;
-
-            public SerializedStop(Stop stop) {
-                this.bigStop = stop.getBigStop().toHexString();
-                this.smallStops = new ArrayList<String>();
-                for (ObjectId id : stop.getSmallStops()) {
-                    smallStops.add(id.toHexString());
-                }
-            }
-        }
 
         private final String startLocation;
         private final String endLocation;
-        private final List<SerializedStop> stops;
+        private final List<Stop> stops;
 
         public SerializedTripData(TripData tripData) {
             this.startLocation = tripData.startLocation.toHexString();
             this.endLocation = tripData.endLocation.toHexString();
-            this.stops = new ArrayList<SerializedStop>();
-            for (Stop stop : tripData.getStops()) {
-                this.stops.add(new SerializedStop(stop));
-            }
-
-        }
-    }
-
-    private class SerializedTripDataExpanded implements SerializingInterface {
-
-        private class SerializedStop implements SerializingInterface {
-            private final BigStops bigStop;
-            private final List<SmallStops> smallStops;
-
-            public SerializedStop(Stop stop, BigStopHandler bigStopHandler, SmallStopHandler smallStopHandler) {
-
-                this.bigStop = bigStopHandler.getById(stop.getBigStop());
-                this.smallStops = new ArrayList<SmallStops>();
-                for (ObjectId id : stop.getSmallStops()) {
-                    SmallStops temp = smallStopHandler.getById(id);
-                    // maybe change this to like correcting it or something in the db but if managed
-                    // correctly it should never happen
-                    if (temp == null)
-                        continue;
-                    smallStops.add(temp);
-                }
-            }
-        }
-
-        private final BigStops startLocation;
-        private final BigStops endLocation;
-        private final List<SerializedStop> stops;
-
-        public SerializedTripDataExpanded(TripData tripData, BigStopHandler bigStopHandler,
-                SmallStopHandler smallStopHandler) {
-            this.startLocation = bigStopHandler.getById(tripData.startLocation);
-            this.endLocation = bigStopHandler.getById(tripData.endLocation);
-            this.stops = new ArrayList<SerializedStop>();
-            for (Stop stop : tripData.getStops()) {
-                this.stops.add(new SerializedStop(stop, bigStopHandler, smallStopHandler));
-            }
+            this.stops = tripData.getStops();
 
         }
     }
@@ -214,7 +162,7 @@ public class TripData implements SerializingInterface {
     public String toJSONString(BigStopHandler bigStopHandler, SmallStopHandler smallStopHandler) {
         if (bigStopHandler == null || smallStopHandler == null)
             return this.toJSONString();
-        SerializedTripDataExpanded temp = new SerializedTripDataExpanded(this, bigStopHandler, smallStopHandler);
+            SerializedTripData temp = new SerializedTripData(this);
         return temp.toJSONString(bigStopHandler, smallStopHandler);
     }
 
