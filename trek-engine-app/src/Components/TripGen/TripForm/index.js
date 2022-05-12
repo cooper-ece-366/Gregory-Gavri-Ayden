@@ -100,6 +100,7 @@ const TripForm = (props) => {
     const [name, setName] = useState("Trip 1");
     const [submittable, setSubmittable] = useState(false);
     const navigate = useNavigate();
+    const mapRef = props.mapRef;
 
     const options = [
         { name: "National Parks", value: 0 },
@@ -175,7 +176,7 @@ const TripForm = (props) => {
                 ]
             }
         }
-
+        console.log("SUBMITTED");
         console.log(data);
 
         let id_token = await getIdToken();
@@ -218,9 +219,9 @@ const TripForm = (props) => {
                 <div style={styleSheet.text}>I prefer to visit...</div>
                 <Multiselect
                     options={options}
-                    onSelect={handlePrefChange} // Function will trigger on select event
-                    onRemove={handlePrefChange} // Function will trigger on remove event
-                    displayValue="name" // Property name to display in the dropdown options
+                    onSelect={handlePrefChange}
+                    onRemove={handlePrefChange}
+                    displayValue="name"
                 />
                 <button style={submittable ? styleSheet.submit : styleSheet.greysubmit} onClick={handleFormSubmit}>Make my Trip!</button>
             </form>

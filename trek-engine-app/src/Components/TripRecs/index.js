@@ -1,3 +1,4 @@
+// Written by Gavri Kepets
 import React, { useEffect, useState, useRef } from 'react';
 import Map from "../Utils/Map";
 import FloatingMenu from "../Utils/FloatingMenu";
@@ -6,6 +7,8 @@ import { useParams } from "react-router-dom";
 import { getTripById, getAutoRecs } from "../../utils/Trip";
 import AutoRec from './AutoRec';
 import tinycolor from 'tinycolor2';
+import { updateTrip } from '../../utils/Trip';
+import { useNavigate } from 'react-router-dom';
 
 const styleSheet = {
     fullPage: {
@@ -14,7 +17,7 @@ const styleSheet = {
         display: "flex",
     },
     contentContainer: {
-        width: "25%",
+        width: "100%",
         display: "flex",
         flexDirection: "column",
         height: "100%",
@@ -29,6 +32,9 @@ const styleSheet = {
         borderRadius: "10px",
         textAlign: "center",
         color: "white",
+    },
+    recsContainer: {
+        width: "100%",
     }
 };
 
@@ -38,26 +44,21 @@ const TripRecs = () => {
     const [trip, setTrip] = useState(null);
     const [tripRecs, setTripRecs] = useState(null);
     let mapRef = useRef(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         (async () => {
+            console.log(user)
             if (user === null) return;
             let id_token = await getIdToken();
             console.log("id_token: ", id_token);
 
             let data = await getTripById(params.id);
-            let rawTrip = data.trip;
-            let stops = data.stops;
 
-            let enrichedStops = rawTrip.tripData.stops.map(stop => {
-                let bigStop = stops.find(s => s.id === stop.bigStop);
-                return { ...bigStop };
-            });
-
-            rawTrip.tripData.stops = enrichedStops;
-            setTrip(rawTrip);
+            setTrip(data);
             console.log("HERE!");
             let tripRecs = await getAutoRecs(params.id, id_token);
+            console.log(tripRecs)
             setTripRecs([tripRecs])
         })();
     }, [params.id, user]);
@@ -66,13 +67,19 @@ const TripRecs = () => {
         let i = 1;
         for (let rec of tripRecs) {
             for (let { bigStop: stop } of rec.tripData.stops) {
-                console.log("stop: ", stop);
                 mapRef.current.addMarkerLngLat(stop.lng, stop.lat, stop.id);
             }
 
             mapRef.current.addPath(rec.tripData.stops.map(stop => stop.bigStop), "trip" + (i++), tinycolor.random().toString());
         }
     }, [tripRecs]);
+
+    const overrideTrip = async (otrip) => {
+        console.log("overrideTrip w:", otrip);
+        let id_token = await getIdToken();
+        await updateTrip(otrip, id_token);
+        navigate("/viewTrip/" + otrip._id);
+    }
 
     return (
         <div style={styleSheet.fullPage}>
@@ -82,12 +89,12 @@ const TripRecs = () => {
             <FloatingMenu>
                 <div style={styleSheet.contentContainer}>
                     <h1>{trip ? trip.meta.name : "Loading..."}</h1>
-                    <div>
+                    <div style={styleSheet.recsContainer}>
                         {
                             tripRecs ?
                                 tripRecs.map(trip => {
                                     return (
-                                        <AutoRec trip={trip} />
+                                        <AutoRec trip={trip} override={overrideTrip} />
                                     )
                                 })
                                 :

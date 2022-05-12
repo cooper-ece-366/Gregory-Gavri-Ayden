@@ -34,7 +34,7 @@ const TripGen = (props) => {
         <div style={styleSheet.fullPage}>
             <Map ref={mapRef} />
             <div style={styleSheet.floatingMenu}>
-                <TripForm />
+                <TripForm mapRef={mapRef} />
             </div>
         </div>
     );

@@ -2,11 +2,8 @@
 package edu.cooper.ece366.Endpoints;
 
 import static spark.Spark.*;
-
-// Written By Gavri Kepets
 import com.google.gson.JsonObject;
 import com.google.gson.JsonArray;
-
 import org.bson.types.ObjectId;
 import java.util.ArrayList;
 import java.lang.Exception;
@@ -41,6 +38,7 @@ public class TripGenAPI {
             });
 
             post("/autorecs", (BodyParserRoute) (req, res, body) -> {
+                System.out.println("STARTED AUTO RECS");
                 String trip_id = body.get("trip_id").getAsString();
                 Trip trip = tripHandler.getById(trip_id);
 

@@ -33,10 +33,18 @@ public class Stop implements SerializingInterface {
     }
 
     public Stop(JsonObject obj) {
-        this.bigStop = new ObjectId(obj.get("bigStop").getAsString());
+        if (obj.get("bigStop").isJsonObject()) {
+            this.bigStop = new ObjectId(obj.get("bigStop").getAsJsonObject().get("id").getAsString());
+        } else {
+            this.bigStop = new ObjectId(obj.get("bigStop").getAsString());
+        }
         this.smallStops = new ArrayList<ObjectId>();
         obj.get("smallStops").getAsJsonArray().forEach(stop -> {
-            this.smallStops.add(new ObjectId(stop.getAsString()));
+            if (stop.isJsonObject()) {
+                this.smallStops.add(new ObjectId(stop.getAsJsonObject().get("id").getAsString()));
+            } else {
+                this.smallStops.add(new ObjectId(stop.getAsString()));
+            }
         });
     }
 
@@ -44,10 +52,10 @@ public class Stop implements SerializingInterface {
         this.bigStop = id;
         this.smallStops = new ArrayList<ObjectId>();
     }
-  
-    public Stop (Stop s){
+
+    public Stop(Stop s) {
         this.bigStop = s.bigStop;
-        this.smallStops = new ArrayList<ObjectId> ();
+        this.smallStops = new ArrayList<ObjectId>();
         s.smallStops.forEach(stop -> {
             this.smallStops.add(stop);
         });

@@ -1,3 +1,4 @@
+// Written by Gavri Kepets
 const styleSheet = {
     floatingMenu: {
         position: "fixed",
@@ -17,8 +18,8 @@ const styleSheet = {
         color: "white",
     }
 }
-const FloatingMenu = ({children, style = {}}) => (
-    <div style={{...styleSheet.floatingMenu, ...style}}>
+const FloatingMenu = ({ children, style = {} }) => (
+    <div style={{ ...styleSheet.floatingMenu, ...style }}>
         {children}
     </div>
 )

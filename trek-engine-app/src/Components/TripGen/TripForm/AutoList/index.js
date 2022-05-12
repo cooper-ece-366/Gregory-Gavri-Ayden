@@ -68,7 +68,7 @@ const AutoList = ({ items = [], setItems, addItem }) => {
     return (
         <div style={styleSheet.container}>
             <AutoComplete setName={handleTextChange} inputColor="#0000ff" inputRef={inputRef} setText={handleTextChange} />
-            <div style={styleSheet.buttonContainer}><button style={styleSheet.mybutton} onClick={() => { localAddItem(text); setText(''); }}>Add</button></div>
+            <div style={styleSheet.buttonContainer}><button style={styleSheet.mybutton} onClick={(e) => { e.preventDefault(); localAddItem(text); setText(''); }}>Add</button></div>
             <div style={styleSheet.scroll}>
                 {items.map((item, index) => {
                     return (
