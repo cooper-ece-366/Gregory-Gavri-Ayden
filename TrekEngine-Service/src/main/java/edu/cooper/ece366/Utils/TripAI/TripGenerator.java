@@ -7,14 +7,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-
-import org.eclipse.jetty.util.IO;
-
 import edu.cooper.ece366.Exceptions.InvalidTripException;
 import edu.cooper.ece366.Mongo.Stops.BigStops.BigStopHandler;
 import edu.cooper.ece366.Mongo.Stops.BigStops.BigStops;
-import edu.cooper.ece366.Mongo.Trips.Tag;
 import edu.cooper.ece366.Mongo.Trips.Trip;
 import edu.cooper.ece366.Utils.GeoLocation.DirData;
 import edu.cooper.ece366.Utils.GeoLocation.GeoLocationHandler;
@@ -74,9 +69,9 @@ public class TripGenerator {
 
             int i = 0; 
             int j = 0; 
-            while(i<stopOptions.size()){
-                while(j<stopOptions.get(i).stops.size()){
-                    Score newScore = TripGeneratorUtils.estimateScore(
+            while(i<stopOptions.size()){// iterate through all the stops in the stop boxes 
+                while(j<stopOptions.get(i).stops.size()){ // this is a while loop so I can control when the increments happen more easily 
+                    Score newScore = TripGeneratorUtils.estimateScore(  // esitate the score without the stop
                         currentScore,
                         stopOptions.get(i).stops,
                         j,
@@ -90,12 +85,12 @@ public class TripGenerator {
                             stopOptions.get(i+1).stops.get(0) // next box first item 
                     ); 
     
-                    if(newScore != null){
+                    if(newScore != null){ // check if its better
     
                         double newSocreA = newScore.getAvgScore(); 
                         double currentScoreA = currentScore.getAvgScore();
     
-                        if(Math.abs(currentScoreA - newSocreA) >= delta){
+                        if(Math.abs(currentScoreA - newSocreA) >= delta){ // check if its in the threshold
                             stopOptions.get(i).stops.remove(j);
                             currentScore = newScore;
                             continue; 
@@ -169,8 +164,6 @@ public class TripGenerator {
             }
         }
 
-        
-
         final long timeData = geoHandler.directions(stopStr).getDurtaionS();
         final int len3 = (int)Math.round((double)templateTrip.getDetails().getTripLength()/3.0); 
 
@@ -179,23 +172,6 @@ public class TripGenerator {
 
     private Score calculateScore() throws IOException{
         return calculateScore(stops,true); 
-        // ArrayList<String> stopStr = new ArrayList<String>();
-        // Map<String,Integer> tags = new HashMap<String,Integer>(); 
-        // int stopCount = 0; 
-        // for(StopBox box: stops){
-        //     stopCount += box.stops.size(); 
-        //     for(BigStops stop: box.stops){
-        //         stopStr.add(stop.toLngLat().getDirStr());
-        //         tags.put(stop.getType(), tags.getOrDefault(stop.getType(), 0) + 1); 
-        //     }
-        // }
-
-        
-
-        // final long timeData = geoHandler.directions(stopStr).getDurtaionS();
-        // final int len3 = (int)Math.round((double)templateTrip.getDetails().getTripLength()/3.0); 
-
-        // return TripGeneratorUtils.calculateScore(timeData, len3, templateTrip.getDetails().getTags(), tags, stopCount); 
     }
 
     private DirData calculateMinTripLen(){
@@ -215,7 +191,7 @@ public class TripGenerator {
     }
 
 
-
+    // grab the inital stops 
     private ArrayList<StopBox> makeStops(int distPerDay){
         ArrayList<StopBox> stopBoxes = new ArrayList<StopBox>();
         LngLat boxes[][] = getBoundingBox(distPerDay); 
@@ -225,12 +201,25 @@ public class TripGenerator {
                 10,
                 templateTrip.getTripData().getBigStops()
             );
-            Collections.sort(
+            Collections.sort( // sorts the stops by distance from start location 
                 stopsB,
                 new SortBigStops(templateTrip.getTripData().getStartLocation(stopHandler)).getSort()
             );
             stopBoxes.add(new StopBox(stopsB, boxes[i]));
         }
+
+        // validate that the last stop is the end location and if not swap it with the last spot 
+        int lastBoxSize = stopBoxes.get(distPerDay-1).stops.size(); 
+        if (stopBoxes.get(distPerDay-1).stops.get(lastBoxSize-1).getId() != templateTrip.getTripData().getEndLocation()){
+            for(int i = 0; i<lastBoxSize; i++){
+                if(stopBoxes.get(distPerDay-1).stops.get(i).getId() == templateTrip.getTripData().getEndLocation()){
+                    stopBoxes.get(distPerDay-1).stops.remove(i);
+                    break;
+                }
+            }
+            stopBoxes.get(distPerDay-1).stops.add(templateTrip.getTripData().getEndLocation(stopHandler));
+        }
+
         return stopBoxes;  
     }
 
