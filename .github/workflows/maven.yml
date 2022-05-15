@@ -13,6 +13,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     environment: test
+    env:
+      MONGO_URI: ${{secrets.MONGO_URI}}
+      GOOGLE_CLIENT_ID: ${{secrets.GOOGLE_CLIENT_ID}}
+      GOOGLE_API_KEY: ${{secrets.GOOGLE_API_KEY}}
     steps:
     - uses: actions/checkout@v3
     - name: Set up JDK 17
