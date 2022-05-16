@@ -1,3 +1,4 @@
+// Written By Gregory Presser
 package edu.cooper.ece366;
 
 import java.util.ArrayList;
@@ -11,9 +12,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import edu.cooper.ece366.Mongo.MongoHandler;
+import edu.cooper.ece366.Mongo.Stops.BigStops.BigStopHandler;
+import edu.cooper.ece366.Mongo.Stops.BigStops.BigStops;
+import edu.cooper.ece366.Mongo.Stops.SmallStops.SmallStopHandler;
+import edu.cooper.ece366.Mongo.Stops.SmallStops.SmallStops;
 import edu.cooper.ece366.Mongo.Trips.Detail;
-import edu.cooper.ece366.Mongo.Trips.Loacation;
 import edu.cooper.ece366.Mongo.Trips.Meta;
+import edu.cooper.ece366.Mongo.Trips.Stop;
 import edu.cooper.ece366.Mongo.Trips.Tag;
 import edu.cooper.ece366.Mongo.Trips.Trip;
 import edu.cooper.ece366.Mongo.Trips.TripData;
@@ -21,11 +26,33 @@ import edu.cooper.ece366.Mongo.Trips.TripHandler;
 
 public class TripHandlerUnitTest {
     private static MongoHandler mongoHandler;
+    private static BigStopHandler bigStopHandler;
+    private static SmallStopHandler smallStopHandler;
     private TripHandler underTest; 
+    private static List<BigStops> bigStops; 
+    private static List<SmallStops> smallStops;
 
     @BeforeAll
     public static void setup(){
         mongoHandler = new MongoHandler("TrekEngine-Test");
+        bigStopHandler = new BigStopHandler(mongoHandler);
+        smallStopHandler = new SmallStopHandler(mongoHandler);
+        bigStopHandler.flush(); 
+        smallStopHandler.flush();
+
+        bigStops = new ArrayList<BigStops>(){{
+            add (new BigStops(new ObjectId(), "New York", 70.0, 70.0, "City",true)); 
+            add (new BigStops(new ObjectId(), "Chicago", 75.0, 65.0, "City",true)); 
+            add (new BigStops(new ObjectId(), "LA", 79.0, 70.0, "City",true)); 
+        }}; 
+        bigStopHandler.insert(bigStops); 
+
+        smallStops = new ArrayList<SmallStops>(){{
+            add (new SmallStops(new ObjectId(), "Centeral Park ", 70.0, 70.0, "Park", bigStops.get(0).getId())); 
+            add (new SmallStops(new ObjectId(), "Bean", 75.0, 65.0, "Attraction", bigStops.get(1).getId())); 
+            add (new SmallStops(new ObjectId(), "Thing in LA", 79.0, 70.0, "things", bigStops.get(2).getId())); 
+        }}; 
+        smallStopHandler.insert(smallStops);
     }
 
     @BeforeEach
@@ -40,7 +67,7 @@ public class TripHandlerUnitTest {
         Trip trip1 = new Trip(
             new ObjectId(),
             new Meta("Test Trip 1","Description","gpress2222@gmail.com",false,new Date(),new Date()),
-            new TripData(new Loacation("start", 70.0,70.0,"city"),new Loacation("end", 80.0,80.0,"city"),new ArrayList<Loacation>()),
+            new TripData(new ObjectId(),new ObjectId(),new ArrayList<Stop>()),
             new Detail(new Date(), 10, new ArrayList<Tag>())
         );  
 
@@ -75,14 +102,14 @@ public class TripHandlerUnitTest {
         Trip trip1 = new Trip(
             new ObjectId(),
             new Meta("Test Trip 1","Description","gpress2222@gmail.com",false,new Date(),new Date()),
-            new TripData(new Loacation("start", 70.0,70.0,"city"),new Loacation("end", 80.0,80.0,"city"),new ArrayList<Loacation>()),
+            new TripData(bigStops.get(0).getId(),bigStops.get(1).getId(),new ArrayList<Stop>()),
             new Detail(new Date(), 10, tags1)
         ); 
 
         Trip trip2 = new Trip(
             new ObjectId(),
             new Meta("Test Trip 1","Description","gpress2222@gmail.com",false,new Date(),new Date()),
-            new TripData(new Loacation("start", 70.0,70.0,"city"),new Loacation("end", 80.0,80.0,"city"),new ArrayList<Loacation>()),
+            new TripData(bigStops.get(0).getId(),bigStops.get(1).getId(),new ArrayList<Stop>()),
             new Detail(new Date(), 10, tags2)
         );
 
@@ -110,19 +137,19 @@ public class TripHandlerUnitTest {
         Trip trip1 = new Trip(
             new ObjectId(),
             new Meta("Test Trip 1","Description","email1@gmail.com",false,new Date(),new Date()),
-            new TripData(new Loacation("start", 70.0,70.0,"city"),new Loacation("end", 80.0,80.0,"city"),new ArrayList<Loacation>()),
+            new TripData(bigStops.get(0).getId(),bigStops.get(1).getId(),new ArrayList<Stop>()),
             new Detail(new Date(), 10, new ArrayList<Tag>())
         ); 
         Trip trip2 = new Trip(
             new ObjectId(),
             new Meta("Test Trip 1","Description","email2@gmail.com",false,new Date(),new Date()),
-            new TripData(new Loacation("start", 70.0,70.0,"city"),new Loacation("end", 80.0,80.0,"city"),new ArrayList<Loacation>()),
+            new TripData(bigStops.get(0).getId(),bigStops.get(1).getId(),new ArrayList<Stop>()),
             new Detail(new Date(), 10, new ArrayList<Tag>())
         ); 
         Trip trip3 = new Trip(
             new ObjectId(),
             new Meta("Test Trip 1","Description","email2@gmail.com",false,new Date(),new Date()),
-            new TripData(new Loacation("start", 70.0,70.0,"city"),new Loacation("end", 80.0,80.0,"city"),new ArrayList<Loacation>()),
+            new TripData(bigStops.get(0).getId(),bigStops.get(1).getId(),new ArrayList<Stop>()),
             new Detail(new Date(), 10, new ArrayList<Tag>())
         ); 
 
@@ -145,25 +172,25 @@ public class TripHandlerUnitTest {
         Trip trip1 = new Trip(
             new ObjectId(),
             new Meta("Test Trip 1","Description","email1@gmail.com",false,new Date(),new Date()),
-            new TripData(new Loacation("start", 70.0,70.0,"city"),new Loacation("end", 80.0,80.0,"city"),new ArrayList<Loacation>()),
+            new TripData(bigStops.get(0).getId(),bigStops.get(1).getId(),new ArrayList<Stop>()),
             new Detail(new Date(), 10, new ArrayList<Tag>())
         );
         Trip trip2 = new Trip(
             new ObjectId(),
             new Meta("Test Trip 1","Description","email1@gmail.com",false,new Date(),new Date()),
-            new TripData(new Loacation("start", 70.0,70.0,"city"),new Loacation("end", 80.0,80.0,"city"),new ArrayList<Loacation>()),
+            new TripData(bigStops.get(0).getId(),bigStops.get(1).getId(),new ArrayList<Stop>()),
             new Detail(new Date(), 20, new ArrayList<Tag>())
         );
         Trip trip3 = new Trip(
             new ObjectId(),
             new Meta("Test Trip 1","Description","email1@gmail.com",false,new Date(),new Date()),
-            new TripData(new Loacation("start", 70.0,70.0,"city"),new Loacation("end", 80.0,80.0,"city"),new ArrayList<Loacation>()),
+            new TripData(bigStops.get(0).getId(),bigStops.get(1).getId(),new ArrayList<Stop>()),
             new Detail(new Date(), 5, new ArrayList<Tag>())
         );
         Trip trip4 = new Trip(
             new ObjectId(),
             new Meta("Test Trip 1","Description","email1@gmail.com",false,new Date(),new Date()),
-            new TripData(new Loacation("start", 70.0,70.0,"city"),new Loacation("end", 80.0,80.0,"city"),new ArrayList<Loacation>()),
+            new TripData(bigStops.get(0).getId(),bigStops.get(1).getId(),new ArrayList<Stop>()),
             new Detail(new Date(), 10, new ArrayList<Tag>())
         );
 
@@ -193,19 +220,19 @@ public class TripHandlerUnitTest {
         Trip trip1 = new Trip(
             new ObjectId(),
             new Meta("Test Trip 1","Description","email1@gmail.com",false,new Date(),new Date()),
-            new TripData(new Loacation("New York", 70.0,70.0,"city"),new Loacation("LA", 80.0,80.0,"city"),new ArrayList<Loacation>()),
+            new TripData(bigStops.get(0).getId(),bigStops.get(2).getId(),new ArrayList<Stop>()),
             new Detail(new Date(), 10, new ArrayList<Tag>())
         );
         Trip trip2 = new Trip(
             new ObjectId(),
             new Meta("Test Trip 1","Description","email1@gmail.com",false,new Date(),new Date()),
-            new TripData(new Loacation("New York", 75.0,65.0,"city"),new Loacation("Chicago", 80.0,80.0,"city"),new ArrayList<Loacation>()),
+            new TripData(bigStops.get(0).getId(),bigStops.get(1).getId(),new ArrayList<Stop>()),
             new Detail(new Date(), 10, new ArrayList<Tag>())
         );
         Trip trip3 = new Trip(
             new ObjectId(),
             new Meta("Test Trip 1","Description","email1@gmail.com",false,new Date(),new Date()),
-            new TripData(new Loacation("Chicago", 80.0,70.0,"city"),new Loacation("LA", 80.0,80.0,"city"),new ArrayList<Loacation>()),
+            new TripData(bigStops.get(1).getId(),bigStops.get(2).getId(),new ArrayList<Stop>()),
             new Detail(new Date(), 10, new ArrayList<Tag>())
         );
 
@@ -218,17 +245,17 @@ public class TripHandlerUnitTest {
         assert(underTest.getCount() == 3);
         
         // start location
-        assert(underTest.getTripByStartLoc("New York").size() == 2);
-        assert(underTest.getTripByStartLoc("Chicago").size() == 1);
-        assert(underTest.getTripByStartLoc("LA").size() == 0);
+        assert(underTest.getTripByStartLoc("New York", bigStopHandler).size() == 2);
+        assert(underTest.getTripByStartLoc("Chicago", bigStopHandler).size() == 1);
+        assert(underTest.getTripByStartLoc("LA", bigStopHandler).size() == 0);
 
         // end location
-        assert(underTest.getTripByEndLoc("New York").size() == 0);
-        assert(underTest.getTripByEndLoc("Chicago").size() == 1);
-        assert(underTest.getTripByEndLoc("LA").size() == 2);
+        assert(underTest.getTripByEndLoc("New York", bigStopHandler).size() == 0);
+        assert(underTest.getTripByEndLoc("Chicago", bigStopHandler).size() == 1);
+        assert(underTest.getTripByEndLoc("LA", bigStopHandler).size() == 2);
 
         // start location by lng lat
-        assert(underTest.getTripByStartLoc(-90.0,90.0,60.0,79.0).size() == 2);
+        // assert(underTest.getTripByStartLoc(-90.0,90.0,60.0,79.0, bigStopHandler).size() == 2);
 
     }
 
@@ -237,18 +264,30 @@ public class TripHandlerUnitTest {
         Trip trip = new Trip(
             new ObjectId(),
             new Meta("Test Trip 1","Description","email1@gmail.com",false,new Date(),new Date()),
-            new TripData(new Loacation("Chicago", 80.0,70.0,"city"),new Loacation("LA", 80.0,80.0,"city"),new ArrayList<Loacation>()),
+            new TripData(bigStops.get(1).getId(),bigStops.get(2).getId(),new ArrayList<Stop>()),
             new Detail(new Date(), 10, new ArrayList<Tag>())
         );
         underTest.insert(trip);
         
         assert(underTest.getCount() == 1);
 
-        trip.getTripData().addStop(new Loacation("YellowStone", 80.0,70.0,"park"));
+        trip.addStop(smallStops.get(1).getId(), bigStops.get(1).getId());
 
+        List<Stop> stops = trip.getTripData().getStops(); 
+        for(Stop stop: stops){
+            if(stop.getBigStop().equals(bigStops.get(1).getId())){
+                assert(stop.getSmallStops().size() == 1);
+            }
+        }
+        
         underTest.update(trip);
-        assert(underTest.getById(trip.getId()).getTripData().getStops().size() == 1);
-        assert(underTest.getById(trip.getId()).equals(trip)); 
+
+        stops = underTest.getById(trip.getId()).getTripData().getStops();
+        for(Stop stop: stops){
+            if(stop.getBigStop().equals(bigStops.get(1).getId())){
+                assert(stop.getSmallStops().size() == 1);
+            }
+        }
     }
         
 }

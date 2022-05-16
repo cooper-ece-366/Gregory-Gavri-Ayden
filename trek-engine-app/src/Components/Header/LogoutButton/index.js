@@ -4,6 +4,7 @@ import { useUserContext } from "../../../Contexts/UserContext";
 
 const LogoutButton = () => {
 
+    // Written By Gavri Kepets
     const styleSheet = {
         button: {
             background: "#781C10",
@@ -21,6 +22,8 @@ const LogoutButton = () => {
         }
     }
 
+
+    // Written By Gregory Presser
     const { logout } = useUserContext();
     const onSuccess = (response) => {
         logout();

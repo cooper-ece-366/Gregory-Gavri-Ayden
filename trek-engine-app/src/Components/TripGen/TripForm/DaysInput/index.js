@@ -14,8 +14,8 @@ const styleSheet = {
         fontSize: "1.25em",
         width: "25%",
         marginRight: "20px",
-        background: "#ffffff",
-        color: "black",
+        background: "rgba(100, 100, 100, 0.25)",
+        color: "white",
         borderRadius: "10px",
         padding: "0px 10px",
         border: "2px solid #0014C4"

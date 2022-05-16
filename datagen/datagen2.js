@@ -147,3 +147,4 @@ const generateStops = async (obj)=>{
     const jsonObj = await csv().fromFile(csvFilePath); 
     fs.writeFileSync(stopsFilePath,JSON.stringify(await generateStops(jsonObj))); 
 })();
+

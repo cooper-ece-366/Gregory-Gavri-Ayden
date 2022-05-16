@@ -1,3 +1,4 @@
+// Written By Gregory Presser
 import axios from "axios"; 
 import { decode } from "@googlemaps/polyline-codec";
 
@@ -6,8 +7,8 @@ export const getDirection = async (stops)=> {
     console.log("stops", stops); 
     const stuff = await axios.post(`http://localhost:4567/api/v1/geo/directions`,{stops});  
     console.log(stuff); 
-    const {data} = stuff; 
-    const result = data.map(x=>decode(x,5)).reduce((acc,x)=>[...acc,...x],[]).map(([first,second])=>[second,first]); 
+    const {data: {polylines}} = stuff; 
+    const result = polylines.map(x=>decode(x,5)).reduce((acc,x)=>[...acc,...x],[]).map(([first,second])=>[second,first]); 
     console.log(result); 
     return result;
 }

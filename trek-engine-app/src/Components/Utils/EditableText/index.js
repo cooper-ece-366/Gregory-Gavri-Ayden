@@ -1,29 +1,34 @@
 // Written by Gavri Kepets
-import { useEffect, useRef,useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-const styleSheet = (fontSize)=>({
+const styleSheet = (fontSize) => ({
     container: {
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-between",
         fontSize,
         margin: "10px",
+        width: "100%",
+        overflow: "hidden",
     },
     input: {
         width: "100%",
-        fontSize: fontSize*2,
-        height: "30px",
+        fontSize: fontSize,
+        height: fontSize,
     },
     text: {
-        fontSize: fontSize*2,
-        margin: "0px"
+        fontSize: fontSize,
+        margin: "0px",
+        overflow: "hidden",
     },
-    edit:{
+    edit: {
         fontSize: "10px",
+        position: "absolute",
+        right: "10px",
     }
-}); 
+});
 
-const EditableText = ({text,setText,fontSize="15px"}) => {
+const EditableText = ({ text, setText, fontSize = "30px" }) => {
     const wrapperRef = useRef(null);
     const [isEdit, setIsEdit] = useState(false);
     // const [text, setText] = useState(text);
@@ -35,7 +40,7 @@ const EditableText = ({text,setText,fontSize="15px"}) => {
     useEffect(() => {
         document.addEventListener("click", handleClickOutside, false);
         document.addEventListener("keydown", handleKeyDown, false);
-      }, []);
+    }, []);
 
     const handleClickOutside = (event) => {
         if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {

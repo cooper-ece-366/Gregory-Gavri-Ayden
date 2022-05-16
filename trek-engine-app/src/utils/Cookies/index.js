@@ -1,3 +1,4 @@
+// Written By Gregory Presser
 export const setCookie = (name,value, options)=>{
     options = {
         path: '/',

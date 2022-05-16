@@ -14,7 +14,7 @@ const styleSheet = {
         marginTop: "20px"
     },
     input: {
-        fontSize: "1.25em",
+        fontSize: "1.15em",
         width: "25%",
         marginRight: "20px",
         background: "#ffffff",
@@ -23,13 +23,10 @@ const styleSheet = {
         padding: "0px 10px",
         border: "2px solid #0014C4"
     },
-    days: {
-        fontSize: "1.25em",
-    },
     scroll: {
         overflow: "auto",
         maxHeight: "200px",
-        minHeight: "200px",
+        minHeight: "100px",
         background: "rgba(100, 100, 100, 0.25)",
     },
     mybutton: {
@@ -71,7 +68,7 @@ const AutoList = ({ items = [], setItems, addItem }) => {
     return (
         <div style={styleSheet.container}>
             <AutoComplete setName={handleTextChange} inputColor="#0000ff" inputRef={inputRef} setText={handleTextChange} />
-            <div style={styleSheet.buttonContainer}><button style={styleSheet.mybutton} onClick={() => { localAddItem(text); setText(''); }}>Add</button></div>
+            <div style={styleSheet.buttonContainer}><button style={styleSheet.mybutton} onClick={(e) => { e.preventDefault(); localAddItem(text); setText(''); }}>Add</button></div>
             <div style={styleSheet.scroll}>
                 {items.map((item, index) => {
                     return (

@@ -1,42 +1,27 @@
-import {useState} from 'react'; 
-import DraggableItem from "./DraggableItem";
-const DraggableList = ({stops, swapStops, remove})=>{
+// Written By Gavri Kepets
+import { useCallback, useState } from 'react'
+import DraggableItem from './DraggableItem'
+import DnDList from 'react-dnd-list';
 
-    const [startPos,setStartPos] = useState(null); 
-    const [endPos, setEndPos] = useState(null); 
-
-    const onDragStart = (e)=>{
-        console.log("drag start");
-        console.log(parseInt(e.target.classList[1]));
-        setStartPos(parseInt(e.target.classList[1]));  
-    }
-
-    const onDragOver = (e)=>{
-        e.preventDefault();
-        const currentEnd = parseInt(e.target.classList[1]);
-        setEndPos(currentEnd); 
-    }
-
-    const onDrop = (e)=>{
-    }
-
-
-    const onDragEnd = (e)=>{
-        swapStops(startPos,endPos);
-        setStartPos(null);
-        setEndPos(null);
-    }
-
-    return (
-        <div>
-            {stops.map(({name},i)=>(<DraggableItem index = {i} 
-                onDragStart={onDragStart} 
-                onDrop={onDrop} 
-                onDragOver={onDragOver}
-                onDragEnd={onDragEnd}
-                remove={remove}>{name}</DraggableItem>))}
-        </div>
-    )
+const style = {
+    width: "85%",
+    userSelect: "none",
+    listStyle: "none",
+    padding: "0",
+    backgroundColor: "rgba(255,255,255,0.25)",
 }
 
-export default DraggableList; 
+const DraggableList = ({ stops, swapStops }) => {
+    return (
+        <ul style={style}>
+            <DnDList
+                items={stops}
+                itemComponent={DraggableItem}
+                setList={swapStops}
+                disableTransitions={true}
+            />
+        </ul>
+    );
+}
+
+export default DraggableList;

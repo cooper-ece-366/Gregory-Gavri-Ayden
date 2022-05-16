@@ -1,3 +1,4 @@
+// Written By Gregory Presser
 package edu.cooper.ece366.Mongo.Trips;
 
 import com.google.gson.JsonObject;
@@ -21,6 +22,11 @@ public class Tag implements SerializingInterface{
     public Tag(JsonObject tagObj) {
         this.tag = tagObj.get("tag").getAsString();
         this.weight = tagObj.get("weight").getAsDouble();
+    }
+
+    public Tag(Tag tag) {
+        this.tag = tag.tag;
+        this.weight = tag.weight;
     }
     public String getTag(){
         return tag; 

@@ -1,3 +1,4 @@
+// Written By Gregory Presser
 package edu.cooper.ece366.Mongo.Trips;
 
 import java.util.Date;
@@ -47,6 +48,15 @@ public class Meta implements SerializingInterface{
             this.isPrivate = metaJson.get("isPrivate").getAsBoolean();
         this.created = new Date (metaJson.get("created").getAsLong()); 
         this.updated = new Date (metaJson.get("updated").getAsLong()); 
+    }
+
+    public Meta(Meta meta){
+        this.name = meta.name;
+        this.description = meta.description;
+        this.user = meta.user;
+        this.isPrivate = meta.isPrivate;
+        this.created = meta.created;
+        this.updated = meta.updated;
     }
 
 
