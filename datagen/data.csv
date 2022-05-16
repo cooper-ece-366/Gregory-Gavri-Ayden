@@ -1,6 +1,7 @@
-city_ascii,lat,lng,type
-New York,40.6943,-73.9249,city
+name,lat,lng,type
+New York,40.7588,-73.9851,city
 Los Angeles,34.1139,-118.4068,city
+Long Beach,33.770050,-118.193741,city
 Chicago,41.8373,-87.6862,city
 Miami,25.7839,-80.2102,city
 Dallas,32.7936,-96.7662,city
@@ -17,9 +18,6 @@ San Diego,32.8312,-117.1225,city
 Minneapolis,44.9635,-93.2678,city
 Tampa,27.9942,-82.4451,city
 Denver,39.7621,-104.8759,city
-Brooklyn,40.6501,-73.9496,city
-Queens,40.7498,-73.7976,city
-Riverside,33.9381,-117.3948,city
 Baltimore,39.3051,-76.6144,city
 Las Vegas,36.2333,-115.2654,city
 Portland,45.5372,-122.65,city
@@ -33,13 +31,10 @@ Pittsburgh,40.4396,-79.9762,city
 Austin,30.3004,-97.7522,city
 Cincinnati,39.1413,-84.5061,city
 Kansas City,39.1239,-94.5541,city
-Manhattan,40.7834,-73.9662,city
 Indianapolis,39.7771,-86.1458,city
 Columbus,39.9862,-82.985,city
 Charlotte,35.208,-80.8304,city
 Virginia Beach,36.7335,-76.0435,city
-Bronx,40.8501,-73.8662,city
-Milwaukee,43.0642,-87.9673,city
 Providence,41.823,-71.4187,city
 Jacksonville,30.3322,-81.6749,city
 Salt Lake City,40.7777,-111.9306,city
@@ -50,191 +45,41 @@ Raleigh,35.8325,-78.6435,city
 New Orleans,30.0687,-89.9288,city
 Louisville,38.1663,-85.6485,city
 Oklahoma City,35.4676,-97.5136,city
-Bridgeport,41.1918,-73.1953,city
-Buffalo,42.9016,-78.8487,city
 Fort Worth,32.7811,-97.3473,city
 Hartford,41.7661,-72.6834,city
 Tucson,32.1545,-110.8782,city
 Omaha,41.2627,-96.0522,city
 El Paso,31.8479,-106.4309,city
-Honolulu,21.3294,-157.846,city
-McAllen,26.2273,-98.2471,city
 Albuquerque,35.1053,-106.6464,city
 Birmingham,33.5277,-86.7987,city
-Sarasota,27.3386,-82.5431,city
-Dayton,39.7797,-84.1998,city
-Rochester,43.168,-77.6162,city
-Fresno,36.7831,-119.7941,city
-Allentown,40.5961,-75.4756,city
-Tulsa,36.1284,-95.9042,city
-Cape Coral,26.6446,-81.9956,city
-Concord,37.9722,-122.0016,city
 Colorado Springs,38.8674,-104.7606,city
-Charleston,32.8153,-79.9628,city
-Springfield,42.1155,-72.5395,city
-Grand Rapids,42.962,-85.6562,city
-Mission Viejo,33.6095,-117.655,city
-Albany,42.6664,-73.7987,city
-Knoxville,35.9692,-83.9496,city
-Bakersfield,35.3529,-119.0359,city
-Ogden,41.2278,-111.9682,city
-Baton Rouge,30.4418,-91.131,city
-Akron,41.0798,-81.5219,city
-New Haven,41.3112,-72.9246,city
-Columbia,34.0376,-80.9037,city
-Mesa,33.4017,-111.718,city
-Palm Bay,27.955,-80.6627,city
-Provo,40.2457,-111.6457,city
-Worcester,42.2705,-71.8079,city
-Murrieta,33.572,-117.1909,city
-Greenville,34.8353,-82.3647,city
-Wichita,37.6896,-97.3442,city
-Toledo,41.6639,-83.5822,city
-Staten Island,40.5834,-74.1496,city
-Des Moines,41.5725,-93.6105,city
-Long Beach,33.7981,-118.1675,city
-Port St. Lucie,27.2796,-80.3883,city
-Denton,33.2176,-97.1419,city
-Madison,43.0826,-89.3931,city
-Reno,39.5497,-119.8483,city
-Harrisburg,40.2752,-76.8843,city
-Little Rock,34.7256,-92.3576,city
-Oakland,37.7903,-122.2165,city
-Durham,35.9794,-78.9031,city
-Winston-Salem,36.1029,-80.2611,city
-Bonita Springs,26.3559,-81.7861,city
-Indio,33.7346,-116.2346,city
-Palm Coast,29.5392,-81.246,city
-Chattanooga,35.0657,-85.2488,city
-Spokane,47.6671,-117.433,city
-Syracuse,43.0409,-76.1438,city
-Lancaster,40.0421,-76.3012,city
-Arlington,32.6998,-97.125,city
-Stockton,37.9765,-121.3109,city
-Poughkeepsie,41.6949,-73.921,city
-Augusta,33.3645,-82.0708,city
-Boise,43.6007,-116.2312,city
-Oxnard,34.1963,-119.1815,city
-Scranton,41.4044,-75.6649,city
-Modesto,37.6374,-121.0028,city
-Kissimmee,28.3042,-81.4164,city
-Aurora,39.7087,-104.7273,city
-Youngstown,41.0993,-80.6463,city
-Fayetteville,36.0713,-94.166,city
-Anaheim,33.839,-117.8572,city
-Pensacola,30.4427,-87.1886,city
-Victorville,34.5277,-117.3536,city
-Lancaster,34.6935,-118.1753,city
-Greensboro,36.0956,-79.8269,city
-Corpus Christi,27.726,-97.3755,city
-Fort Wayne,41.0886,-85.1437,city
-Santa Ana,33.7366,-117.8819,city
-Flint,43.0235,-83.6922,city
-Fayetteville,35.0846,-78.9776,city
-Jackson,32.3163,-90.2124,city
-Santa Rosa,38.4458,-122.7067,city
-Lansing,42.7142,-84.5601,city
-San Juan,18.4037,-66.0636,city
-Lexington,38.0423,-84.4587,city
-Ann Arbor,42.2755,-83.7312,city
-Henderson,36.0133,-115.038,city
-Huntsville,34.6988,-86.6412,city
-Mobile,30.6783,-88.1162,city
-Fort Collins,40.5478,-105.0656,city
-Asheville,35.5704,-82.5536,city
-Santa Clarita,34.4175,-118.4964,city
-St. Paul,44.9477,-93.104,city
-Antioch,37.9789,-121.7958,city
-Lakeland,28.0556,-81.9545,city
-Trenton,40.2236,-74.7641,city
-Lincoln,40.809,-96.6788,city
-Springfield,37.1943,-93.2916,city
-Anchorage,61.1508,-149.1091,city
-Plano,33.0502,-96.7487,city
-Irvine,33.6772,-117.7738,city
-Davenport,41.5563,-90.6052,city
-Rockford,42.2597,-89.0641,city
-Newark,40.7245,-74.1725,city
-South Bend,41.6767,-86.2696,city
-Shreveport,32.4656,-93.7956,city
-Round Lake Beach,42.379,-88.0811,city
-Savannah,32.0281,-81.1784,city
-Myrtle Beach,33.7096,-78.8843,city
-Chula Vista,32.6281,-117.0145,city
-Eugene,44.0563,-123.1173,city
-Canton,40.8075,-81.3677,city
-Lubbock,33.5659,-101.8878,city
-Reading,40.34,-75.9267,city
-Winter Haven,28.0118,-81.7017,city
-Salem,44.9231,-123.0246,city
-St. Petersburg,27.7931,-82.6652,city
-Lafayette,30.2084,-92.0323,city
-Laredo,27.5629,-99.4875,city
-Jersey City,40.7161,-74.0682,city
-Concord,35.3933,-80.6366,city
-Columbus,32.51,-84.8771,city
-Chandler,33.2826,-111.8516,city
-McKinney,33.2015,-96.6669,city
-Scottsdale,33.6872,-111.8651,city
-Killeen,31.0754,-97.7296,city
-Tallahassee,30.4551,-84.2526,city
-Peoria,40.752,-89.6153,city
-Wilmington,34.21,-77.8866,city
-Montgomery,32.3473,-86.2666,city
-Gilbert,33.3101,-111.7463,city
-Glendale,33.5791,-112.2311,city
-North Las Vegas,36.288,-115.0901,city
-Chesapeake,36.6778,-76.3024,city
-Barnstable,41.6722,-70.3599,city
-Norfolk,36.8945,-76.259,city
-Fremont,37.5265,-121.9852,city
-Kennewick,46.1978,-119.1732,city
-Garland,32.91,-96.6305,city
-Irving,32.8584,-96.9702,city
-Visalia,36.3276,-119.3269,city
-Atlantic City,39.3797,-74.4527,city
-Paradise,36.0807,-115.1369,city
-Nashua,42.7491,-71.491,city
-Arlington,38.8786,-77.1011,city
-Hialeah,25.8696,-80.3046,city
-York,39.9651,-76.7315,city
-Evansville,37.9881,-87.5341,city
-Avondale,33.3858,-112.3236,city
-Brownsville,25.998,-97.4565,city
-Gulfport,30.4271,-89.0703,city
-Appleton,44.2779,-88.3891,city
-Bremerton,47.5436,-122.7122,city
-Hickory,35.7425,-81.323,city
-Tacoma,47.2431,-122.4531,city
-San Bernardino,34.1417,-117.2946,city
-College Station,30.5852,-96.296,city
-Kalamazoo,42.2749,-85.5882,city
-Thousand Oaks,34.1914,-118.8755,city
-Roanoke,37.2785,-79.958,city
-Fontana,34.0968,-117.4599,city
-Moreno Valley,33.9244,-117.2045,city
-North Port,27.0577,-82.1975,city
-Fargo,46.8652,-96.8292,city
-Green Bay,44.515,-87.9896,city
-Spring Valley,36.0987,-115.2619,city
-Amarillo,35.1988,-101.8311,city
-Portland,43.6773,-70.2715,city
-Santa Barbara,34.4285,-119.7202,city
-Gainesville,29.6804,-82.3458,city
-Olympia,47.0417,-122.8959,city
-Frisco,33.1555,-96.8215,city
-Yonkers,40.9466,-73.8674,city
-Norwich,41.5495,-72.0882,city
-Glendale,34.1818,-118.2468,city
-Huntington Beach,33.696,-118.0025,city
-Deltona,28.905,-81.2137,city
-Aurora,41.7637,-88.2901,city
+Fredericksburg,38.2992,-77.4872,city
+Stanley,44.2106127,-114.9561151,city
+Breckenridge,39.482231,-106.046181,city
+Whitefish,48.4329,-114.3591,city
+Leavenworth,47.596233,-120.661476,city
+Annapolis,38.978443,-76.49218,city
+Chincoteague,37.9591,-75.3496,city
+Stowe,44.475277,-72.702225,city
+Broken Bow,34.029278,-94.739105,city
+Hatteras,35.250538,-75.528824,city
+Newport,41.490578,-71.310196,city
+Page,36.917839,-111.458664,city
+Moab,38.573315,-109.549843,city
+Portland,43.65545,-70.26162,city
+Fort Lauderdale,26.1412,-80.1464,city
+Missoula,46.867428,-114.002385,city
+Burlington,44.475883,-73.212074,city
+Vale,39.641903,-106.373934,city
+Sedona,34.871002,-111.760826,city
+Milwaukee,43.0642,-87.9673,city
+Santa Fe,35.685363,-105.938685,city
 Acadia,44.35,-68.21,national_park
 American Samoa,-14.25,-170.68,national_park
 Arches,38.68,-109.57,national_park
 Badlands,43.75,-102.5,national_park
 Big Bend,29.25,-103.25,national_park
-Biscayne,25.475056,-80.186925,national_park
+Biscayne,25.65,-80.08,national_park
 Black Canyon of the Gunnison,38.57,-107.72,national_park
 Bryce Canyon,37.57,-112.18,national_park
 Canyonlands,38.2,-109.93,national_park
@@ -245,10 +90,8 @@ Congaree,33.78,-80.78,national_park
 Crater Lake,42.94,-122.1,national_park
 Cuyahoga Valley,41.24,-81.55,national_park
 Death Valley,36.24,-116.82,national_park
-Denali,63.33,-150.5,national_park
 Dry Tortugas,24.63,-82.87,national_park
 Everglades,25.32,-80.93,national_park
-Gates of the Arctic,67.78,-153.3,national_park
 Glacier,48.8,-114,national_park
 Glacier Bay,58.5,-137,national_park
 Grand Canyon,36.06,-112.14,national_park
@@ -257,15 +100,10 @@ Great Basin,38.98,-114.3,national_park
 Great Sand Dunes,37.73,-105.51,national_park
 Great Smoky Mountains,35.68,-83.53,national_park
 Guadalupe Mountains,31.92,-104.87,national_park
-Haleakala,20.72,-156.17,national_park
-Hawaii Volcanoes,19.38,-155.2,national_park
 Hot Springs,34.51,-93.05,national_park
 Isle Royale,48.1,-88.55,national_park
 Joshua Tree,33.79,-115.9,national_park
-Katmai,58.5,-155,national_park
-Kenai Fjords,59.92,-149.65,national_park
 Kings Canyon,36.8,-118.55,national_park
-Kobuk Valley,67.55,-159.28,national_park
 Lake Clark,60.97,-153.42,national_park
 Lassen Volcanic,40.49,-121.51,national_park
 Mammoth Cave,37.18,-86.1,national_park
@@ -284,7 +122,80 @@ Theodore Roosevelt,46.97,-103.45,national_park
 Virgin Islands,18.33,-64.73,national_park
 Voyageurs,48.5,-92.88,national_park
 Wind Cave,43.57,-103.48,national_park
-Wrangell–St. Elias,61,-142,national_park
 Yellowstone,44.6,-110.5,national_park
 Yosemite,37.83,-119.5,national_park
 Zion,37.3,-113.05,national_park
+Fall Creek Falls,35.66848,-85.36021,state_park
+Anza Borrego Desert,32.92876,-116.23355,state_park
+Dead Horse Point,-33.29734,151.36113,state_park
+Julia Pfeiffer Burns,40.9084,-77.94278,state_park
+Valley Of Fire,36.445679,-114.661873,state_park
+Niagara Falls,43.08436,-79.0614686,state_park
+Baxter,45.8162859,-68.8593921,state_park
+Custer,43.76136,-103.370303,state_park
+Ecola,45.919405,-123.973593,state_park
+Starved Rock,41.319209,-89.006009,state_park
+Hocking Hills,39.424181,-82.538003,state_park
+Devil's Lake,43.418308,-89.730933,state_park
+Franconia Notch,44.142052,-71.681321,state_park
+Makoshika,47.089764,-104.706278,state_park
+Letchworth,42.6512,-77.969107,state_park
+Cayo Costa,26.67068,-82.250159,state_park
+Hunting Island,32.3737071,-80.44634833,state_park
+Palo Duro Canyon,34.93747014,-101.658952,state_park
+Chimney Rock,35.43974992,-82.24856571,state_park
+Castle Rocks,42.13670083,-113.6769422,state_park
+Island Beach,39.79781407,-74.0976103,state_park
+Palouse Falls,46.66341918,-118.2235769,state_park
+Porcupine Mountains Wilderness,46.77599926,-89.73501368,state_park
+Devil's Den,35.78373781,-94.25299255,state_park
+Eldorado Canyon,39.92903899,-105.2941413,state_park
+Smith Falls,42.88806848,-100.3162367,state_park
+City of Rocks,32.59052492,-107.9751101,state_park
+Emerald Bay,38.95427784,-120.1103443,state_park
+Watkins Glen,42.37616984,-76.87173354,state_park
+Cathedral Gorge,37.82406771,-114.4154336,state_park
+Tettegouche ,47.33935536,-91.19598177,state_park
+Goblin Valley,38.57376786,-110.7071335,state_park
+Red Rock,34.81322782,-111.8306685,state_park
+Lovers Leap,41.54300305,-73.40871137,state_park
+Grand Isle,29.25855392,-89.95399876,state_park
+Talladega,32.8779032,-86.9972142,national_forest
+Coconino,35.0002948,-111.6673795,national_forest
+Ozark St. Francis,35.275,-94.475556,national_forest
+Inyo,37.833333,-118.991667,national_forest
+San Isabel,38.043948,-105.108776,national_forest
+Ocala,29.173611,-81.821667,national_forest
+Chattahoochee-Oconee,34.763611,-84.115556,national_forest
+Caribou-Targhee,42.783333,-111.55,national_forest
+Shawnee,37.5,-88.666667,national_forest
+Hoosier,38.461,-86.494,national_forest
+Daniel Boone,37.288056,-83.875278,national_forest
+Kisatchie,31.338889,-92.4125,national_forest
+White Mountain,44.14935164,-71.40956981,national_forest
+Hiawatha,46.133333,-86.666667,national_forest
+Superior,47.86621945,-91.4806388,national_forest
+De Soto,31.066667,-88.983333,national_forest
+Mark Twain,37.36495551,-91.2987349,national_forest
+Flathead,48.033333,-113.8,national_forest
+Nebraska,42.746111,-102.901944,national_forest
+Humboldt-Toiyabe,38.662747,-119.229106,national_forest
+Finger Lakes,42.5106272,-76.7896763,national_forest
+Pisgah,35.7506729,-82.2503991,national_forest
+Ouachita,34.649325,-93.804406,national_forest
+Allegheny,41.6278392,-79.0164274,national_forest
+Sumter,34.868675,-83.10553,national_forest
+Black Hills,43.9166499,-103.6671397,national_forest
+Cherokee,36.106911,-82.111158,national_forest
+Sam Houston,30.5335342,-95.3502186,national_forest
+Dixie,38.0167,-111.6333,national_forest
+Green Mountain,43.4167383,-72.9162135,national_forest
+Mount Baker-Snoqualmie,48.05788,-121.796791,national_forest
+Monongahela,38.5501153,-79.8331151,national_forest
+Medicine Bow-Routt,41.2502503,-106.2508484,national_forest
+Sawtooth,41.9068626,-113.4872248,national_forest
+Custer Gallatin,45.672053,-111.088069,national_forest
+Bridger-Teton,43.926016,-110.242659,national_forest
+Gunnison,38.869715,-106.987823,national_forest
+Sierra,37.4166094,-119.167623,national_forest
+Fishlake National Forest,38.708333,-111.959167,national_forest
